@@ -8,3 +8,4 @@ data/processed/
 .pytest_cache/
 # The team's pickles are large (RF = 125 MB); keep them out of git, share via Box.
 ml_models/*.pkl
+**/*.egg-info/
