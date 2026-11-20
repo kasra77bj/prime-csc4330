@@ -49,7 +49,7 @@ Dev without Docker: `make local-setup`, then `make local-backend` and `make loca
 - **Offline:** no runtime calls to external services or CDNs (fonts/icons bundled via npm).
 - **UI:** colors only from `styles/tokens.css` (Milestone II palette); status always = color + icon + label; the ControlBar (Pause · Resume · Hold-to-STOP) is on every `/prints/:sessionId/*` page; plain-language copy, no lorem ipsum, no emoji.
 - **Data:** canonical signals/units in docs/20 §2 (°C, RPM, V, A, %, W, mm/s, mm, mm³/s, min). Timestamps UTC in DB, America/Chicago in UI.
-- **Secrets:** never commit `.env`, real passwords, or pickles larger than 50 MB (git-ignored; keep in `ml/models/`).
+- **Secrets:** never commit `.env`, real passwords, or pickles larger than 50 MB (git-ignored; keep in `ml_models/`).
 - Python: ruff + type hints, Pydantic v2 schemas, async SQLAlchemy. TS: strict, no `any` for API types (generated from OpenAPI).
 
 ## Workflow for every task
