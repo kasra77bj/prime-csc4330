@@ -1,0 +1,18 @@
+# Demo scenario for Wall Panel WP-03 (docs/20 section 4). Approved by: (team to fill in)
+scenario: demo
+dataset: demo_wp03
+speed: 10                 # printing rows per real second (1 row = 1 s of print time)
+delay_compression: 10     # interlayer-delay rows play 10x faster again (5 min delay -> 3 s)
+precheck_seconds: 2       # "sensor pre-check" pause after Start
+branch:                   # if nobody acts on the layer-5 AI recommendation...
+  dataset: demo_wp03_noaction
+  from_layer: 6
+  unless_adjusted: pump_rpm
+  decide_by_layer: 5      # an RPM adjustment requested during layer <= 5 keeps the main track
+adjustment_response:      # how later rows react to applied changes (docs/14 section 6)
+  rpm_alpha: 0.8          # width' = width * (rpm_new / rpm_recorded)^alpha
+  speed_beta: 0.5         # width' = width * (speed_recorded / speed_new)^beta
+  same_as_recorded_rpm: 3 # |new - recorded| <= 3 RPM: the dataset already reflects the change
+triggers:                 # fired from the /demo panel
+  sensor_drop: { signal: temperature, seconds: 8 }
+  temp_spike: { signal: temperature, value: 31.2, seconds: 20 }

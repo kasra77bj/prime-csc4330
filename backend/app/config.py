@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=(REPO_ROOT / ".env", ".env"), extra="ignore")
 
     database_url: str = "postgresql+asyncpg://prime:prime@localhost:5432/prime"
-    jwt_secret: str = "change-me-in-.env"
+    jwt_secret: str = "prime-demo-only-secret-change-me-0123456789"
     fernet_key: str = ""                 # for TOTP secrets at rest; generated if empty in demo mode
     access_token_minutes: int = 15
     refresh_token_days: int = 7
@@ -21,6 +21,12 @@ class Settings(BaseSettings):
     data_dir: Path = REPO_ROOT / "data"
     cors_origins: str = "http://localhost:5173"
     load_models_on_startup: bool = True
+    db_nullpool: bool = False            # tests: avoid sharing pooled connections across event loops
+    autostart_background: bool = True    # demo: start the calm Arm-01 replay on startup
+    demo_mfa_code: str = "246810"        # accepted for seeded demo users when DEMO_MODE=true
+    lockout_attempts: int = 5
+    lockout_minutes: int = 5
+    cookie_secure: bool = False          # set true behind HTTPS
 
     @property
     def sync_database_url(self) -> str:

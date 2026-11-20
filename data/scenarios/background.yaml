@@ -1,0 +1,7 @@
+# Calm background print on Arm-01 so the dashboard looks alive during the demo.
+scenario: background
+dataset: trial_c12_calm
+speed: 3
+delay_compression: 5
+precheck_seconds: 0
+triggers: {}

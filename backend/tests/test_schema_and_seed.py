@@ -12,7 +12,7 @@ def test_seed_is_idempotent(sync_engine, capsys):
     seed_main([])
     assert "Already seeded" in capsys.readouterr().out
     with Session(sync_engine) as db:
-        assert db.scalar(text("select count(*) from users")) == 6
+        assert db.scalar(text("select count(*) from users")) == 8
         assert db.scalar(text("select count(*) from datasets")) == 5
         assert db.scalar(text("select count(*) from print_sessions")) == 3
 

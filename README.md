@@ -16,7 +16,17 @@ Real-time monitoring and AI process control for concrete 3D printing. The demo r
 4. Open **http://localhost:5173** (app) and **http://localhost:8000/docs** (API).
 5. Reset demo data any time: `docker compose exec backend python -m app.seed.seed --reset`
 
-Demo users (password `Prime!2026`; TOTP secrets are printed in the backend log on first seed): maya@prime.demo (operator), dev@prime.demo (engineer), sam@prime.demo (admin), jordan@prime.demo (manager).
+### Demo logins
+2-factor code for every demo account: **246810** (works only while `DEMO_MODE=true`; real TOTP secrets are printed in the backend log on first seed).
+
+| Role | Email | Password |
+|---|---|---|
+| Admin | `admin@prime.demo` | `admin123` |
+| Engineer | `engineer@prime.demo` | `engineer123` |
+| Operator (persona) | `maya@prime.demo` | `Prime!2026` |
+| Manager (persona) | `jordan@prime.demo` | `Prime!2026` |
+
+API docs with a "Try it out" button: http://localhost:8000/docs. Demo controls (Admin): `POST /api/v1/demo/reset`, `/demo/sessions/{id}/speed`, `/jump`, `/trigger`, `/disconnect`.
 
 ## Where things are
 | Path | What |
@@ -31,4 +41,4 @@ Demo users (password `Prime!2026`; TOTP secrets are printed in the backend log o
 | `data/reports/` | Per-dataset value summaries |
 
 ## Status
-Phase 0 (foundation) done Nov 20, 2026. Next: Phase 1 backend core (auth/2FA, replay engine, WebSocket stream, alerts). See `docs/19_agent_tasks.md`.
+Phase 0 (foundation) and Phase 1 (backend core: login + 2FA, roles, live replay engine, WebSocket stream, alerts, escalation) done Nov 20, 2026. Next: Phase 2 (ML models in the loop + front-end shell). See `docs/19_agent_tasks.md`.

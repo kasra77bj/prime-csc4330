@@ -24,6 +24,13 @@ FastAPI (Python 3.11) · SQLAlchemy 2 + Alembic · PostgreSQL 16 · WebSockets �
 ## Repo layout (actual)
 `backend/` FastAPI app (`app/models` = all 29 tables, `app/replay/source_csv.py` ingest, `app/seed/seed.py`) · `frontend/` React app · `ml_models/` **the team's pickles (do not modify; git-ignored)** · `ml/` `model_config.yaml`, `MODEL_REPORT.md`, `inspect_models.py` · `raw_data/raw.xlsx` lab reference · `data/generated/` synthetic datasets + `data/generator/` script · `data/mappings/` · `data/processed/` (parquet, git-ignored) · `data/reports/` · `docs/` specs.
 
+## Demo logins
+`admin@prime.demo`/`admin123`, `engineer@prime.demo`/`engineer123`, personas `maya@`/`dev@`/`sam@`/`jordan@prime.demo` with `Prime!2026`. 2FA demo code `246810` (DEMO_MODE only).
+
+## Extension points (Phase 2+)
+- ML: register a function in `app.replay.manager.RUNNER_SETUP_HOOKS` that appends an async hook to `runner.checkpoint_hooks`; it is called with `(runner, db, checkpoint)` for every closed vision checkpoint inside the flush transaction.
+- Adjustments: create the `adjustments` row, then `runner.queue_adjustment(param, value, adjustment_id, requested_at_layer)`; the runner applies it at the next layer start and publishes `adjustment`.
+
 ## Model facts (from docs/20)
 Inputs in this order: `Flow` = speed × SLL_Width × SLL_Height · `Motor Power` = Duty × Voltage × Current · `Temperature (C)`. XGBoost → extrusion rate (RPM). RandomForest → interlayer delay class 1/5/10 (min). Load with `joblib.load`. One prediction per vision checkpoint (4 per layer).
 

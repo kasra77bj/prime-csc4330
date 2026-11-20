@@ -23,14 +23,18 @@ from app.models import (Badge, Base, Dataset, ModelTarget, ModelVersion, Onboard
                         UserBadge, UserRole)
 
 DEMO_PASSWORD = "Prime!2026"
-# Fixed base32 TOTP secrets: ONLY used when DEMO_MODE=true (never in production)
+# Fixed base32 TOTP secrets: ONLY used when DEMO_MODE=true (never in production).
+# In DEMO_MODE every @prime.demo user can also use the demo 2FA code 246810 (settings.demo_mfa_code).
+# (name, email, role, totp secret, password)
 DEMO_USERS = [
-    ("Maya Ortiz", "maya@prime.demo", UserRole.operator, "MAYAPRIMEDEMO234"),
-    ("Dev Patel", "dev@prime.demo", UserRole.engineer, "DEVPRIMEDEMO2345"),
-    ("Sam Lee", "sam@prime.demo", UserRole.admin, "SAMPRIMEDEMO2345"),
-    ("Jordan Brooks", "jordan@prime.demo", UserRole.manager, "JORDANPRIMEDEMO2"),
-    ("Kasra Banijamali", "kasra@prime.demo", UserRole.admin, "KASRAPRIMEDEMO23"),
-    ("Carlos Manosalvas", "carlos@prime.demo", UserRole.admin, "CARLOSPRIMEDEMO2"),
+    ("Demo Admin", "admin@prime.demo", UserRole.admin, "ADMINPRIMEDEMOPRIMEDEMOSECRETKEY", "admin123"),
+    ("Demo Engineer", "engineer@prime.demo", UserRole.engineer, "ENGINEERPRIMEDEMPRIMEDEMOPRIMEDE", "engineer123"),
+    ("Maya Ortiz", "maya@prime.demo", UserRole.operator, "MAYAPRIMEDEMOPRIMEDEMOSECRETKEYA", DEMO_PASSWORD),
+    ("Dev Patel", "dev@prime.demo", UserRole.engineer, "DEVPRIMEDEMOPRIMEDEMOSECRETKEYAB", DEMO_PASSWORD),
+    ("Sam Lee", "sam@prime.demo", UserRole.admin, "SAMPRIMEDEMOPRIMEDEMOSECRETKEYAB", DEMO_PASSWORD),
+    ("Jordan Brooks", "jordan@prime.demo", UserRole.manager, "JORDANPRIMEDEMOPRIMEDEMOSECRETKE", DEMO_PASSWORD),
+    ("Kasra Banijamali", "kasra@prime.demo", UserRole.admin, "KASRAPRIMEDEMOPRIMEDEMOSECRETKEY", DEMO_PASSWORD),
+    ("Carlos Manosalvas", "carlos@prime.demo", UserRole.admin, "CARLOSPRIMEDEMOPRIMEDEMOSECRETKE", DEMO_PASSWORD),
 ]
 
 SENSORS = [
@@ -87,7 +91,7 @@ def ensure_datasets(db: Session) -> dict[str, Dataset]:
     return {d.name: d for d in db.scalars(select(Dataset))}
 
 
-def seed(db: Session) -> None:
+def seed(db: Session, quiet: bool = False) -> None:
     s = get_settings()
     now = datetime.now(timezone.utc)
     site = Site(name="RECAST Lab", timezone="America/Chicago")
@@ -95,8 +99,8 @@ def seed(db: Session) -> None:
     db.flush()
 
     users: dict[str, User] = {}
-    for name, email, role, secret in DEMO_USERS:
-        u = User(email=email, full_name=name, role=role, password_hash=hash_password(DEMO_PASSWORD),
+    for name, email, role, secret, password in DEMO_USERS:
+        u = User(email=email, full_name=name, role=role, password_hash=hash_password(password),
                  totp_secret_enc=encrypt_secret(secret) if s.demo_mode else None,
                  mfa_enrolled=s.demo_mode)
         u.sites.append(site)
@@ -119,6 +123,7 @@ def seed(db: Session) -> None:
                                critical_min=cmin, critical_max=cmax, rate_limit_per_min=rate))
 
     dev = users["dev"]
+    demo_engineer = users["engineer"]   # the dummy engineer receives escalations during the demo
     jobs = {
         "WP-03": PrintJob(name="Wall Panel WP-03", code="A-1027", total_layers=8, created_by=dev.id),
         "C-12": PrintJob(name="Column C-12", code="A-1031", total_layers=6, created_by=dev.id),
@@ -147,11 +152,11 @@ def seed(db: Session) -> None:
         PrintSession(job_id=jobs["WP-03"].id, printer_id=printers["Gantry-02"].id,
                      dataset_id=ds["demo_wp03"].id, branch_dataset_id=ds["demo_wp03_noaction"].id,
                      scenario_name="demo", status=SessionStatus.scheduled, operator_id=maya.id,
-                     engineer_id=dev.id, replay_speed=s.demo_speed, current_delay_min=5),
+                     engineer_id=demo_engineer.id, replay_speed=s.demo_speed, current_delay_min=5),
         PrintSession(job_id=jobs["C-12"].id, printer_id=printers["Arm-01"].id,
                      dataset_id=ds["trial_c12_calm"].id, scenario_name="background",
-                     status=SessionStatus.scheduled, operator_id=maya.id, engineer_id=dev.id,
-                     replay_speed=s.demo_speed, current_delay_min=5),
+                     status=SessionStatus.scheduled, operator_id=maya.id, engineer_id=demo_engineer.id,
+                     replay_speed=3.0, current_delay_min=5),
     ])
 
     cfg = yaml.safe_load(s.model_config_path.read_text())
@@ -182,23 +187,54 @@ def seed(db: Session) -> None:
                      goal_text="3 prints with quality score ≥ 90", target=3, progress=1))
     db.commit()
 
-    print("\nSeeded PRIME demo data. Password for every demo user:", DEMO_PASSWORD)
+    if quiet:
+        return
+    print("\nSeeded PRIME demo data.")
     if s.demo_mode:
-        print("TOTP secrets (add to an authenticator app as 'PRIME <name>'):")
-        for name, email, role, secret in DEMO_USERS:
-            print(f"  {name:18s} {email:20s} {role.value:9s} {secret}")
+        print(f"Demo 2FA code for every @prime.demo user: {s.demo_mfa_code} (or the TOTP secret below)")
+        print(f"  {'name':18s} {'email':22s} {'role':9s} {'password':12s} TOTP secret")
+        for name, email, role, secret, password in DEMO_USERS:
+            print(f"  {name:18s} {email:22s} {role.value:9s} {password:12s} {secret}")
+
+
+async def backfill_history() -> None:
+    """Replays yesterday's completed print (WP-02) so Sessions/Reports have real rows (readings, layers, alerts)."""
+    from app.models import Reading
+    from app.replay.manager import backfill
+    from app.db import SessionLocal
+    async with SessionLocal() as db:
+        from sqlalchemy import func
+        rows = (await db.execute(select(PrintSession.id, PrintSession.started_at).where(
+            PrintSession.status == SessionStatus.completed))).all()
+        for sid, started in rows:
+            n = await db.scalar(select(func.count()).select_from(Reading).where(Reading.session_id == sid))
+            if not n:
+                await backfill(sid, started)
 
 
 def main(argv: list[str]) -> None:
+    """--reset: wipe and reseed · --quiet: no credential table · --no-backfill: skip history replay."""
     engine = create_engine(get_settings().sync_database_url)
     with Session(engine) as db:
         if "--reset" in argv:
             reset(db)
         elif db.scalar(select(Site).limit(1)):
             print("Already seeded (use --reset to start over).")
+            engine.dispose()
             return
-        seed(db)
+        seed(db, quiet="--quiet" in argv)
     engine.dispose()
+    if "--no-backfill" not in argv:
+        import asyncio
+
+        from app.db import engine as async_engine
+
+        async def _run() -> None:
+            try:
+                await backfill_history()
+            finally:
+                await async_engine.dispose()
+        asyncio.run(_run())
 
 
 if __name__ == "__main__":

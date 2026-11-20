@@ -11,7 +11,8 @@
 | Phase | State |
 |---|---|
 | **Phase 0 · Foundation** | ✅ **Done Nov 20** (T0.1–T0.4). See "Phase 0 results" below. |
-| Phase 1 · Backend core | ⏭ next (start with T1.1 auth and T1.3 replay engine) |
+| **Phase 1 · Backend core** | ✅ **Done Nov 20** (T1.1–T1.6). See "Phase 1 results". |
+| Phase 2 · ML + front-end shell | ⏭ next: T2.1 model service hooks into `RUNNER_SETUP_HOOKS` / `checkpoint_hooks`; T2.4 front-end shell |
 
 ### Phase 0 results
 - **T0.1** Repo scaffold: `backend/` (FastAPI, `/api/v1/health`), `frontend/` (Vite + React + TS + Tailwind with team tokens, foundation page), `docker-compose.yml`, `Makefile`, `.env.example`. Verified: API + DB health from the browser.
@@ -19,6 +20,19 @@
 - **T0.3** Ingest pipeline `python -m app.replay.source_csv ingest-all` + mappings for 5 datasets (4 generated + the lab sheet) → parquet + data reports.
 - **T0.4** `ml/MODEL_REPORT.md`, `ml/model_config.yaml`; both pickles load (sklearn 1.8.0, xgboost 3.4.1); **real inputs/outputs documented in `docs/20_data_and_models.md`**.
 - Tests: backend 6 passed (seed idempotency, DB constraints, model feature order, dataset reproduces model outputs, demo story assertions); frontend 1 passed.
+
+### Phase 1 results
+- **Demo logins** (2FA code **246810** works for every `@prime.demo` user while `DEMO_MODE=true`):
+  `admin@prime.demo` / `admin123` (Admin) · `engineer@prime.demo` / `engineer123` (Engineer, assigned to the live demo sessions so escalations reach them) · persona users (`maya@`, `dev@`, `sam@`, `jordan@`, …) keep `Prime!2026`. TOTP secrets are 32-char base32 strings printed by the seed.
+- **T1.1** `app/api/v1/auth.py`: login → single-use 5-min MFA token → TOTP/demo code → 15-min access JWT + rotating httpOnly refresh cookie; remember-device cookie (30 d) skips 2FA; lockout 5 tries / 5 min; enrollment with QR SVG for new users. `core/rbac.py` = permission matrix (tested cell by cell), `core/audit.py`, uniform error envelope `core/errors.py`.
+- **T1.2** routers: `/users`, `/sites`, `/me`, `/me/onboarding`, `/me/notifications`, `/printers` (+ active session), `/printers/{id}/sensors[/test]`, `/jobs`, `/sessions` (list/create/detail with limits + latest reading).
+- **T1.3** `app/replay/runner.py` + `manager.py` + `scenario.py`, scenario files `data/scenarios/demo.yaml` and `background.yaml`. Start/pause/resume/stop (measured 6–70 ms), checkpoint + layer rows, adjustments applied at the next layer start (interlayer-delay changes extend the delay), automatic switch to `demo_wp03_noaction` from layer 6 if no RPM change was requested by layer 5, restart recovery from `replay_cursor`, yesterday's WP-02 print backfilled by the seed. Arm-01 calm print autostarts in demo mode.
+- **T1.4** `app/ws/hub.py`: `/ws?token=`, channels `session:`/`site:`/`user:`, per-channel seq, 2,000-event replay buffer (`last_seq` resume, `resync_required` when too old), heartbeat 5 s, `/demo/sessions/{id}/disconnect` network-drop simulation.
+- **T1.5** `app/alerts/engine.py`: out-of-range (3 readings) → critical (2) → auto-resolve (10), sensor-lost (5 s), rapid temperature change (info); geometry checked only while printing; notifications to operator (critical also engineer); `/alerts`, acknowledge, resolve, `/sessions/{id}/escalate` (receipt: "Demo Engineer (Engineer) was notified · usually responds in ~2 min").
+- **T1.6** `/sessions/{id}/readings` (bucketed by print time, ≤ 600 points; `raw=true` Engineer/Admin only), `/sessions/{id}/layers` (with 4 checkpoints each), `/sessions/{id}/layers/{n}/frame`, `/dashboard/summary`.
+- **Demo controls** (Admin, DEMO_MODE): `/demo/reset`, `/demo/sessions/{id}/speed|jump|trigger|disconnect` (triggers: `sensor_drop`, `temp_spike`).
+- **Tests:** 86 passed (auth flows, RBAC matrix 60 cells + endpoint 403s, alert rules, replay determinism, branch/no-action, adjustment + delay extension, pause/stop latency < 300 ms, restart resume, WS buffer resume/resync/drop, escalation, history endpoints). Live smoke test over HTTP + WebSocket reached the layer-5 width warning as scripted.
+- **Deviations from docs/12:** flag-artifact is `POST /checkpoints/{id}/flag-artifact` (frames are per vision checkpoint); readings filter by print time (`from_s`, `to_s`, `last_s`) instead of timestamps; `adjust_param` includes `interlayer_delay`; WS envelopes also carry `channel`.
 
 ## Phase 0 · Foundation (Nov 20–21)
 | ID | Task | Specs | Acceptance |
