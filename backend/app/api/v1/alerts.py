@@ -98,7 +98,9 @@ async def escalate(session_id: uuid.UUID, body: EscalateIn, request: Request,
                      to_user_id=engineer.id, message=body.message)
     db.add(esc)
     await db.flush()
-    title = f"{user.full_name} needs you on {('alert: ' + alert.signal.value.replace('_', ' ')) if alert else 'a print'}"
+    from app.alerts.engine import LABELS
+    what = LABELS[alert.signal][0].lower() if alert and alert.signal in LABELS else "the live print"
+    title = f"{user.full_name} needs you: {what}"
     await notify(db, engineer.id, "escalation", title, body.message or (alert.message if alert else None),
                  f"/prints/{s.id}/ai", {"escalation_id": str(esc.id), "session_id": str(s.id)})
     audit(db, user.id, "session.escalate", "escalation", esc.id, None,

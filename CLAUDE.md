@@ -27,7 +27,8 @@ FastAPI (Python 3.11) · SQLAlchemy 2 + Alembic · PostgreSQL 16 · WebSockets �
 ## Demo logins
 `admin@prime.demo`/`admin123`, `engineer@prime.demo`/`engineer123`, personas `maya@`/`dev@`/`sam@`/`jordan@prime.demo` with `Prime!2026`. 2FA demo code `246810` (DEMO_MODE only).
 
-## Extension points (Phase 2+)
+## Extension points (Phase 3+)
+- Front end: live data comes from `useSessionStream(sessionId)` → `useLive` store; add new WS event types there. API types: regenerate with `npm run gen:api` (backend running); hand-written types for free-form JSON live in `src/api/types.ts`.
 - ML: register a function in `app.replay.manager.RUNNER_SETUP_HOOKS` that appends an async hook to `runner.checkpoint_hooks`; it is called with `(runner, db, checkpoint)` for every closed vision checkpoint inside the flush transaction.
 - Adjustments: create the `adjustments` row, then `runner.queue_adjustment(param, value, adjustment_id, requested_at_layer)`; the runner applies it at the next layer start and publishes `adjustment`.
 

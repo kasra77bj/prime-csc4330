@@ -71,6 +71,13 @@ class RunnerManager:
                     sensor.status, sensor.last_seen_at = "live", s.started_at
             before = s.status
             s.status = new_status
+            expired = []
+            if action == ControlAction.stop:     # open AI suggestions can no longer be applied
+                from app.models import Recommendation, RecStatus
+                expired = (await db.scalars(select(Recommendation).where(
+                    Recommendation.session_id == s.id, Recommendation.status == RecStatus.pending))).all()
+                for rec in expired:
+                    rec.status = RecStatus.expired
             if action == ControlAction.stop:
                 s.ended_at = datetime.now(timezone.utc)
             db.add(ControlEvent(session_id=s.id, action=action, user_id=user_id, at=datetime.now(timezone.utc),
@@ -89,6 +96,10 @@ class RunnerManager:
                 t = asyncio.create_task(self._finalize(runner))
                 self._bg.add(t)
                 t.add_done_callback(self._bg.discard)
+        if expired:
+            from app.ml.recommend import publish_rec
+            for rec in expired:
+                await publish_rec(rec, printer.site_id)
         payload = {"status": new_status.value, "by": str(user_id), "action": action.value, "reason": reason}
         await hub.publish(f"session:{session_id}", "control", payload, session_id=str(session_id))
         await hub.publish(f"site:{printer.site_id}", "control", {"session_id": str(session_id), **payload},

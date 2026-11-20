@@ -12,7 +12,8 @@
 |---|---|
 | **Phase 0 · Foundation** | ✅ **Done Nov 20** (T0.1–T0.4). See "Phase 0 results" below. |
 | **Phase 1 · Backend core** | ✅ **Done Nov 20** (T1.1–T1.6). See "Phase 1 results". |
-| Phase 2 · ML + front-end shell | ⏭ next: T2.1 model service hooks into `RUNNER_SETUP_HOOKS` / `checkpoint_hooks`; T2.4 front-end shell |
+| **Phase 2 · ML + front-end shell** | ✅ **Done Nov 20** (T2.1–T2.5). See "Phase 2 results". |
+| Phase 3 · Features | ⏭ next: Vision, Trends, full AI page, Alerts center, Reports/Export, Admin, Onboarding + gamification, demo panel UI |
 
 ### Phase 0 results
 - **T0.1** Repo scaffold: `backend/` (FastAPI, `/api/v1/health`), `frontend/` (Vite + React + TS + Tailwind with team tokens, foundation page), `docker-compose.yml`, `Makefile`, `.env.example`. Verified: API + DB health from the browser.
@@ -20,6 +21,16 @@
 - **T0.3** Ingest pipeline `python -m app.replay.source_csv ingest-all` + mappings for 5 datasets (4 generated + the lab sheet) → parquet + data reports.
 - **T0.4** `ml/MODEL_REPORT.md`, `ml/model_config.yaml`; both pickles load (sklearn 1.8.0, xgboost 3.4.1); **real inputs/outputs documented in `docs/20_data_and_models.md`**.
 - Tests: backend 6 passed (seed idempotency, DB constraints, model feature order, dataset reproduces model outputs, demo story assertions); frontend 1 passed.
+
+### Phase 2 results
+- **T2.1** `app/ml/registry.py` loads both pickles once at startup (joblib; `.json` XGBoost export also supported), single-row inference ~0.1 s, run in a worker thread. `app/ml/service.py` runs both models on **every vision checkpoint** (4 per layer) via `RUNNER_SETUP_HOOKS`, stores `predictions` (features snapshot + raw model output + SHAP factors + observed value) and publishes `prediction` events.
+- **Checkpoint values = the mark row.** Each checkpoint is measured at the end of its segment; the generator writes exact (noise-free) values on that row (`checkpoint_mark`) and small sensor noise on the rows in between, so the models see exactly the values verified in `data/generated/*_checkpoints.csv` (tree models jump on tiny input changes).
+- **T2.2** Confidence: RandomForest = max class probability; XGBoost = stability across checkpoints (docs/20 §5), minus a penalty outside the training range. Reasons: one observation line (width trend or temperature change) + the biggest SHAP factor that supports the suggestion.
+- **T2.3** `app/ml/recommend.py`: pump-RPM suggestion when the last two checkpoint predictions of a layer both differ from the running RPM by ≥ 4 (updates in place while pending, e.g. 27 → 33 → 34); delay suggestion when two checkpoint classes agree on a different delay. Not re-proposed while a decided change is queued or in the layer it was rejected. Pending suggestions expire after the next layer and when a print stops. Endpoints: `GET /sessions/{id}/predictions`, `GET /sessions/{id}/recommendations`, `POST /recommendations/{id}/accept|modify|reject`, `POST|GET /sessions/{id}/adjustments`, `GET /models`. Yesterday's print has its suggestion auto-accepted by its engineer during seeding (realistic decision log).
+- **Demo story verified end to end** (tests + headless browser): layer 5 → "Increase pump speed 27 → 34 RPM" (92 %), accepted → applied at layer 6, width back to 19.5 mm; layer 7 → "Increase interlayer delay 5 → 10 min" (53 %); reject → no-action branch → critical width alert and a new suggestion at layer 6.
+- **T2.4** Front-end foundation: API client with refresh-cookie retry, OpenAPI types (`npm run gen:api`), single WebSocket with per-channel `last_seq` resume, Zustand live store, permissions from `/me` + `LockedButton`, components (MetricTile, Sparkline, StatusPill, ControlBar, HoldToStopButton, AlertBanner, AiRecommendationCard + EffectChart, ConnectionPill, Toaster, Logo).
+- **T2.5** Pages: Login, 2FA code, authenticator enrollment (QR), Dashboard (KPIs, printers with live values, AI suggestions waiting, recent alerts, welcome banner), Live Monitor (7 tiles, status strip, alert banner with Acknowledge, AI suggestion cards with Accept/Modify/Reject or locked + Escalate for operators, adjustment log, persistent control bar with hold-to-stop). Other routes show a clear "arrives in Phase 3" page.
+- **Tests:** backend 91 passed; frontend 4 passed; `scripts/ui_smoke.mjs` drives the whole story in two browsers (engineer 1440×900, operator tablet 1024×768) with no page errors.
 
 ### Phase 1 results
 - **Demo logins** (2FA code **246810** works for every `@prime.demo` user while `DEMO_MODE=true`):

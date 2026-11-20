@@ -41,4 +41,4 @@ API docs with a "Try it out" button: http://localhost:8000/docs. Demo controls (
 | `data/reports/` | Per-dataset value summaries |
 
 ## Status
-Phase 0 (foundation) and Phase 1 (backend core: login + 2FA, roles, live replay engine, WebSocket stream, alerts, escalation) done Nov 20, 2026. Next: Phase 2 (ML models in the loop + front-end shell). See `docs/19_agent_tasks.md`.
+Phases 0–2 done (Nov 20, 2026): backend core, both ML models in the live replay with explainable suggestions, and the first screens (login + 2FA, dashboard, live monitor with Accept/Modify/Reject). Next: Phase 3 (Vision, Trends, AI page, alerts center, reports/export, admin, onboarding, gamification). See `docs/19_agent_tasks.md`.
