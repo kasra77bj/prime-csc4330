@@ -1,0 +1,26 @@
+{
+  "demo_wp03": {
+    "title": "Wall Panel WP-03: live demo (engineer accepts the AI change)",
+    "layers": 8,
+    "stream_rows": 2868,
+    "duration_min": 47.8
+  },
+  "trial_c12_calm": {
+    "title": "Column C-12: calm background print (Arm-01)",
+    "layers": 6,
+    "stream_rows": 2076,
+    "duration_min": 34.6
+  },
+  "hist_wp02_completed": {
+    "title": "Wall Panel WP-02: yesterday's completed print",
+    "layers": 8,
+    "stream_rows": 3168,
+    "duration_min": 52.8
+  },
+  "demo_wp03_noaction": {
+    "title": "WP-03 branch for layers 6-8: nobody acts on the AI recommendation",
+    "layers": 3,
+    "stream_rows": 888,
+    "held_rpm": 27
+  }
+}

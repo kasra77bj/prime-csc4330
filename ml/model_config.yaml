@@ -1,0 +1,49 @@
+# PRIME model configuration (T0.4). Pickles live in /ml_models (MODEL_DIR). Source of truth for feature order and semantics.
+# Confirmed with Kasra on 2026-11-20. See ml/MODEL_REPORT.md for evidence.
+
+features:                       # identical order for both models
+  - name: "Flow"
+    formula: speed_mm_s * sll_width_mm * sll_height_mm      # mm^3/s, ~3000 in lab geometry
+  - name: "Motor Power"
+    formula: duty_pct * voltage_v * current_a               # W, negative by duty convention
+  - name: "Temperature (C)"
+    formula: temperature_c
+
+# Inference cadence: one prediction per vision checkpoint (4 per layer, like raw.xlsx rows),
+# using the checkpoint's measured width/height and the mean power/temperature of that segment.
+cadence: checkpoint
+
+extrusion_rate:
+  file: xgb_extrusion_model.pkl
+  loader: joblib                # also accepts xgb_extrusion.json (Booster.save_model)
+  algorithm: xgboost
+  kind: regression
+  output: { name: pump_rpm_required, unit: RPM }
+  recommend:
+    parameter: pump_rpm
+    compare_to: current_rpm
+    window_checkpoints: 2       # use the mean of the last 2 checkpoint predictions
+    min_delta: 4                # propose only if |model - current| >= 4 RPM
+    max_step: 12                # never propose more than +/-12 RPM at once
+    limits: { min: 5, max: 80 } # lab pump range (raw.xlsx shows 11-75)
+  confidence:
+    method: residual_and_range  # see docs/15 section 4; clamp 0.5-0.97
+    training_range:             # from tree split thresholds
+      "Flow": [1781, 100267]
+      "Motor Power": [-8.77, 0.0]
+      "Temperature (C)": [14.48, 23.63]
+
+interlayer_delay:
+  file: rf_delay_model.pkl
+  loader: joblib
+  algorithm: random_forest
+  kind: classification
+  classes: [1, 5, 10]
+  output: { name: interlayer_delay_min, unit: min }
+  recommend:
+    parameter: interlayer_delay
+    compare_to: delay_setting_min
+    window_checkpoints: 4       # majority vote over the layer's 4 checkpoints
+    min_confidence: 0.5         # max predict_proba
+  confidence:
+    method: predict_proba_max

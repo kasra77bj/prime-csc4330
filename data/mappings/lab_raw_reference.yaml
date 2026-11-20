@@ -1,0 +1,20 @@
+dataset: lab_raw_reference
+title: "RECAST lab print (raw.xlsx): 5 layers, 20 measurement rows; value-range reference"
+source_file: ../raw_data/raw.xlsx
+kind: lab_reference
+synthetic: false
+columns:
+  temperature: "Temperature (C)"
+  pump_rpm: "Extrusion Rate (RPM)"
+  voltage: "Voltage (V)"
+  current: "AbsCurrent (Amp)"
+  duty: "Duty (%)"
+  print_speed: Speed
+  sll_width: SLL_Width
+  sll_height: SLL_Height
+  total_height: "Total Height"
+  delay_setting_min: Delay
+derive:
+  layer_from_total_height: true
+  checkpoint_index: true
+  seconds_per_row: 24        # 4 rows per 96-s layer

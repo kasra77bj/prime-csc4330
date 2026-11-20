@@ -1,0 +1,14 @@
+/* PRIME design tokens: docs/01_design_system.md (team palette) */
+:root {
+  /* Neutrals */
+  --canvas: #F5F4F1; --surface: #FFFFFF; --border: #DCD9D3;
+  --text: #1C1E21; --text-muted: #5F6368; --charcoal: #23272B;
+  /* Brand and Interaction */
+  --brand-600: #1F5F8B; --brand-700: #174A6D; --brand-50: #E6EEF4;
+  /* Status */
+  --critical: #C62828; --critical-50: #FDECEA;
+  --ok: #2E7D32; --ok-50: #E8F5E9;
+  --warn-50: #FBF3E4; /* derived from viz-ochre, see docs/01 2.6 */
+  /* Data visualization (graphs; ochre also = warning accent) */
+  --viz-teal: #3C665E; --viz-violet: #7E57A6; --viz-ochre: #B7791F;
+}
