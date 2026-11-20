@@ -3,7 +3,7 @@ from sqlalchemy import select, text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.models import (Adjustment, AdjustParam, AdjustSource, PrintSession, SessionStatus, Site, User)
+from app.models import (Adjustment, AdjustParam, AdjustSource, PrintSession, SessionStatus, User)
 from app.seed.seed import main as seed_main
 
 
