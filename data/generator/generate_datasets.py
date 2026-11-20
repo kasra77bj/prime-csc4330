@@ -173,16 +173,21 @@ def build(ds: DatasetSpec, xgb, rf):
     for ls in ds.layers:
         lr = cp[cp.layer == ls.layer].reset_index(drop=True)
         for s in range(print_s):
-            r = lr.loc[min(int(s / print_s * CHECKPOINTS), CHECKPOINTS - 1)]
+            idx = min(int(s / print_s * CHECKPOINTS), CHECKPOINTS - 1)
+            r = lr.loc[idx]
+            # The vision checkpoint is measured at the END of its segment: that row carries the exact
+            # checkpoint values (model inputs); the rows in between get small sensor noise for realism.
+            at_mark = s + 1 == print_s or min(int((s + 1) / print_s * CHECKPOINTS), CHECKPOINTS - 1) != idx
+            n = 0.0 if at_mark else 1.0
             stream.append(dict(t_s=t, layer=ls.layer, phase="printing", checkpoint=int(r.checkpoint),
                                speed_mm_s=SPEED_MM_S, nozzle=NOZZLE, mixture=MIX, rpm=int(r.rpm),
                                sll_width_mm=r.sll_width_mm, sll_height_mm=r.sll_height_mm,
                                total_height_mm=r.total_height_mm,
-                               voltage_v=round(r.voltage_v + rng.normal(0, 0.01), 3),
-                               current_a=round(r.current_a + rng.normal(0, 0.006), 3),
-                               duty_pct=round(r.duty_pct * (1 + rng.normal(0, 0.008)), 4),
-                               temperature_c=round(r.temperature_c + rng.normal(0, 0.015), 3),
-                               delay_setting_min=ls.delay_setting))
+                               voltage_v=round(r.voltage_v + n * rng.normal(0, 0.01), 3),
+                               current_a=round(r.current_a + n * rng.normal(0, 0.006), 3),
+                               duty_pct=round(r.duty_pct * (1 + n * rng.normal(0, 0.008)), 4),
+                               temperature_c=round(r.temperature_c + n * rng.normal(0, 0.015), 3),
+                               checkpoint_mark=bool(at_mark), delay_setting_min=ls.delay_setting))
             t += 1
         if ls.layer != last_layer:
             last = lr.iloc[-1]

@@ -200,7 +200,9 @@ def seed(db: Session, quiet: bool = False) -> None:
 async def backfill_history() -> None:
     """Replays yesterday's completed print (WP-02) so Sessions/Reports have real rows (readings, layers, alerts)."""
     from app.models import Reading
+    from app.ml.service import register
     from app.replay.manager import backfill
+    register()
     from app.db import SessionLocal
     async with SessionLocal() as db:
         from sqlalchemy import func

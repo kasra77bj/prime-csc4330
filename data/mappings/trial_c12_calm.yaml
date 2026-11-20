@@ -18,3 +18,4 @@ columns:
   sll_height: sll_height_mm
   total_height: total_height_mm
   delay_setting_min: delay_setting_min
+  checkpoint_mark: checkpoint_mark

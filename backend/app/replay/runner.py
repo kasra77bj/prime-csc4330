@@ -95,6 +95,9 @@ class SessionRunner:
         self.triggers: dict[str, dict] = {}                    # signal -> {mode, value, until}
         self.events: list[tuple] = []
         self.speed_override: float | None = None
+        self.ml_state: dict = {"rejected": {}}                 # filled by app.ml.service.setup
+        self.rec_engine = None
+        self.auto_decide_user = None                           # backfill: engineer who accepts suggestions
         self.finished = asyncio.Event()
 
     # ------------------------------------------------------------------ setup
@@ -305,9 +308,11 @@ class SessionRunner:
             self.seg = None
             return
         rows = self.seg.rows
-        agg = {k: _mean(rows, k) for k in ("sll_width", "sll_height", "temperature", "motor_power",
-                                            "print_speed", "flow", "pump_rpm")}
-        self.events.append(("checkpoint", self.seg.layer, self.seg.checkpoint, rows[-1]["ts"], agg))
+        # the vision checkpoint is measured at its mark row (end of the segment); models use those values
+        mark = next((r for r in reversed(rows) if r.get("checkpoint_mark")), rows[-1])
+        agg = {k: mark.get(k) for k in ("sll_width", "sll_height", "temperature", "motor_power",
+                                         "print_speed", "flow", "pump_rpm")}
+        self.events.append(("checkpoint", self.seg.layer, self.seg.checkpoint, mark["ts"], agg))
         self.seg = None
 
     # ------------------------------------------------------------------ flush
@@ -365,6 +370,13 @@ class SessionRunner:
                                      .values(applied_at_layer=layer))
                     other_pub.append(("adjustment", {"id": str(adj_id), "parameter": param, "to_value": value,
                                                      "applied_at_layer": layer, "status": "applied"}))
+                    if self.publish:
+                        from app.core.notify import notify
+                        txt = (f"Pump speed is now {value:g} RPM from layer {layer}." if param == "pump_rpm" else
+                               f"Interlayer delay after layer {layer} is now {value:g} min." if
+                               param == "interlayer_delay" else f"Print speed is now {value:g} mm/s.")
+                        await notify(db, self.operator_id, "nudge", f"Change applied at layer {layer}", txt,
+                                     f"/prints/{self.session_id}/live", {"adjustment_id": str(adj_id)})
                 elif kind == "scenario":
                     other_pub.append(("scenario", ev[1]))
             if readings:
@@ -435,11 +447,15 @@ class SessionRunner:
         finally:
             self.finished.set()
 
-    async def run_fast(self, max_layer: int | None = None, flush_every: int = 300) -> None:
-        """Process rows without pacing (backfill, tests)."""
+    async def run_fast(self, max_layer: int | None = None, flush_every: int = 300,
+                       stop_at: tuple[int, int] | None = None) -> None:
+        """Process rows without pacing (backfill, tests). `stop_at=(layer, checkpoint)` stops before that segment."""
         n = 0
         while True:
             nxt = self._peek()
+            if stop_at and nxt is not None and nxt["phase"] == "printing" and \
+                    (nxt["layer"], nxt.get("checkpoint")) == stop_at:
+                break
             if max_layer is not None and nxt is not None and nxt["layer"] > max_layer \
                     and self.extra_delay_left == 0:
                 break

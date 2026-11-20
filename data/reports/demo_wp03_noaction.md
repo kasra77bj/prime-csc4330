@@ -7,12 +7,12 @@ WP-03 branch for layers 6-8 (nobody acts on the AI recommendation)
 
 | Signal | Unit | min | mean | max |
 |---|---|---|---|---|
-| temperature | °C | 19.665 | 20.334 | 21.545 |
+| temperature | °C | 19.665 | 20.333 | 21.545 |
 | pump_rpm | RPM | 27.000 | 27.000 | 27.000 |
 | voltage | V | 11.894 | 12.010 | 12.134 |
 | current | A | 0.611 | 0.780 | 0.928 |
 | duty | % | -0.434 | -0.301 | -0.238 |
-| motor_power | W | -3.265 | -2.787 | -2.446 |
+| motor_power | W | -3.265 | -2.788 | -2.446 |
 | print_speed | mm/s | 10.000 | 10.000 | 10.000 |
 | sll_width | mm | 16.698 | 17.145 | 17.902 |
 | sll_height | mm | 15.444 | 15.608 | 15.807 |

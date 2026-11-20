@@ -24,7 +24,7 @@ from app.models import Dataset
 
 CANONICAL = ["t_s", "layer", "checkpoint", "phase", "temperature", "pump_rpm", "voltage", "current", "duty",
              "motor_power", "print_speed", "sll_width", "sll_height", "total_height", "flow",
-             "delay_setting_min"]
+             "delay_setting_min", "checkpoint_mark"]
 UNITS = {"t_s": "s", "temperature": "°C", "pump_rpm": "RPM", "voltage": "V", "current": "A", "duty": "%",
          "motor_power": "W", "print_speed": "mm/s", "sll_width": "mm", "sll_height": "mm",
          "total_height": "mm", "flow": "mm³/s", "delay_setting_min": "min"}
@@ -70,6 +70,10 @@ def load_mapped(mapping: dict, data_dir: Path) -> pd.DataFrame:
     out["motor_power"] = out["duty"] * out["voltage"] * out["current"]
     out["flow"] = out["print_speed"] * out["sll_width"] * out["sll_height"]
 
+    if "checkpoint_mark" not in out:            # no vision marks: the last row of each segment is the mark
+        seg = out["layer"].astype(str) + ":" + out["checkpoint"].astype(str)
+        out["checkpoint_mark"] = (seg != seg.shift(-1)) & (out["phase"] == "printing")
+    out["checkpoint_mark"] = out["checkpoint_mark"].fillna(False).astype(bool)
     for c in CANONICAL:
         if c not in out:
             out[c] = np.nan
@@ -104,7 +108,7 @@ def report(name: str, mapping: dict, df: pd.DataFrame, issues: list[str]) -> str
              f"- Rows: {len(df)} ({len(p)} printing) · layers {df.layer.min()}–{df.layer.max()} · "
              f"duration {df.t_s.max() / 60:.1f} min\n",
              "| Signal | Unit | min | mean | max |", "|---|---|---|---|---|"]
-    for c in CANONICAL[4:]:
+    for c in CANONICAL[4:-1]:
         s = p[c].dropna()
         if len(s):
             lines.append(f"| {c} | {UNITS.get(c, '')} | {s.min():.3f} | {s.mean():.3f} | {s.max():.3f} |")

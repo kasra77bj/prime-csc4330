@@ -30,6 +30,7 @@ RUNNER_SETUP_HOOKS: list = []
 class RunnerManager:
     def __init__(self) -> None:
         self.runners: dict[uuid.UUID, SessionRunner] = {}
+        self._bg: set[asyncio.Task] = set()
 
     def get(self, session_id: uuid.UUID) -> SessionRunner | None:
         return self.runners.get(session_id)
@@ -84,17 +85,23 @@ class RunnerManager:
             runner = await self._spawn(session_id)
         elif runner is not None:
             runner.status = new_status          # the loop sees this within one tick (<= 0.1 s at 10x)
-            if action == ControlAction.stop:
-                with contextlib.suppress(asyncio.TimeoutError):
-                    await asyncio.wait_for(runner.finished.wait(), timeout=2)
-                runner._close_segment()
-                runner._close_layer()
-                await runner.flush()
+            if action == ControlAction.stop:     # acknowledge now; close the open layer in the background
+                t = asyncio.create_task(self._finalize(runner))
+                self._bg.add(t)
+                t.add_done_callback(self._bg.discard)
         payload = {"status": new_status.value, "by": str(user_id), "action": action.value, "reason": reason}
         await hub.publish(f"session:{session_id}", "control", payload, session_id=str(session_id))
         await hub.publish(f"site:{printer.site_id}", "control", {"session_id": str(session_id), **payload},
                           session_id=str(session_id))
         return s
+
+    @staticmethod
+    async def _finalize(runner: SessionRunner) -> None:
+        with contextlib.suppress(asyncio.TimeoutError):
+            await asyncio.wait_for(runner.finished.wait(), timeout=5)
+        runner._close_segment()
+        runner._close_layer()
+        await runner.flush()
 
     async def resume_active(self) -> int:
         async with SessionLocal() as db:
@@ -113,6 +120,9 @@ class RunnerManager:
                     await self.control(sid, ControlAction.start, system_user_id, reason="background replay")
 
     async def shutdown(self) -> None:
+        for t in list(self._bg):
+            with contextlib.suppress(Exception):
+                await t
         for r in list(self.runners.values()):
             if r.task and not r.task.done():
                 r.task.cancel()
@@ -125,11 +135,16 @@ manager = RunnerManager()
 
 
 async def backfill(session_id: uuid.UUID, base_time: datetime) -> None:
-    """Replays a whole dataset instantly with historical timestamps (seed: yesterday's completed print)."""
+    """Replays a whole dataset instantly with historical timestamps (seed: yesterday's completed print).
+    The session's engineer 'accepts' every AI suggestion so the history has a realistic decision log."""
+    from app.models import User
     r = SessionRunner(session_id, publish=False, base_time=base_time)
     await r.load()
     for hook in RUNNER_SETUP_HOOKS:
         hook(r)
+    if r.engineer_id is not None:
+        async with SessionLocal() as db:
+            r.auto_decide_user = await db.get(User, r.engineer_id)
     await r.run_fast()
     async with SessionLocal() as db:
         s = await db.get(PrintSession, session_id)
