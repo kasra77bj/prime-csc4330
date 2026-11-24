@@ -28,6 +28,9 @@ git status
 ```powershell
 Remove-Item frontend\src\pages\FoundationPage.tsx, frontend\src\pages\FoundationPage.test.tsx
 git status        # "nothing to commit, working tree clean"
+```
+If `git status` also lists files as *modified*, run `git checkout -- .` to make them match the committed versions (it only touches tracked files; your `ml_models\` and `.env` are left alone).
+```powershell
 git log --oneline # the Phase 0–2 commits
 ```
 
