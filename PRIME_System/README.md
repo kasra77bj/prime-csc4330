@@ -5,12 +5,17 @@ CSC 4330 Software System Development · Fall 2026 · Kasra Banijamali & Carlos M
 Real-time monitoring and AI process control for concrete 3D printing. The demo replays recorded/synthesized print data, runs the team's **XGBoost (extrusion rate)** and **Random Forest (interlayer delay)** models per layer checkpoint, raises alerts, and lets engineers accept/modify/reject AI adjustments.
 
 ## Getting the code
-`gh repo clone prime-csc4330`, then copy the six model files into `ml_models\` (they're on Box; the Random Forest is too large for GitHub). First-time GitHub setup from the Box folder: `docs/GITHUB_SETUP.md`.
+The GitHub repo ([kasra77bj/prime-csc4330](https://github.com/kasra77bj/prime-csc4330)) holds the whole `Milestone 2` folder; this app lives in its `PRIME_System/` subfolder.
+```powershell
+git clone https://github.com/kasra77bj/prime-csc4330.git
+cd prime-csc4330\PRIME_System
+```
+Then copy the six model files from Box (`Milestone 2\PRIME_System\ml_models\`) into `PRIME_System\ml_models\` in your clone; the Random Forest is too large for GitHub. Full setup and day-to-day Git steps: `docs/GITHUB_SETUP.md`.
 
 ## Quick start on Windows (Docker Desktop)
 1. Install **Docker Desktop** (enable WSL 2 when asked) and restart.
 2. Make sure `ml_models\` contains the six `.pkl` files and `raw_data\raw.xlsx` exists.
-3. In PowerShell, from this folder:
+3. In PowerShell, from this folder (`PRIME_System`):
    ```powershell
    copy .env.example .env
    docker compose up --build
