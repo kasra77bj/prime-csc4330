@@ -4,6 +4,9 @@ CSC 4330 Software System Development · Fall 2026 · Kasra Banijamali & Carlos M
 
 Real-time monitoring and AI process control for concrete 3D printing. The demo replays recorded/synthesized print data, runs the team's **XGBoost (extrusion rate)** and **Random Forest (interlayer delay)** models per layer checkpoint, raises alerts, and lets engineers accept/modify/reject AI adjustments.
 
+## Getting the code
+`gh repo clone prime-csc4330`, then copy the six model files into `ml_models\` (they're on Box; the Random Forest is too large for GitHub). First-time GitHub setup from the Box folder: `docs/GITHUB_SETUP.md`.
+
 ## Quick start on Windows (Docker Desktop)
 1. Install **Docker Desktop** (enable WSL 2 when asked) and restart.
 2. Make sure `ml_models\` contains the six `.pkl` files and `raw_data\raw.xlsx` exists.
