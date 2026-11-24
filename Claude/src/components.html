@@ -1,0 +1,553 @@
+<!doctype html>
+<!-- Component sheet · plan/01_design_system.md §6 · T0.4 (human review gate before Phase 2). Copy markup from here into screens. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PRIME · Component sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/app.css">
+<style>
+  .sheet-section { background: var(--surface); border-radius: 12px; padding: 32px; }
+  .sheet-title { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; }
+  .spec { font-size: 12px; color: var(--text-muted); margin-top: 8px; }
+  .swatch { height: 64px; border-radius: 8px; border: 1px solid var(--border); }
+</style>
+</head>
+<body data-frame="sheet" class="bg-canvas">
+<div class="px-12 py-12 flex flex-col gap-8">
+
+  <!-- Header -->
+  <header class="flex items-end justify-between">
+    <div>
+      <div class="caption mb-1">PRIME · Milestone II · Design system v1 · For team review (T0.4)</div>
+      <h1 class="h1">Component sheet</h1>
+      <p class="text-text-muted mt-1 max-w-[760px]">Every Hi-Fi screen copies its markup from this page. Calm by default: color appears only for warning and critical states, blue only on things you can act on, and every status carries an icon and a text label.</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="caption">Reviewed by</span>
+      <span class="chip"><span class="checkbox"></span>Kasra</span>
+      <span class="chip"><span class="checkbox"></span>Carlos</span>
+    </div>
+  </header>
+
+  <!-- 1. Tokens -->
+  <section class="sheet-section">
+    <div class="sheet-title">1 · Color tokens</div>
+    <div class="grid grid-cols-9 gap-4">
+      <div><div class="swatch" style="background:var(--canvas)"></div><div class="label mt-2">canvas</div><div class="mono text-text-muted">#F5F4F1</div></div>
+      <div><div class="swatch" style="background:var(--surface)"></div><div class="label mt-2">surface</div><div class="mono text-text-muted">#FFFFFF</div></div>
+      <div><div class="swatch" style="background:var(--border)"></div><div class="label mt-2">border</div><div class="mono text-text-muted">#DCD9D3</div></div>
+      <div><div class="swatch" style="background:var(--text)"></div><div class="label mt-2">text</div><div class="mono text-text-muted">#1C1E21</div></div>
+      <div><div class="swatch" style="background:var(--text-muted)"></div><div class="label mt-2">text-muted</div><div class="mono text-text-muted">#5F6368</div></div>
+      <div><div class="swatch" style="background:var(--charcoal)"></div><div class="label mt-2">charcoal</div><div class="mono text-text-muted">#23272B</div></div>
+      <div><div class="swatch" style="background:var(--brand-600)"></div><div class="label mt-2">brand-600</div><div class="mono text-text-muted">#1F5F8B</div></div>
+      <div><div class="swatch" style="background:var(--brand-700)"></div><div class="label mt-2">brand-700</div><div class="mono text-text-muted">#174A6D</div></div>
+      <div><div class="swatch" style="background:var(--brand-50)"></div><div class="label mt-2">brand-50</div><div class="mono text-text-muted">#E6EEF4</div></div>
+      <div><div class="swatch" style="background:var(--critical)"></div><div class="label mt-2">critical</div><div class="mono text-text-muted">#C62828</div></div>
+      <div><div class="swatch" style="background:var(--critical-50)"></div><div class="label mt-2">critical-50</div><div class="mono text-text-muted">#FDECEA</div></div>
+      <div><div class="swatch" style="background:var(--ok)"></div><div class="label mt-2">ok</div><div class="mono text-text-muted">#2E7D32</div></div>
+      <div><div class="swatch" style="background:var(--ok-50)"></div><div class="label mt-2">ok-50</div><div class="mono text-text-muted">#E8F5E9</div></div>
+      <div><div class="swatch" style="background:var(--warn-50)"></div><div class="label mt-2">warn-50 <span class="caption">(derived)</span></div><div class="mono text-text-muted">#FBF3E4</div></div>
+      <div><div class="swatch" style="background:var(--viz-teal)"></div><div class="label mt-2">viz-teal</div><div class="mono text-text-muted">#3C665E</div></div>
+      <div><div class="swatch" style="background:var(--viz-violet)"></div><div class="label mt-2">viz-violet</div><div class="mono text-text-muted">#7E57A6</div></div>
+      <div><div class="swatch" style="background:var(--viz-ochre)"></div><div class="label mt-2">viz-ochre</div><div class="mono text-text-muted">#B7791F</div></div>
+    </div>
+  </section>
+
+  <!-- 2. Type -->
+  <section class="sheet-section grid grid-cols-2 gap-10">
+    <div>
+      <div class="sheet-title">2 · Typography · Inter + JetBrains Mono</div>
+      <div class="flex flex-col gap-3">
+        <div class="flex items-baseline gap-6"><span class="caption w-28">H1 28/600</span><span class="h1">Live Print Monitor</span></div>
+        <div class="flex items-baseline gap-6"><span class="caption w-28">H2 20/600</span><span class="h2">Needs your attention</span></div>
+        <div class="flex items-baseline gap-6"><span class="caption w-28">H3 16/600</span><span class="h3">Predicted effect</span></div>
+        <div class="flex items-baseline gap-6"><span class="caption w-28">Body 14/400</span><span>Changes apply at the next layer start.</span></div>
+        <div class="flex items-baseline gap-6"><span class="caption w-28">Label 13/500</span><span class="label">Material temperature</span></div>
+        <div class="flex items-baseline gap-6"><span class="caption w-28">Caption 12/400</span><span class="caption">Normal 18–30 °C</span></div>
+        <div class="flex items-baseline gap-6"><span class="caption w-28">Mono 12/500</span><span class="mono">Job #A-1027 · /prints/:jobId/live</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="sheet-title">Live values · tabular numbers</div>
+      <div class="flex items-end gap-10">
+        <div><div class="caption mb-1">Desktop card 32/600</div><span class="value-desktop">24.6</span><span class="tile-unit">°C</span></div>
+        <div><div class="caption mb-1">Tablet card 44/700</div><span class="value-tablet">246</span><span class="tile-unit">RPM</span></div>
+      </div>
+      <div class="sheet-title mt-8">Icons · Lucide, 20 px desktop / 24 px tablet, 1.75 stroke</div>
+      <div class="flex items-center gap-6">
+        <span class="status-inline"><svg data-lucide="circle-check" class="ic text-ok" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16 9-5.5 5.5L8 12"/></svg>OK</span>
+        <span class="status-inline"><svg data-lucide="triangle-alert" class="ic text-viz-ochre" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>Warning</span>
+        <span class="status-inline"><svg data-lucide="octagon-alert" class="ic text-critical" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16h.01"/><path d="M12 8v4"/><path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z"/></svg>Critical</span>
+        <span class="status-inline"><svg data-lucide="sparkles" class="ic text-viz-violet" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>AI</span>
+        <span class="status-inline"><svg data-lucide="wifi-off" class="ic text-critical" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h.01"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/><path d="M5 12.859a10 10 0 0 1 5.17-2.69"/><path d="M19 12.859a10 10 0 0 0-2.007-1.523"/><path d="M2 8.82a15 15 0 0 1 4.177-2.643"/><path d="M22 8.82a15 15 0 0 0-11.288-3.764"/><path d="m2 2 20 20"/></svg>Offline</span>
+        <span class="status-inline"><svg data-lucide="lock" class="ic text-text-muted" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Restricted</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Buttons, pills, badges -->
+  <section class="sheet-section grid grid-cols-2 gap-10">
+    <div>
+      <div class="sheet-title">3 · Buttons · one primary per region</div>
+      <div class="flex flex-wrap items-center gap-3">
+        <button class="btn btn-primary">Accept</button>
+        <button class="btn btn-primary is-hover">Hover</button>
+        <button class="btn btn-secondary">Modify</button>
+        <button class="btn btn-ghost">Reject</button>
+        <button class="btn btn-disabled" disabled>Disabled</button>
+        <button class="btn btn-danger"><svg data-lucide="square" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/></svg>Stop</button>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 mt-4">
+        <button class="btn btn-sm btn-secondary"><svg data-lucide="download" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>Export</button>
+        <button class="btn btn-sm btn-primary focus-ring">Focus ring</button>
+        <a class="link text-[14px]">Forgot password?</a>
+      </div>
+      <div class="flex items-center gap-3 mt-4">
+        <button class="btn btn-lg btn-secondary"><svg data-lucide="pause" class="ic-lg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="14" y="3" width="5" height="18" rx="1"/><rect x="5" y="3" width="5" height="18" rx="1"/></svg>Pause</button>
+        <span class="caption">Tablet 56 px touch target</span>
+      </div>
+      <div class="flex items-center gap-3 mt-4 relative">
+        <button class="btn btn-locked"><svg data-lucide="lock" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Accept</button>
+        <span class="tooltip">Engineer approval required</span>
+        <span class="caption">Locked action + tooltip</span>
+      </div>
+    </div>
+    <div>
+      <div class="sheet-title">Status pills · color + icon + label</div>
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="pill pill-ok"><svg data-lucide="circle-check" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16 9-5.5 5.5L8 12"/></svg>In range</span>
+        <span class="pill pill-warn"><svg data-lucide="triangle-alert" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>Warning</span>
+        <span class="pill pill-critical"><svg data-lucide="octagon-alert" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16h.01"/><path d="M12 8v4"/><path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z"/></svg>Critical</span>
+        <span class="pill pill-neutral"><svg data-lucide="circle-dot" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="12" r="10"/></svg>Idle</span>
+        <span class="pill pill-ai"><svg data-lucide="sparkles" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>AI · 87 %</span>
+        <span class="status-inline"><span class="dot bg-ok"></span>In range</span>
+      </div>
+      <div class="sheet-title mt-6">Connection pill · role badge · avatar · count</div>
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="conn conn-live"><svg data-lucide="wifi" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/></svg>Live</span>
+        <span class="conn conn-reconnecting"><svg data-lucide="loader-circle" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>Reconnecting… 12 readings buffered</span>
+        <span class="conn conn-offline"><svg data-lucide="wifi-off" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h.01"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/><path d="M5 12.859a10 10 0 0 1 5.17-2.69"/><path d="M19 12.859a10 10 0 0 0-2.007-1.523"/><path d="M2 8.82a15 15 0 0 1 4.177-2.643"/><path d="M22 8.82a15 15 0 0 0-11.288-3.764"/><path d="m2 2 20 20"/></svg>Offline · 37 readings buffered</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 mt-3">
+        <span class="role-badge">Operator</span><span class="role-badge">Engineer</span><span class="role-badge">Admin</span><span class="role-badge">Manager</span>
+        <span class="avatar">MO</span><span class="avatar">DP</span>
+        <span class="icon-btn"><svg data-lucide="bell" class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg><span class="count-badge">2</span></span>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 mt-3 bg-charcoal rounded-card p-3 on-dark">
+        <span class="conn conn-live"><svg data-lucide="wifi" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/></svg>Live</span>
+        <span class="conn conn-reconnecting"><svg data-lucide="loader-circle" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>Reconnecting…</span>
+        <span class="caption text-white/70">on charcoal (tablet top bar)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Metric tiles -->
+  <section class="sheet-section">
+    <div class="sheet-title">4 · Metric card · label · value + unit · range · 60-min sparkline on target band · status. Left border only when not OK.</div>
+    <div class="grid grid-cols-4 gap-6">
+      <!-- Desktop tile · OK -->
+      <div class="tile">
+        <div class="tile-head"><span class="label">Material temperature</span><svg data-lucide="info" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></div>
+        <div><span class="value-desktop">24.6</span><span class="tile-unit">°C</span></div>
+        <div class="tile-range">Normal 18–30 °C</div>
+        <div id="spark-temp-d" class="h-[36px]"></div>
+        <span class="status-inline"><span class="dot bg-ok"></span>In range</span>
+      </div>
+      <!-- Desktop tile · Warning -->
+      <div class="tile tile-warn">
+        <div class="tile-head"><span class="label">Layer width</span><svg data-lucide="info" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></div>
+        <div><span class="value-desktop">36.4</span><span class="tile-unit">mm</span></div>
+        <div class="tile-range">Target 40 ± 3 mm</div>
+        <div id="spark-width-d" class="h-[36px]"></div>
+        <span class="pill pill-warn self-start"><svg data-lucide="triangle-alert" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>Low · −9 %</span>
+      </div>
+      <!-- Desktop tile · Critical (example) -->
+      <div class="tile tile-critical">
+        <div class="tile-head"><span class="label">Pump power</span><svg data-lucide="info" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></div>
+        <div><span class="value-desktop">2.95</span><span class="tile-unit">kW</span></div>
+        <div class="tile-range">Normal 1.2–2.8 kW</div>
+        <div id="spark-power-c" class="h-[36px]"></div>
+        <span class="pill pill-critical self-start"><svg data-lucide="octagon-alert" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16h.01"/><path d="M12 8v4"/><path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z"/></svg>Critical · above limit</span>
+      </div>
+      <!-- Desktop tile · AI secondary -->
+      <div class="tile">
+        <div class="tile-head"><span class="label">Interlayer delay</span><svg data-lucide="info" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></div>
+        <div><span class="value-desktop">132</span><span class="tile-unit">s</span></div>
+        <div class="tile-range">Normal 60–240 s</div>
+        <div id="spark-delay-d" class="h-[36px]"></div>
+        <span class="pill pill-ai self-start"><svg data-lucide="sparkles" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>AI · next 151 s</span>
+      </div>
+    </div>
+    <div class="spec">Desktop cards: 16 px padding, value 32/600. Critical example uses the alert value 2.95 kW (pump power spike) from mock.json.</div>
+
+    <div class="grid grid-cols-3 gap-6 mt-8 w-[1000px]">
+      <!-- Tablet tile · OK -->
+      <div class="tile p-5">
+        <div class="flex items-center justify-between">
+          <div class="tile-head"><span class="label text-[15px]">Material temperature</span><svg data-lucide="info" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></div>
+          <span class="status-inline text-[13px]"><span class="dot bg-ok"></span>In range</span>
+        </div>
+        <div><span class="value-tablet">24.6</span><span class="tile-unit text-[20px]">°C</span></div>
+        <div class="flex items-end justify-between gap-3">
+          <div class="tile-range text-[13px]">Normal 18–30 °C</div>
+          <div id="spark-temp-t"></div>
+        </div>
+      </div>
+      <!-- Tablet tile · Warning -->
+      <div class="tile tile-warn p-5">
+        <div class="flex items-center justify-between">
+          <div class="tile-head"><span class="label text-[15px]">Layer width</span><svg data-lucide="info" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></div>
+          <span class="pill pill-warn"><svg data-lucide="triangle-alert" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>Low · −9 %</span>
+        </div>
+        <div><span class="value-tablet">36.4</span><span class="tile-unit text-[20px]">mm</span></div>
+        <div class="flex items-end justify-between gap-3">
+          <div class="tile-range text-[13px]">Target 40 ± 3 mm</div>
+          <div id="spark-width-t"></div>
+        </div>
+      </div>
+      <!-- Tablet tile · with secondary line -->
+      <div class="tile p-5">
+        <div class="flex items-center justify-between">
+          <div class="tile-head"><span class="label text-[15px]">Print speed</span><svg data-lucide="info" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></div>
+          <span class="status-inline text-[13px]"><span class="dot bg-ok"></span>In range</span>
+        </div>
+        <div><span class="value-tablet">100</span><span class="tile-unit text-[20px]">mm/s</span></div>
+        <div class="flex items-end justify-between gap-3">
+          <div class="tile-range text-[13px]">Normal 60–140 · <span class="text-text font-medium">Nozzle Ø 30 mm</span></div>
+          <div id="spark-speed-t"></div>
+        </div>
+      </div>
+    </div>
+    <div class="spec">Tablet cards (Live Monitor 2×3 grid): value 44/700, label 15 px, graph beside the value.</div>
+  </section>
+
+  <!-- 5. Banners -->
+  <section class="sheet-section">
+    <div class="sheet-title">5 · Alert banner · full width under the top bar</div>
+    <div class="flex flex-col gap-3">
+      <div class="banner banner-warn rounded-card">
+        <svg data-lucide="triangle-alert" class="ic-lg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+        <div class="flex-1"><b class="font-semibold">Warning ·</b> Layer width 36.4 mm is below target (40 ± 3) and dropping. Check Vision.</div>
+        <span class="caption num">0:42 ago</span>
+        <button class="btn btn-sm btn-secondary">View</button>
+        <button class="btn btn-sm btn-primary">Acknowledge</button>
+      </div>
+      <div class="banner banner-critical rounded-card">
+        <svg data-lucide="octagon-alert" class="ic-lg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16h.01"/><path d="M12 8v4"/><path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z"/></svg>
+        <div class="flex-1"><b class="font-semibold text-critical">Critical ·</b> Material temperature 31.2 °C is above the 30 °C limit on Arm-01.</div>
+        <span class="caption num">0:08 ago</span>
+        <button class="btn btn-sm btn-secondary">View</button>
+        <button class="btn btn-sm btn-primary">Acknowledge</button>
+      </div>
+      <div class="banner banner-info rounded-card">
+        <svg data-lucide="wifi" class="ic-lg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/></svg>
+        <div class="flex-1"><b class="font-semibold">Connection restored ·</b> 12 readings synced, no data lost.</div>
+        <button class="btn btn-sm btn-ghost">Dismiss</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. AI card + control bar -->
+  <section class="sheet-section flex flex-col gap-10">
+    <div class="w-[560px]">
+      <div class="sheet-title">6 · AI recommendation card</div>
+      <div class="ai-card">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="ai-chip"><svg data-lucide="sparkles" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>AI</span>
+          <span class="caption">14:33:40 · WP-03 · Gantry-02</span>
+        </div>
+        <div class="h2 text-text">Increase pump speed 246 → 262 RPM</div>
+        <div class="flex items-center gap-3 mt-2">
+          <span class="label text-text-muted">Confidence</span>
+          <div class="conf-track w-[200px]"><div class="conf-fill" style="width:87%"></div></div>
+          <span class="label num">87 %</span>
+        </div>
+        <div class="label mt-4 mb-1">Why</div>
+        <ul class="list-disc pl-5 text-[14px] flex flex-col gap-1">
+          <li>Layer width has dropped 9 % over 6 layers while pump power is stable → under-extrusion.</li>
+          <li>Material temperature rising (+1.8 °C/30 min) is increasing viscosity.</li>
+        </ul>
+        <div class="label mt-4 mb-1">Predicted effect</div>
+        <div class="bg-surface rounded-card p-3">
+          <div id="ai-effect"></div>
+          <div class="caption mt-1">Width returns to 39.6 ± 0.8 mm within 3 layers.</div>
+        </div>
+        <div class="flex items-center gap-3 mt-4">
+          <button class="btn btn-primary">Accept</button>
+          <button class="btn btn-secondary">Modify</button>
+          <button class="btn btn-ghost">Reject</button>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col gap-8">
+      <div>
+        <div class="sheet-title">7 · Persistent control bar · identical on every /prints/:jobId/* screen</div>
+        <div class="w-[1024px] max-w-full border border-border rounded-card overflow-hidden">
+          <!-- CONTROL BAR · copy exactly -->
+          <footer class="control-bar">
+            <div class="ml-auto flex items-center gap-3">
+              <button class="btn btn-lg btn-secondary"><svg data-lucide="pause" class="ic-lg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="14" y="3" width="5" height="18" rx="1"/><rect x="5" y="3" width="5" height="18" rx="1"/></svg>Pause</button>
+              <button class="btn btn-lg btn-disabled" disabled><svg data-lucide="play" class="ic-lg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>Resume</button>
+              <button class="stop-btn">
+                <span class="stop-ring">
+                  <svg class="stop-ring-svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="17" fill="none" stroke="#FFFFFF" stroke-opacity=".35" stroke-width="3"/></svg>
+                  <svg data-lucide="square" class="ic-sm" style="fill:currentColor" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/></svg>
+                </span>
+                <span class="stop-label"><b>STOP</b><small>Hold to stop</small></span>
+              </button>
+            </div>
+          </footer>
+        </div>
+        <div class="spec">72 px bar · controls only (job + layer live in the screen) · Pause secondary 56 px · Resume disabled while running · STOP critical 64 px, press-and-hold 1.5 s with ring progress.</div>
+      </div>
+      <div>
+        <div class="sheet-title">STOP states</div>
+        <div class="flex items-center gap-6">
+          <button class="stop-btn">
+            <span class="stop-ring">
+              <svg class="stop-ring-svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="17" fill="none" stroke="#FFFFFF" stroke-opacity=".35" stroke-width="3"/></svg>
+              <svg data-lucide="square" class="ic-sm" style="fill:currentColor" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/></svg>
+            </span>
+            <span class="stop-label"><b>STOP</b><small>Hold to stop</small></span>
+          </button>
+          <button class="stop-btn" style="box-shadow:0 0 0 4px var(--critical-50)">
+            <span class="stop-ring">
+              <svg class="stop-ring-svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="17" fill="none" stroke="#FFFFFF" stroke-opacity=".35" stroke-width="3"/><circle cx="20" cy="20" r="17" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-dasharray="74.77 106.81"/></svg>
+              <svg data-lucide="square" class="ic-sm" style="fill:currentColor" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/></svg>
+            </span>
+            <span class="stop-label"><b>STOP</b><small>Keep holding… 70 %</small></span>
+          </button>
+          <span class="caption max-w-[260px]">Idle · holding (ring fills over 1.5 s). Releasing early cancels; no accidental stops.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Shells -->
+  <section class="sheet-section">
+    <div class="sheet-title">8 · Desktop shell · 240 px charcoal sidebar + 64 px top bar</div>
+    <div class="flex gap-8 items-start">
+      <div class="flex border border-border rounded-card overflow-hidden h-[520px] w-[900px] shrink-0">
+        <!-- SIDEBAR · copy exactly; move nav-item-active to the current page -->
+        <aside class="sidebar">
+          <div class="flex items-center gap-2 px-3 h-10 mb-6">
+            <img src="../assets/logo/prime-logo-horizontal-white.svg" alt="PRIME" class="h-7">
+          </div>
+          <nav class="flex flex-col gap-1">
+            <a class="nav-item nav-item-active"><svg data-lucide="layout-dashboard" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>Dashboard</a>
+            <a class="nav-item"><svg data-lucide="brick-wall" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 9v6"/><path d="M16 15v6"/><path d="M16 3v6"/><path d="M3 15h18"/><path d="M3 9h18"/><path d="M8 15v6"/><path d="M8 3v6"/></svg>Live prints</a>
+            <a class="nav-item"><svg data-lucide="bell" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>Alerts<span class="count-badge count-badge-neutral">2</span></a>
+            <a class="nav-item"><svg data-lucide="sparkles" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>AI suggestions<span class="count-badge count-badge-neutral">1</span></a>
+            <a class="nav-item"><svg data-lucide="history" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>Sessions</a>
+            <a class="nav-item"><svg data-lucide="trophy" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14.66V17a1 1 0 0 1-1 1 2 2 0 0 0-2 2v2"/><path d="M14 14.66V17a1 1 0 0 0 1 1 2 2 0 0 1 2 2v2"/><path d="M17.916 10H19.5A2.5 2.5 0 0 0 22 7.5V5a1 1 0 0 0-1-1h-3"/><path d="M4 22h16"/><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/><path d="M6.084 10H4.5A2.5 2.5 0 0 1 2 7.5V5a1 1 0 0 1 1-1h3"/></svg>Achievements</a>
+            <a class="nav-item"><svg data-lucide="shield" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>Admin<svg data-lucide="lock" class="ic-sm ml-auto opacity-70" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></a>
+            <a class="nav-item"><svg data-lucide="settings" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>Settings</a>
+          </nav>
+          <div class="mt-auto flex flex-col gap-1">
+            <a class="nav-item"><svg data-lucide="circle-help" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>Help</a>
+            <a class="nav-item"><svg data-lucide="panel-left-close" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/></svg>Collapse</a>
+          </div>
+        </aside>
+        <div class="flex-1 flex flex-col bg-canvas">
+          <!-- TOP BAR · desktop -->
+          <header class="topbar">
+            <div class="flex flex-col leading-tight">
+              <span class="h3">Good afternoon, Dev</span>
+              <span class="caption">Fri Oct 9 · Shift B</span>
+            </div>
+            <div class="ml-auto"></div>
+            <span class="conn conn-live"><svg data-lucide="wifi" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/></svg>All sensors live</span>
+            <span class="icon-btn"><svg data-lucide="bell" class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg><span class="count-badge count-badge-dark">2</span></span>
+            <span class="role-badge">Engineer</span>
+            <span class="avatar">DP</span>
+          </header>
+          <div class="p-6 flex flex-col gap-3">
+            <div class="search"><svg data-lucide="search" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>Search jobs, printers, alerts</div>
+            <div class="caption">Search field (top bar on wide screens, 280 px). Content area: 12-col grid, 24 px gutters.</div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col gap-3 text-[14px]">
+        <div class="label">Shell rules</div>
+        <ul class="list-disc pl-5 flex flex-col gap-2 text-text-muted">
+          <li>Sidebar is charcoal so blue stays reserved for actions; active item = light tint + left indicator.</li>
+          <li>Top bar always shows the connection pill, alerts bell with count, role badge and avatar (NFR security).</li>
+          <li>Admin shows a lock for non-admin roles instead of disappearing, so permissions are explained.</li>
+          <li>Tablet replaces the sidebar with the charcoal top bar and print tabs (section 9).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. Tablet top bar full width -->
+  <section class="sheet-section">
+    <div class="sheet-title">9 · Tablet top bar · tabs inside a print</div>
+    <div class="w-[1024px] rounded-card overflow-hidden">
+      <!-- TABLET TOP BAR · copy exactly; move tab-dark-active to the current tab -->
+      <header class="topbar-tablet on-dark">
+        <span class="icon-btn text-white"><svg data-lucide="chevron-left" class="ic-lg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></span>
+        <div class="flex flex-col leading-tight mr-2">
+          <span class="text-[16px] font-semibold">WP-03 · Gantry-02</span>
+          <span class="text-[12px] text-white/70">Job #A-1027 · Bay 2</span>
+        </div>
+        <nav class="tabs-dark">
+          <a class="tab-dark tab-dark-active"><svg data-lucide="gauge" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>Live</a>
+          <a class="tab-dark"><svg data-lucide="camera" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"/><circle cx="12" cy="13" r="3"/></svg>Vision</a>
+          <a class="tab-dark"><svg data-lucide="chart-line" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/></svg>Trends</a>
+          <a class="tab-dark"><svg data-lucide="sparkles" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>AI</a>
+        </nav>
+        <div class="ml-auto flex items-center gap-3">
+          <span class="conn conn-live"><svg data-lucide="wifi" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/></svg>Live</span>
+          <span class="role-badge">Operator</span>
+          <span class="avatar">MO</span>
+        </div>
+      </header>
+    </div>
+    <div class="sheet-title mt-8">Navigation · one sidebar everywhere</div>
+    <ul class="caption text-[13px] list-disc pl-5 flex flex-col gap-2 max-w-[760px]">
+      <li>Every signed-in screen, desktop and tablet, shows the same opened 240 px sidebar (section 8) with the same items and order.</li>
+      <li>The markup lives in scripts/lib/shell.mjs and is stamped into every screen by npm run sidebar (part of npm run render).</li>
+      <li>Roles only add lock icons: Admin is locked unless Admin; Sessions is locked for Operators.</li>
+      <li>"Live prints" uses the brick-wall icon (a wall built layer by layer). Login and MFA have no menu (not signed in yet).</li>
+    </ul>
+    <div class="sheet-title mt-8">Light tabs + filter chips (desktop content)</div>
+    <div class="flex items-center gap-10">
+      <div class="tabs w-[460px]">
+        <a class="tab tab-active">Pending <span class="pill pill-neutral h-5 px-2">1</span></a>
+        <a class="tab">Accepted <span class="caption">4</span></a>
+        <a class="tab">Rejected <span class="caption">1</span></a>
+        <a class="tab">Manual <span class="caption">2</span></a>
+      </div>
+      <div class="flex gap-2">
+        <span class="chip">5 m</span><span class="chip">15 m</span><span class="chip chip-selected">1 h</span><span class="chip">Whole print</span><span class="chip"><svg data-lucide="calendar" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>Custom</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. Forms + table -->
+  <section class="sheet-section grid grid-cols-[400px_1fr] gap-10">
+    <div class="flex flex-col gap-4">
+      <div class="sheet-title mb-0">10 · Form fields</div>
+      <div><label class="field-label">Email</label><div class="input">maya.ortiz@prime.example</div></div>
+      <div><label class="field-label">Password</label><div class="input input-focus"><span class="flex-1 tracking-[.2em]">••••••••••</span><svg data-lucide="eye" class="ic text-text-muted" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg></div></div>
+      <label class="flex items-center gap-3 text-[14px]"><span class="checkbox checkbox-on"><svg data-lucide="check" class="ic-xs" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>Remember this device for 30 days</label>
+      <label class="flex items-center gap-3 text-[14px] text-text-muted"><span class="checkbox checkbox-locked"><svg data-lucide="lock" class="ic-xs" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>Log as independent engineer decision (always on)</label>
+    </div>
+    <div>
+      <div class="sheet-title">Table</div>
+      <table class="table">
+        <thead><tr><th>Severity</th><th>Signal</th><th>Message</th><th>Raised</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr class="is-selected"><td><span class="pill pill-warn"><svg data-lucide="triangle-alert" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>Warning</span></td><td>Layer width</td><td>Layer width below tolerance on WP-03</td><td class="num">14:33:18</td><td>Open</td></tr>
+          <tr><td><span class="pill pill-neutral"><svg data-lucide="info" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>Info</span></td><td>Camera</td><td>Arm-01 camera calibration due</td><td class="num">13:05:00</td><td>Open</td></tr>
+          <tr><td><span class="pill pill-critical"><svg data-lucide="octagon-alert" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16h.01"/><path d="M12 8v4"/><path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z"/></svg>Critical</span></td><td>Pump power</td><td>Pump power spike 2.95 kW on C-12</td><td class="num">11:52:40</td><td class="text-text-muted">Resolved</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 11. Onboarding + gamification -->
+  <section class="sheet-section">
+    <div class="sheet-title">11 · Coach mark · nudge toasts (max 1 visible, 8 s) · badges · quality ring</div>
+    <div class="grid grid-cols-[340px_1fr] gap-10">
+      <div class="coach">
+        <div class="coach-step">STEP 4 OF 5</div>
+        <div class="text-[16px] font-semibold mt-1">Hold to stop</div>
+        <p class="text-[14px] text-white/85 mt-1">Press and hold STOP for 1.5 seconds. A ring fills so a bump never stops a print by accident. Try it: this is a simulation.</p>
+        <div class="flex items-center gap-2 mt-4">
+          <span class="flex gap-1.5"><span class="dot bg-white/40"></span><span class="dot bg-white/40"></span><span class="dot bg-white/40"></span><span class="dot bg-white"></span><span class="dot bg-white/40"></span></span>
+          <button class="btn btn-sm btn-ghost text-white/80 ml-auto">Skip</button>
+          <button class="btn btn-sm btn-ghost text-white">Back</button>
+          <button class="btn btn-sm btn-primary">Next</button>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="toast"><svg data-lucide="user-round-check" class="ic mt-0.5" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 21a8 8 0 0 1 13.292-6"/><circle cx="10" cy="8" r="5"/><path d="m16 19 2 2 4-4"/></svg><div class="flex-1">Dev Patel (Engineer) was notified · usually responds in ~2 min.</div></div>
+        <div class="toast toast-ok"><svg data-lucide="circle-check" class="ic mt-0.5" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16 9-5.5 5.5L8 12"/></svg><div class="flex-1">Applied at layer 43. Width is recovering: 38.9 mm (+2.5 mm). Nice catch.</div></div>
+        <div class="toast toast-warn"><svg data-lucide="triangle-alert" class="ic mt-0.5" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div class="flex-1">Layer width warning has been open for 30 s. Acknowledge or escalate?<div class="flex gap-2 mt-2"><button class="btn btn-sm btn-primary">Acknowledge</button><button class="btn btn-sm btn-secondary">Escalate</button></div></div></div>
+        <div class="toast toast-ai"><svg data-lucide="sparkles" class="ic mt-0.5" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg><div class="flex-1">Heads-up: interlayer delay is predicted to reach 228 s in ~6 layers (limit 240 s).<div class="mt-2"><a class="link text-[13px]">Review AI suggestion →</a></div></div></div>
+      </div>
+    </div>
+    <div class="flex items-center gap-10 mt-8">
+      <div class="flex flex-col items-center gap-2 w-[96px] text-center"><span class="medal"><svg data-lucide="bell-ring" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M22 8c0-2.3-.8-4.3-2-6"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/><path d="M4 2C2.8 3.7 2 5.7 2 8"/></svg></span><span class="label">First Catch</span><span class="caption">Earned today</span></div>
+      <div class="flex flex-col items-center gap-2 w-[96px] text-center"><span class="medal"><svg data-lucide="octagon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.586 16.726A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2h6.624a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586z"/></svg></span><span class="label">Safety First</span><span class="caption">Earned Oct 2</span></div>
+      <div class="flex flex-col items-center gap-2 w-[96px] text-center"><span class="medal medal-locked"><svg data-lucide="sparkles" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg></span><span class="label">Model Partner</span><span class="caption num">7/10</span></div>
+      <div class="w-px h-20 bg-border"></div>
+      <div class="flex items-center gap-3"><div id="ring-quality"></div><div><div class="label">Print quality score</div><div class="caption">WP-03 · live</div></div></div>
+      <div class="flex items-center gap-2"><svg data-lucide="layers" class="ic text-text-muted" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg><span class="label">18-layer clean streak</span></div>
+      <div class="w-[260px]">
+        <div class="flex justify-between"><span class="label">Shift B goal: 3 prints with quality ≥ 90</span></div>
+        <div class="flex items-center gap-3 mt-2"><div class="progress progress-ok flex-1"><span style="width:66.7%"></span></div><span class="caption num">2/3</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. Charts -->
+  <section class="sheet-section">
+    <div class="sheet-title">12 · Charts (inline SVG from src/lib/chart.js) · measured = text · AI prediction = violet dashed · target = brand-50 band · limits = critical dashed · warning zone = ochre</div>
+    <div class="grid grid-cols-[1fr_420px] gap-10">
+      <div id="chart-trend"></div>
+      <div class="flex flex-col gap-6">
+        <div><div class="label mb-2">Alerts timeline</div><div id="chart-timeline"></div></div>
+        <div><div class="label mb-2">Width · last 10 layers</div><div id="chart-bars"></div></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script type="module">
+  import { mount } from './lib/mount.js';
+  mount(({ mock, chart, $ }) => {
+    const s = mock.sparklines60m, sig = mock.signals, T = chart.T;
+    const warnIdx = s.layerWidth.findIndex((v, i) => i > 90 && v < 38.5);
+    $('#spark-temp-d').innerHTML = chart.sparkline(s.materialTemp, { width: 260, height: 36, band: [18, 30] , min: 17, max: 31 });
+    $('#spark-width-d').innerHTML = chart.sparkline(s.layerWidth, { width: 260, height: 36, band: [37, 43], min: 35.5, max: 43.5, warnFrom: warnIdx });
+    $('#spark-power-c').innerHTML = chart.sparkline([...s.pumpPower.slice(0, 110), 2.4, 2.7, 2.95], { width: 260, height: 36, band: [1.2, 2.8], min: 1.1, max: 3.0 });
+    $('#spark-delay-d').innerHTML = chart.sparkline(s.interlayerDelay, { width: 260, height: 36, band: [60, 240], min: 50, max: 250 });
+    $('#spark-temp-t').innerHTML = chart.sparkline(s.materialTemp, { width: 120, height: 40, band: [18, 30], min: 17, max: 31 });
+    $('#spark-width-t').innerHTML = chart.sparkline(s.layerWidth, { width: 120, height: 40, band: [37, 43], min: 35.5, max: 43.5, warnFrom: warnIdx });
+    $('#spark-speed-t').innerHTML = chart.sparkline(s.printSpeed, { width: 120, height: 40, band: [60, 140], min: 55, max: 145 });
+
+    // AI predicted effect: actual per-layer width (37–42) vs predicted (42–48)
+    const actual = mock.perLayer.layerWidth.slice(36).map((v, i) => [37 + i, v]);
+    const rec = mock.aiRecommendations.pending;
+    const pred = [[42, 36.4], ...rec.predicted.map((p) => [p.layer, p.value])];
+    $('#ai-effect').innerHTML = chart.lineChart({
+      width: 488, height: 150, margin: { left: 36, right: 16, bottom: 22 },
+      x: { min: 37, max: 48, ticks: [[37, 'L37'], [40, 'L40'], [42, 'Now'], [45, 'L45'], [48, 'L48']] },
+      y: { min: 35, max: 42, ticks: [36, 38, 40, 42] }, band: [37, 43],
+      predictBand: { points: pred.map(([x, y]) => [x, y - (x > 42 ? rec.predictedBand : 0), y + (x > 42 ? rec.predictedBand : 0)]) },
+      series: [{ points: actual, color: T.text, endDot: true }, { points: pred, color: T.violet, dash: '5 4' }],
+      legend: [{ label: 'Actual', color: T.text }, { label: 'Predicted (AI)', color: T.violet, dash: '5 4' }, { label: 'Target 40 ± 3', color: T.brand50, swatch: true }],
+    });
+
+    // Trends-style chart: 1 h window of layer width ending 14:36:00 + AI prediction for the next 10 min
+    const se = mock.series, from = se.trendsNowIndex - 360;
+    const meas = se.layerWidth.slice(from, se.trendsNowIndex + 1).map((v, i) => [(from + i) * 10, v]);
+    const tr = mock.trends;
+    const predT = tr.prediction.map((p) => [p.t, p.value]);
+    const tick = (t) => { const s0 = 13 * 3600 + 21 * 60 + 20 + t; return `${String(Math.floor(s0 / 3600)).padStart(2, '0')}:${String(Math.floor(s0 / 60) % 60).padStart(2, '0')}`; };
+    const xt = [880, 1780, 2680, 3580, 4480, 5080].map((t) => [t, tick(t)]);
+    $('#chart-trend').innerHTML = chart.lineChart({
+      width: 820, height: 300, x: { min: from * 10, max: 5080, ticks: xt }, y: { min: 34, max: 44, ticks: [34, 36, 38, 40, 42, 44], unit: 'mm' },
+      band: [37, 43], limits: [37, 43], warnZones: [[34, 37]], futureFrom: 4480,
+      predictBand: { points: predT.map(([x, y]) => [x, y - 0.8, y + 0.8]) },
+      annotations: [{ x: 4180, label: 'Alert raised 14:31', align: 'end' }, { x: 4420, label: 'Pump adjusted 14:35' }],
+      series: [{ points: meas, color: T.text, width: 1.75 }, { points: predT, color: T.violet, dash: '5 4' }],
+      nowX: 4480, hover: { x: 4250, y: 36.9, lines: ['14:32:10 · Layer 41', '36.9 mm'], side: 'left', boxWidth: 136 },
+      legend: [{ label: 'Measured', color: T.text }, { label: 'AI predicted', color: T.violet, dash: '5 4' }, { label: 'Target band', color: T.brand50, swatch: true }, { label: 'Limits', color: T.critical, dash: '4 3' }, { label: 'Warning zone', color: T.ochre, swatch: true, opacity: 0.25 }],
+    });
+
+    const tl = mock.session.alertsTimeline;
+    $('#chart-timeline').innerHTML = chart.timelineDots({ width: 420, height: 60, min: 1, max: 120,
+      items: tl.map((a) => ({ x: a.layer, severity: a.severity })), ticks: [[1, '13:20'], [60, '14:22'], [120, '15:25']] });
+    $('#chart-bars').innerHTML = chart.bars({ width: 420, height: 96, min: 34, max: 42, band: [37, 43], limit: 37,
+      bars: mock.perLayer.last10.map((d) => ({ label: `L${d.layer}`, value: d.value, status: d.value < 38 ? 'warn' : 'ok' })) });
+    $('#ring-quality').innerHTML = chart.ring({ size: 64, pct: mock.gamification.qualityScore.live, stroke: 6, color: T.teal, label: String(mock.gamification.qualityScore.live) });
+  });
+</script>
+</body>
+</html>

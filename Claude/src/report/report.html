@@ -1,0 +1,420 @@
+<!doctype html>
+<!-- REPORT · PRIME Milestone II · Letter PDF (plan/README §3, plan/08 §5). 10 pages + appendix (onboarding and cool features split to keep ≤ 3 frames per page). -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PRIME · Milestone II · UI/UX Design</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/app.css">
+<style>
+  @page { size: Letter; margin: 0.6in; }
+  @page cover { size: Letter; margin: 0; }
+  @page landscape { size: Letter landscape; margin: 0; }
+  html, body { background: var(--surface); }
+  body { font-size: 12.5px; line-height: 1.5; width: auto; }        /* ≥ 9 pt everywhere */
+  .page { break-after: page; position: relative; height: 9.79in; overflow: hidden; }
+  .page:last-child { break-after: auto; }
+  .page.cover { page: cover; height: 11in; width: 8.5in; }
+  .page.landscape { page: landscape; width: 11in; height: 8.5in; }
+
+  /* Milestone 1 style: blue numbered headings */
+  .rh1 { font-size: 22px; line-height: 28px; font-weight: 700; color: var(--brand-700); display: flex; align-items: baseline; gap: 10px; }
+  .rh1 .n { color: var(--brand-600); }
+  .rh-rule { height: 2px; background: var(--brand-600); margin: 8px 0 14px; }
+  .rh2 { font-size: 14px; font-weight: 700; color: var(--brand-700); text-transform: uppercase; letter-spacing: .06em; }
+  .lead { font-size: 13px; color: var(--text); }
+  .muted { color: var(--text-muted); }
+  .pfoot { position: absolute; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 6px; }
+
+  /* Palette page */
+  .group-title { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+  .sw { display: grid; grid-template-columns: 46px 1fr; gap: 10px; align-items: center; padding: 3px 0; }
+  .chip { width: 46px; height: 30px; border-radius: 6px; border: 1px solid var(--border); }
+  .sw .t { font-weight: 600; font-size: 12.5px; }
+  .sw .hex { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-left: 6px; font-weight: 500; }
+  .sw .r { font-size: 11.5px; color: var(--text-muted); line-height: 1.35; }
+  .pal-card { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+  .principle { display: grid; grid-template-columns: 20px 1fr; gap: 8px; font-size: 12px; line-height: 1.45; }
+  .principle svg { color: var(--brand-700); margin-top: 1px; }
+
+  /* Figures (pages 3–10, appendix) */
+  .fig { margin: 0; }
+  .shot { position: relative; }
+  .shot > img { display: block; width: 100%; border: 1px solid var(--border); border-radius: 6px; }
+  .device { background: var(--charcoal); padding: 10px; border-radius: 20px; }
+  .device .shot > img { border: 0; border-radius: 6px; }
+  .mk { position: absolute; transform: translate(-80%, -80%); width: 22px; height: 22px; border-radius: 999px; background: var(--text); color: #fff;
+    font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 2px #fff; }
+  figcaption { font-size: 12px; margin-top: 6px; line-height: 1.4; }
+  figcaption .route { font-family: var(--font-mono); font-size: 11.5px; color: var(--text-muted); }
+  .legend { display: flex; flex-direction: column; gap: 3px; margin-top: 4px; font-size: 12px; color: var(--text); }
+  .legend li { display: flex; gap: 6px; align-items: flex-start; }
+  .legend li i { flex-shrink: 0; width: 17px; height: 17px; border-radius: 999px; background: var(--text); color: #fff; font-style: normal; font-size: 10.5px; font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center; margin-top: 1px; }
+  .crop { position: relative; overflow: hidden; border: 1px solid var(--border); border-radius: 6px; }
+  .crop img { position: absolute; max-width: none; }
+  .slot { border: 2px dashed var(--border); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: var(--text-muted); }
+  .tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .tbl th { text-align: left; font-weight: 600; color: var(--text-muted); padding: 5px 8px; border-bottom: 1px solid var(--border); }
+  .tbl td { padding: 5px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .todo { color: var(--text-muted); font-style: italic; }
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE 1 · COVER ============ -->
+<section class="page cover">
+  <div style="height:16px;background:var(--brand-700)"></div>
+  <div style="padding:0.9in 0.9in 0.6in;height:calc(11in - 16px);display:flex;flex-direction:column;align-items:center;text-align:center">
+    <img src="../../assets/logo/prime-logo-stacked.svg" alt="PRIME · AI-Powered Concrete 3D Printing Platform" style="width:3.2in;margin-top:0.35in">
+    <h1 style="font-size:32px;line-height:40px;font-weight:700;color:var(--brand-700);margin:0.75in 0 0;max-width:6.4in">PRIME: Process Real-time Intelligence for Manufacturing Excellence</h1>
+    <div style="font-size:20px;font-weight:500;color:var(--brand-600);margin-top:18px">Milestone II: UI/UX Design</div>
+    <div class="shot" style="width:5.2in;margin-top:0.6in;box-shadow:0 18px 40px rgba(28,30,33,.18);border-radius:8px"><img src="../../exports/S08-live-monitor@2x.png" alt="Live Print Monitor"></div>
+    <div style="margin-top:auto;width:100%;text-align:left">
+      <div style="height:3px;width:72px;background:var(--ok);margin-bottom:16px"></div>
+      <div style="font-size:14px;line-height:1.7;color:var(--text)">
+        <div><b>Team:</b> Kasra Banijamali · Carlos Manosalvas</div>
+        <div><b>Professor:</b> Dr. Nash Mahmoud</div>
+        <div class="muted" style="font-size:12.5px">CSC 4330 Software System Development · Milestone #2 · Fall 2026</div>
+        <div class="muted" style="font-size:12.5px">Figma: <span class="mono" style="color:var(--brand-600)">[Figma link added after import]</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PAGE 2 · COLOR PALETTE ============ -->
+<section class="page">
+  <div class="rh1"><span class="n">2.</span>Color Palette</div>
+  <div class="rh-rule"></div>
+  <p class="lead" style="margin:0 0 14px">Sixteen colors from our Figma frame plus one derived warning tint, grouped by job. A warm, quiet base keeps attention free for the moments that need it; blue only marks things you can act on.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <!-- Left column: Neutrals, then Brand and Interaction -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="pal-card">
+        <div class="group-title">Neutrals</div>
+        <div class="sw"><div class="chip" style="background:var(--canvas)"></div><div><span class="t">canvas</span><span class="hex">#F5F4F1</span><div class="r">App background; warm off-white, like cured concrete</div></div></div>
+        <div class="sw"><div class="chip" style="background:var(--surface)"></div><div><span class="t">surface</span><span class="hex">#FFFFFF</span><div class="r">Cards, panels, modals</div></div></div>
+        <div class="sw"><div class="chip" style="background:var(--border)"></div><div><span class="t">border</span><span class="hex">#DCD9D3</span><div class="r">Dividers, chart grid, disabled fills (never text)</div></div></div>
+        <div class="sw"><div class="chip" style="background:var(--text)"></div><div><span class="t">text</span><span class="hex">#1C1E21</span><div class="r">Primary text and live values · 15.2:1 on canvas</div></div></div>
+        <div class="sw"><div class="chip" style="background:var(--text-muted)"></div><div><span class="t">text-muted</span><span class="hex">#5F6368</span><div class="r">Units, ranges, captions · 6.1:1 on white</div></div></div>
+        <div class="sw"><div class="chip" style="background:var(--charcoal)"></div><div><span class="t">charcoal</span><span class="hex">#23272B</span><div class="r">Sidebar, tablet top bar, coach marks, toasts</div></div></div>
+      </div>
+      <div class="pal-card">
+        <div class="group-title">Brand and Interaction</div>
+        <div class="sw"><div class="chip" style="background:var(--brand-600)"></div><div><span class="t">brand-600</span><span class="hex">#1F5F8B</span><div class="r">Primary buttons, links, selected tab, focus · white 6.8:1</div></div></div>
+        <div class="sw"><div class="chip" style="background:var(--brand-700)"></div><div><span class="t">brand-700</span><span class="hex">#174A6D</span><div class="r">Hover / pressed, report headings, logo</div></div></div>
+        <div class="sw"><div class="chip" style="background:var(--brand-50)"></div><div><span class="t">brand-50</span><span class="hex">#E6EEF4</span><div class="r">Selected rows, AI cards, chart target band</div></div></div>
+      </div>
+    </div>
+    <!-- Right column: Status, then Data Visualization -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="pal-card">
+        <div class="group-title">Status</div>
+        <div class="sw"><div class="chip" style="background:var(--critical)"></div><div><span class="t">critical</span><span class="hex">#C62828</span><div class="r">Out of range, sensor lost, STOP button (ISO 3864)</div></div></div>
+        <div class="sw"><div class="chip" style="background:var(--critical-50)"></div><div><span class="t">critical-50</span><span class="hex">#FDECEA</span><div class="r">Critical banner and card background</div></div></div>
+        <div class="sw"><div class="chip" style="background:var(--ok)"></div><div><span class="t">ok</span><span class="hex">#2E7D32</span><div class="r">In range, connected, success; shown small, never as big fills</div></div></div>
+        <div class="sw"><div class="chip" style="background:var(--ok-50)"></div><div><span class="t">ok-50</span><span class="hex">#E8F5E9</span><div class="r">Success toast, "decision applied"</div></div></div>
+        <div class="sw"><div class="chip" style="background:var(--warn-50)"></div><div><span class="t">warn-50</span><span class="hex">#FBF3E4</span><div class="r">Warning banner background (tint derived from viz-ochre)</div></div></div>
+      </div>
+      <div class="pal-card">
+        <div class="group-title">Data Visualization</div>
+        <div class="sw"><div class="chip" style="background:var(--viz-teal)"></div><div><span class="t">viz-teal</span><span class="hex">#3C665E</span><div class="r">Second measured series (layer height, pump power)</div></div></div>
+        <div class="sw"><div class="chip" style="background:var(--viz-violet)"></div><div><span class="t">viz-violet</span><span class="hex">#7E57A6</span><div class="r">AI predictions (dashed) and confidence; no status meaning</div></div></div>
+        <div class="sw"><div class="chip" style="background:var(--viz-ochre)"></div><div><span class="t">viz-ochre</span><span class="hex">#B7791F</span><div class="r">Third series and warning zones; icons and borders only, never text</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:12px">
+    <div class="rh2" style="margin-bottom:8px">Why these colors</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 20px">
+      <div class="principle"><svg data-lucide="eye" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg><div><b>Calm until it matters.</b> Following ISA-101 high-performance HMI practice, the normal state is warm gray and white. Saturated color appears only when an operator must act, so it is never ignored.</div></div>
+      <div class="principle"><svg data-lucide="mouse-pointer-click" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4.1 12 6"/><path d="m5.1 8-2.9-.8"/><path d="m6 12-1.9 2"/><path d="M7.2 2.2 8 5.1"/><path d="M9.037 9.69a.498.498 0 0 1 .653-.653l11 4.5a.5.5 0 0 1-.074.949l-4.349 1.041a1 1 0 0 0-.74.739l-1.04 4.35a.5.5 0 0 1-.95.074z"/></svg><div><b>Blue means "you can act here."</b> Steel blue from the logo is reserved for buttons, links and focus. Structural surfaces use charcoal so blue never gets diluted.</div></div>
+      <div class="principle"><svg data-lucide="sparkles" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg><div><b>AI advises, people decide.</b> Predictions are always violet and dashed, so a model suggestion is never confused with a measured value or an alarm.</div></div>
+      <div class="principle"><svg data-lucide="shapes" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.3 10a.7.7 0 0 1-.626-1.079L11.4 3a.7.7 0 0 1 1.198-.043L16.3 8.9a.7.7 0 0 1-.572 1.1Z"/><rect x="3" y="14" width="7" height="7" rx="1"/><circle cx="17.5" cy="17.5" r="3.5"/></svg><div><b>Never color alone.</b> Every status pairs color with an icon and a text label, which keeps our red/green pair readable for the ~8 % of men with color-vision deficiency.</div></div>
+    </div>
+    <div class="banner banner-info rounded-card" style="margin-top:10px;font-size:12px;padding:7px 14px">
+      <svg data-lucide="circle-check" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16 9-5.5 5.5L8 12"/></svg>
+      <div><b>All text/background pairs checked: WCAG 2.1 AA.</b> Ochre fails text contrast on white (3.6:1), so warning text stays in <span class="mono">text</span> on <span class="mono">warn-50</span>.</div>
+    </div>
+  </div>
+
+  <div class="pfoot"><span>PRIME · Milestone II · UI/UX Design</span><span>2</span></div>
+</section>
+
+<!-- ============ PAGE 3 ============ -->
+<section class="page">
+  <div class="rh1"><span class="n">3.</span>Lo-Fi Wireframes &amp; Navigation Routes</div>
+  <div class="rh-rule"></div>
+  <p class="lead" style="margin:0 0 12px">We sketched the seven main screens on paper together, then redrew them digitally so every route stays readable. Arrows show how people move between screens; each label names the trigger.</p>
+  <div class="slot" style="height:3.55in">
+    <svg data-lucide="camera" class="ic-lg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"/><circle cx="12" cy="13" r="3"/></svg>
+    <b style="color:var(--text)">Team photo with the paper sketches</b>
+    <span style="font-size:12px">Paper lo-fi session · Oct 10, 2026 · to be added by the team</span>
+  </div>
+  <div style="height:14px"></div>
+  <figure class="fig" style="width:100%">
+      <div class="shot" data-screen="flow"><img src="../../exports/flow@2x.png" alt="Navigation routes"></div>
+      <figcaption><b>Navigation routes</b> · the 7 main screens · dashed = role-restricted (Engineer / Manager)</figcaption>
+      
+    </figure>
+  <div class="pfoot"><span>PRIME · Milestone II · UI/UX Design</span><span>3</span></div>
+</section>
+
+<!-- ============ PAGE 4 ============ -->
+<section class="page">
+  <div class="rh1"><span class="n">4.</span>Hi-Fi · Home</div>
+  <div class="rh-rule"></div>
+  <figure class="fig" style="width:100%">
+      <div class="shot" data-screen="S07-dashboard"><img src="../../exports/S07-dashboard@2x.png" alt="Home / Dashboard"></div>
+      <figcaption><b>Home / Dashboard</b> · <span class="route">/dashboard</span> · US-03, 04, 06</figcaption>
+      <ol class="legend"><li><i>1</i>Color only where it matters: one warning; everything else stays calm.</li><li><i>2</i>A waiting AI suggestion is one click away.</li><li><i>3</i>A shared team goal instead of an individual leaderboard.</li></ol>
+    </figure>
+  <div style="height:14px"></div>
+  <div style="display:flex;gap:21px">
+    <figure class="fig" style="width:340px">
+      <div class="shot" data-screen="S01-login"><img src="../../exports/S01-login@2x.png" alt="Login"></div>
+      <figcaption><b>Login</b> · <span class="route">/login</span> · US-01</figcaption>
+      <ol class="legend"><li><i>1</i>Remember this device for 30 days: fewer codes with gloves.</li></ol>
+    </figure>
+    <figure class="fig" style="width:340px">
+      <div class="shot" data-screen="S02-mfa"><img src="../../exports/S02-mfa@2x.png" alt="2-factor code"></div>
+      <figcaption><b>2-factor code</b> · <span class="route">/login/verify</span> · US-01</figcaption>
+      <ol class="legend"><li><i>1</i>Large 56 px code boxes with a visible expiry timer.</li></ol>
+    </figure>
+  </div>
+  <div class="pfoot"><span>PRIME · Milestone II · UI/UX Design</span><span>4</span></div>
+</section>
+
+<!-- ============ PAGE 5 ============ -->
+<section class="page">
+  <div class="rh1"><span class="n">5.</span>Hi-Fi · Core I: The Live Print</div>
+  <div class="rh-rule"></div>
+  <div style="display:flex;justify-content:center"><figure class="fig" style="width:540px">
+      <div class="shot" data-screen="S08-live-monitor"><img src="../../exports/S08-live-monitor@2x.png" alt="Live Print Monitor"></div>
+      <figcaption><b>Live Print Monitor</b> · <span class="route">/prints/:jobId/live</span> · US-03, 04, 06, 07</figcaption>
+      <ol class="legend"><li><i>1</i>Only the out-of-range value gets color, icon and label.</li><li><i>2</i>Pause · Resume · Hold-to-STOP sit in the same place on every print screen.</li><li><i>3</i>One tap reaches the engineer.</li></ol>
+    </figure></div>
+  <div style="height:12px"></div>
+  <div style="display:flex;gap:21px">
+    <figure class="fig" style="width:340px">
+      <div class="shot" data-screen="S09-vision"><img src="../../exports/S09-vision@2x.png" alt="Vision"></div>
+      <figcaption><b>Vision</b> · <span class="route">/prints/:jobId/vision</span> · US-05</figcaption>
+      <ol class="legend"><li><i>1</i>Width and height measured on the live bead.</li><li><i>2</i>Flag a camera glitch instead of acting on it.</li></ol>
+    </figure>
+    <figure class="fig" style="width:340px">
+      <div class="shot" data-screen="S08c-hold-to-stop"><img src="../../exports/S08c-hold-to-stop@2x.png" alt="Hold to stop"></div>
+      <figcaption><b>Hold to stop</b> · <span class="route">/prints/:jobId/live</span> · US-07</figcaption>
+      <ol class="legend"><li><i>1</i>A 1.5 s hold fills a ring; letting go cancels.</li></ol>
+    </figure>
+  </div>
+  <div class="pfoot"><span>PRIME · Milestone II · UI/UX Design</span><span>5</span></div>
+</section>
+
+<!-- ============ PAGE 6 ============ -->
+<section class="page">
+  <div class="rh1"><span class="n">6.</span>Hi-Fi · Core II: Decide and Report</div>
+  <div class="rh-rule"></div>
+  <figure class="fig" style="width:100%">
+      <div class="shot" data-screen="S11-ai-recommendations"><img src="../../exports/S11-ai-recommendations@2x.png" alt="AI Recommendations"></div>
+      <figcaption><b>AI Recommendations</b> · <span class="route">/prints/:jobId/ai</span> · US-09, 10, 11</figcaption>
+      <ol class="legend"><li><i>1</i>The predicted effect is shown before anyone decides.</li><li><i>2</i>Reasons in plain language, with the risk.</li><li><i>3</i>Accept, modify or reject; every choice is logged.</li></ol>
+    </figure>
+  <div style="height:14px"></div>
+  <div style="display:flex;gap:21px">
+    <figure class="fig" style="width:340px">
+      <div class="shot" data-screen="S14-session-report"><img src="../../exports/S14-session-report@2x.png" alt="Session Report"></div>
+      <figcaption><b>Session Report</b> · <span class="route">/sessions/:id/report</span> · US-12, 13</figcaption>
+      <ol class="legend"><li><i>1</i>Export CSV, JSON or PDF (Manager / Engineer only).</li><li><i>2</i>Alerts overlaid on the layer chart.</li></ol>
+    </figure>
+    <figure class="fig" style="width:340px">
+      <div class="shot" data-screen="S10-trends"><img src="../../exports/S10-trends@2x.png" alt="Trends"></div>
+      <figcaption><b>Trends</b> · <span class="route">/prints/:jobId/trends</span> · US-08</figcaption>
+      <ol class="legend"><li><i>1</i>Any signal over any time window.</li><li><i>2</i>Events and the AI prediction on one chart.</li></ol>
+    </figure>
+  </div>
+  <div class="pfoot"><span>PRIME · Milestone II · UI/UX Design</span><span>6</span></div>
+</section>
+
+<!-- ============ PAGE 7 ============ -->
+<section class="page">
+  <div class="rh1"><span class="n">7.</span>Onboarding</div>
+  <div class="rh-rule"></div>
+  <p class="lead" style="margin:0 0 12px">First sign-in takes about three minutes and can be skipped or resumed. It explains roles before anyone meets a locked button, and lets operators practice stopping a print safely.</p>
+  <div style="display:flex;justify-content:center"><figure class="fig" style="width:560px">
+      <div class="shot" data-screen="S05-tour"><img src="../../exports/S05-tour@2x.png" alt="Guided tour · step 4 of 4"></div>
+      <figcaption><b>Guided tour · step 4 of 4</b> · <span class="route">/onboarding/tour</span> · US-06, 07</figcaption>
+      <ol class="legend"><li><i>1</i>Practice hold-to-stop in a simulation, on the real Live Monitor.</li></ol>
+    </figure></div>
+  <div style="height:12px"></div>
+  <div style="display:flex;gap:21px">
+    <figure class="fig" style="width:340px">
+      <div class="shot" data-screen="S03-welcome"><img src="../../exports/S03-welcome@2x.png" alt="Welcome"></div>
+      <figcaption><b>Welcome</b> · <span class="route">/onboarding/welcome</span> · first sign-in</figcaption>
+      <ol class="legend"><li><i>1</i>About 3 minutes; skip any time.</li></ol>
+    </figure>
+    <figure class="fig" style="width:340px">
+      <div class="shot" data-screen="S04-role"><img src="../../exports/S04-role@2x.png" alt="Your role"></div>
+      <figcaption><b>Your role</b> · <span class="route">/onboarding/role</span> · US-02</figcaption>
+      <ol class="legend"><li><i>1</i>Shows what needs an engineer before users hit a lock.</li></ol>
+    </figure>
+  </div>
+  <div class="pfoot"><span>PRIME · Milestone II · UI/UX Design</span><span>7</span></div>
+</section>
+
+<!-- ============ PAGE 8 ============ -->
+<section class="page">
+  <div class="rh1"><span class="n">8.</span>Cool Features: Nudges &amp; Gamification</div>
+  <div class="rh-rule"></div>
+  <p class="lead" style="margin:0 0 12px">Rewards attention and quality, never speed. Goals are shared by the team, and nudges stay calm: one at a time, gone after 8 seconds, never over the controls.</p>
+  <div style="display:flex;gap:21px;align-items:flex-start">
+    <figure class="fig" style="width:466px">
+      <div class="shot" data-screen="S16-achievements"><img src="../../exports/S16-achievements@2x.png" alt="Achievements &amp; shift summary"></div>
+      <figcaption><b>Achievements &amp; shift summary</b> · <span class="route">/me/achievements</span> · gamification</figcaption>
+      <ol class="legend"><li><i>1</i>Badges for good habits, with progress on locked ones.</li><li><i>2</i>A team goal instead of a leaderboard.</li></ol>
+    </figure>
+    <figure class="fig" style="width:214px">
+      <div class="shot" data-screen="S16c-quality-score"><img src="../../exports/S16c-quality-score@2x.png" alt="Quality score"></div>
+      <figcaption><b>Quality score</b> · explained, not a black box</figcaption>
+      
+    </figure>
+  </div>
+  <div style="height:14px"></div>
+  <figure class="fig">
+    <div style="display:flex;gap:11px">
+      <div class="crop" data-crop="S16b-nudges#crop:0" style="width:345px;height:166px"><img src="../../exports/S16b-nudges@2x.png" alt="Predictive heads-up nudge"></div>
+      <div class="crop" data-crop="S16b-nudges#crop:1" style="width:345px;height:166px"><img src="../../exports/S16b-nudges@2x.png" alt="Decision closure nudge"></div>
+    </div>
+    <figcaption><b>Nudges</b> on the Live Monitor · US-06, 09 · a predictive heads-up and a decision closure, shown above the controls (all six in Appendix A3)</figcaption>
+  </figure>
+  <div class="pfoot"><span>PRIME · Milestone II · UI/UX Design</span><span>8</span></div>
+</section>
+
+<!-- ============ PAGE 9 · JOURNEY MAP (bonus, landscape; embedded as vector from src/journey) ============ -->
+<section class="page landscape" id="journey-slot"></section>
+
+<!-- ============ PAGE 10 ============ -->
+<section class="page">
+  <div class="rh1"><span class="n">10.</span>Figma, Traceability, Contributions &amp; Use of AI</div>
+  <div class="rh-rule"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+    <div class="slot" style="height:84px;align-items:flex-start;padding:0 16px"><b style="color:var(--text)">Figma file (view)</b><span class="mono" style="color:var(--brand-600)">[link added after import]</span></div>
+    <div class="slot" style="height:84px;align-items:flex-start;padding:0 16px"><b style="color:var(--text)">Clickable prototype</b><span class="mono" style="color:var(--brand-600)">[link added after import]</span></div>
+  </div>
+  <div class="rh2" style="margin-bottom:6px">User stories → screens</div>
+  <table class="tbl"><thead><tr><th style="width:70px">Story</th><th>What it needs</th><th style="width:170px">Screens</th></tr></thead><tbody><tr><td class="mono">US-01</td><td>Login + 2-factor</td><td class="mono">S01, S02</td></tr><tr><td class="mono">US-02</td><td>Create users, assign roles</td><td class="mono">S15, S15b, S04</td></tr><tr><td class="mono">US-03</td><td>Live temperature</td><td class="mono">S07, S08</td></tr><tr><td class="mono">US-04</td><td>Print speed + nozzle size</td><td class="mono">S07, S08</td></tr><tr><td class="mono">US-05</td><td>Camera with width/height overlay</td><td class="mono">S09</td></tr><tr><td class="mono">US-06</td><td>Out-of-range alert</td><td class="mono">S07, S08, S12</td></tr><tr><td class="mono">US-07</td><td>Pause / resume / stop always reachable</td><td class="mono">S08–S11, S08c, S05</td></tr><tr><td class="mono">US-08</td><td>Graph any value over a window</td><td class="mono">S10</td></tr><tr><td class="mono">US-09</td><td>AI proposes a change with a reason</td><td class="mono">S11</td></tr><tr><td class="mono">US-10</td><td>Accept / modify / reject</td><td class="mono">S11, S11c</td></tr><tr><td class="mono">US-11</td><td>Manual change logged separately</td><td class="mono">S11b</td></tr><tr><td class="mono">US-12</td><td>Download session data</td><td class="mono">S14</td></tr><tr><td class="mono">US-13</td><td>Generated summary report</td><td class="mono">S14</td></tr></tbody></table>
+  <div class="rh2" style="margin:16px 0 6px">Contributions</div>
+  <table class="tbl"><thead><tr><th style="width:170px">Member</th><th>Contribution</th></tr></thead><tbody>
+    <tr><td>Kasra Banijamali</td><td class="todo">[to be written by the team]</td></tr>
+    <tr><td>Carlos Manosalvas</td><td class="todo">[to be written by the team]</td></tr>
+  </tbody></table>
+  <div class="rh2" style="margin:16px 0 6px">Use of AI</div>
+  <p class="todo" style="font-size:12px">[to be written by the team: which tools were used, for what, and how the team reviewed and decided]</p>
+  <div class="pfoot"><span>PRIME · Milestone II · UI/UX Design</span><span>10</span></div>
+</section>
+
+<!-- ============ PAGE A1 ============ -->
+<section class="page">
+  <div class="rh1"><span class="n">A1</span>Appendix · Alerts &amp; Administration</div>
+  <div class="rh-rule"></div>
+  <figure class="fig" style="width:100%">
+      <div class="shot" data-screen="S12-alerts"><img src="../../exports/S12-alerts@2x.png" alt="Alerts center"></div>
+      <figcaption><b>Alerts center</b> · <span class="route">/alerts</span> · US-06</figcaption>
+      <ol class="legend"><li><i>1</i>One line per alert; details only when opened.</li></ol>
+    </figure>
+  <div style="height:14px"></div>
+  <div style="display:flex;gap:21px">
+    <figure class="fig" style="width:340px">
+      <div class="shot" data-screen="S15-admin-users"><img src="../../exports/S15-admin-users@2x.png" alt="Admin › Users"></div>
+      <figcaption><b>Admin › Users</b> · <span class="route">/admin/users</span> · US-02</figcaption>
+      
+    </figure>
+    <figure class="fig" style="width:340px">
+      <div class="shot" data-screen="S15b-create-user"><img src="../../exports/S15b-create-user@2x.png" alt="Create user"></div>
+      <figcaption><b>Create user</b> · <span class="route">/admin/users?new=1</span> · US-02</figcaption>
+      <ol class="legend"><li><i>1</i>2-factor setup is always required.</li></ol>
+    </figure>
+  </div>
+  <div class="pfoot"><span>PRIME · Milestone II · UI/UX Design</span><span>A1</span></div>
+</section>
+
+<!-- ============ PAGE A2 ============ -->
+<section class="page">
+  <div class="rh1"><span class="n">A2</span>Appendix · Variants</div>
+  <div class="rh-rule"></div>
+  <figure class="fig" style="width:100%">
+      <div class="shot" data-screen="S11b-manual-adjust"><img src="../../exports/S11b-manual-adjust@2x.png" alt="Manual adjustment"></div>
+      <figcaption><b>Manual adjustment</b> · <span class="route">/prints/:jobId/ai</span> · US-11</figcaption>
+      <ol class="legend"><li><i>1</i>Logged as the engineer's own decision.</li></ol>
+    </figure>
+  <div style="height:14px"></div>
+  <div style="display:flex;gap:21px">
+    <figure class="fig" style="width:340px">
+      <div class="shot" data-screen="S08b-live-reconnecting"><img src="../../exports/S08b-live-reconnecting@2x.png" alt="Reconnecting"></div>
+      <figcaption><b>Reconnecting</b> · <span class="route">/prints/:jobId/live</span> · US-07 · reliability</figcaption>
+      <ol class="legend"><li><i>1</i>Readings are buffered; nothing is lost.</li></ol>
+    </figure>
+    <figure class="fig" style="width:340px">
+      <div class="shot" data-screen="S11c-operator-locked"><img src="../../exports/S11c-operator-locked@2x.png" alt="Operator view"></div>
+      <figcaption><b>Operator view</b> · <span class="route">/prints/:jobId/ai</span> · US-10 · security</figcaption>
+      <ol class="legend"><li><i>1</i>Locked actions say who can help.</li></ol>
+    </figure>
+  </div>
+  <div class="pfoot"><span>PRIME · Milestone II · UI/UX Design</span><span>A2</span></div>
+</section>
+
+<!-- ============ PAGE A3 ============ -->
+<section class="page">
+  <div class="rh1"><span class="n">A3</span>Appendix · Setup &amp; All Nudges</div>
+  <div class="rh-rule"></div>
+  <figure class="fig" style="width:100%">
+      <div class="shot" data-screen="S16b-nudges"><img src="../../exports/S16b-nudges@2x.png" alt="All six nudges"></div>
+      <figcaption><b>All six nudges</b> · <span class="route">/prints/:jobId/live</span> · US-06, 07, 09</figcaption>
+      
+    </figure>
+  <div style="height:14px"></div>
+  <div style="display:flex;gap:21px">
+    <figure class="fig" style="width:340px">
+      <div class="shot" data-screen="S06-connect-printer"><img src="../../exports/S06-connect-printer@2x.png" alt="Connect printer"></div>
+      <figcaption><b>Connect printer</b> · <span class="route">/onboarding/printer</span> · setup</figcaption>
+      
+    </figure>
+    <figure class="fig" style="width:340px">
+      <div class="shot" data-screen="S07b-dashboard-checklist"><img src="../../exports/S07b-dashboard-checklist@2x.png" alt="Getting-started checklist"></div>
+      <figcaption><b>Getting-started checklist</b> · <span class="route">/dashboard</span> · onboarding</figcaption>
+      
+    </figure>
+  </div>
+  <div class="pfoot"><span>PRIME · Milestone II · UI/UX Design</span><span>A3</span></div>
+</section>
+
+<script>
+  // Places measured callout markers, crops the nudge examples, and embeds the journey map as vector.
+  window.__primePending = true;
+  (async () => {
+    try {
+      const pos = await (await fetch('callouts.json', { cache: 'no-store' })).json();
+      for (const shot of document.querySelectorAll('.shot[data-screen]')) {
+        (pos[shot.dataset.screen] || []).forEach((p, i) => {
+          if (!p) return;
+          const m = document.createElement('span');
+          m.className = 'mk'; m.textContent = i + 1; m.style.left = p.x + '%'; m.style.top = p.y + '%';
+          shot.appendChild(m);
+        });
+      }
+      for (const c of document.querySelectorAll('.crop[data-crop]')) {
+        const [screen, k] = c.dataset.crop.split(':'), p = pos[screen][+k], img = c.querySelector('img');
+        const s = c.clientWidth / 437; // nudge panel = 437 x 290 CSS px on the 1440 x 900 board
+        img.style.width = 1440 * s + 'px';
+        img.style.left = -((p.x / 100) * 1440 + 6) * s + 'px';
+        img.style.top = -((p.y / 100) * 900 + 6 + 80) * s + 'px'; // skip the top 80 px of the panel
+      }
+      const doc = new DOMParser().parseFromString(await (await fetch('../journey/journey-map.html', { cache: 'no-store' })).text(), 'text/html');
+      document.getElementById('journey-slot').append(...doc.querySelectorAll('head style'), doc.getElementById('journey'));
+    } catch (e) { console.error('report assembly failed: ' + e.message); }
+    finally { window.__primePending = false; }
+  })();
+</script>
+</body>
+</html>

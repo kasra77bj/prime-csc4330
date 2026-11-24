@@ -1,11 +1,15 @@
-.env
+# Installed / generated
+**/node_modules/
 **/.venv/
 **/__pycache__/
-**/node_modules/
-frontend/dist/
-data/processed/
 *.pyc
-.pytest_cache/
-# The team's pickles are large (RF = 125 MB); keep them out of git, share via Box.
-ml_models/*.pkl
-**/*.egg-info/
+
+# Local secrets
+.env
+**/.env
+
+# Too large for GitHub (RF model is 125 MB > 100 MB limit) - shared via Box
+PRIME_System/ml_models/*.pkl
+
+# Old git history bundle (already imported into this repo)
+prime-history.bundle

@@ -1,0 +1,59 @@
+{
+ "_readme": "Numbered callouts on report figures. render.mjs opens each screen, measures the element (Playwright selector) and writes callouts.json (percent positions). Max 3 per frame. Keys ending in #crop are crop origins (not markers).",
+ "S07-dashboard": [
+  ".tile-warn .pill-warn",
+  "text=Review pump speed change",
+  "text=Shift B goal"
+ ],
+ "S01-login": [
+  ".checkbox-on"
+ ],
+ "S02-mfa": [
+  ".code-filled >> nth=0"
+ ],
+ "S08-live-monitor": [
+  ".tile-warn .pill-warn",
+  ".stop-btn",
+  "text=Escalate to engineer"
+ ],
+ "S09-vision": [
+  "svg text >> nth=0",
+  "text=Flag as artifact"
+ ],
+ "S08c-hold-to-stop": [
+  "text=Keep holding to stop"
+ ],
+ "S11-ai-recommendations": [
+  "text=Predicted effect",
+  "div.h3:has-text('Why')",
+  "button.btn-primary:has-text('Accept')"
+ ],
+ "S14-session-report": [
+  "text=Export PDF report",
+  "text=Warning alert"
+ ],
+ "S10-trends": [
+  ".chip-selected",
+  "text=Pump adjusted"
+ ],
+ "S05-tour": [
+  "#coach"
+ ],
+ "S03-welcome": [
+  "text=Skip setup >> nth=-1"
+ ],
+ "S04-role": [
+  "text=Needs an engineer"
+ ],
+ "S16-achievements": [
+  ".medal-locked >> nth=0",
+  "text=Team goal"
+ ],
+ "S16c-quality-score": [
+  "#rows"
+ ],
+ "S16b-nudges#crop": [
+  ".panel >> nth=0",
+  ".panel >> nth=3"
+ ]
+}

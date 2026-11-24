@@ -1,0 +1,82 @@
+<!doctype html>
+<!-- FLOW · Lo-fi route diagram · all routes (plan/02 §2–3) · page 3 figure · US-01…13 -->
+<html lang="en"><head><meta charset="utf-8"><title>Lo-fi · Route diagram</title>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lofi.css">
+<style>
+  .thumb { position: absolute; border: 2px solid var(--text); border-radius: 6px; background: var(--surface); }
+  .thumb img { display: block; width: 100%; height: 100%; border-radius: 4px; }
+  .name { position: absolute; font-weight: 700; font-size: 26px; line-height: 1; }
+  .route { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 500; color: var(--text-muted); margin-top: 6px; }
+  .trig { position: absolute; font-weight: 700; font-size: 22px; line-height: 1.05; color: var(--brand-600); background: var(--surface); padding: 2px 6px; border-radius: 6px; white-space: nowrap; }
+  .trig.c { transform: translateX(-50%); text-align: center; }
+  .group { position: absolute; background: var(--brand-50); border-radius: 16px; }
+  .node { position: absolute; border: 2px dashed var(--text); border-radius: 12px; background: var(--surface); display: flex; flex-direction: column; justify-content: center; padding: 0 18px; }
+</style></head>
+<body data-frame="flow">
+<!-- Group: inside a live print (control bar always visible) -->
+<div class="group" style="left:810px;top:12px;width:775px;height:690px"></div>
+<div class="name" style="left:832px;top:24px;font-size:20px;color:var(--brand-700)">Inside a live print · control bar always visible</div>
+
+<!-- Screens -->
+<div class="name" style="left:20px;top:58px">Login + MFA<div class="route">/login</div></div>
+<div class="thumb" style="left:20px;top:110px;width:280px;height:175px"><img src="../../exports/L01-login-mfa@2x.png" alt=""></div>
+
+<div class="name" style="left:420px;top:58px">Dashboard<div class="route">/dashboard</div></div>
+<div class="thumb" style="left:420px;top:110px;width:280px;height:175px"><img src="../../exports/L02-dashboard@2x.png" alt=""></div>
+
+<div class="name" style="left:840px;top:58px">Live Monitor<div class="route">/prints/:id/live</div></div>
+<div class="thumb" style="left:840px;top:110px;width:300px;height:188px"><img src="../../exports/L03-live-monitor@2x.png" alt=""></div>
+
+<div class="name" style="left:1260px;top:58px">Vision<div class="route">/prints/:id/vision</div></div>
+<div class="thumb" style="left:1260px;top:110px;width:300px;height:188px"><img src="../../exports/L04-vision@2x.png" alt=""></div>
+
+<div class="name" style="left:840px;top:428px">Trends<div class="route">/prints/:id/trends</div></div>
+<div class="thumb" style="left:840px;top:480px;width:300px;height:188px"><img src="../../exports/L05-trends@2x.png" alt=""></div>
+
+<div class="name" style="left:1260px;top:428px">AI Recommendations<div class="route">/prints/:id/ai</div></div>
+<div class="thumb" style="left:1260px;top:480px;width:300px;height:188px"><img src="../../exports/L06-ai-recommendations@2x.png" alt=""></div>
+
+<div class="name" style="left:420px;top:438px">Session Report<div class="route">/sessions/:id/report</div></div>
+<div class="thumb" style="left:420px;top:490px;width:280px;height:175px"><img src="../../exports/L07-session-report@2x.png" alt=""></div>
+
+<div class="node" style="left:30px;top:440px;width:250px;height:96px"><span style="font-weight:700;font-size:24px">Onboarding</span><span class="route" style="margin-top:2px">/onboarding/*</span></div>
+<div class="node" style="left:420px;top:770px;width:300px;height:104px"><span style="font-weight:700;font-size:24px">Export</span><span class="route" style="margin-top:2px">CSV · JSON · PDF</span><span class="route" style="margin-top:2px">Operators: no access</span></div>
+
+<!-- Arrows (single blue) -->
+<svg width="1600" height="920" viewBox="0 0 1600 920" style="position:absolute;inset:0;pointer-events:none">
+  <defs>
+    <marker id="h" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1F5F8B"/></marker>
+  </defs>
+  <g fill="none" stroke="#1F5F8B" stroke-width="3.5" stroke-linecap="round">
+    <path d="M304 197H414" marker-end="url(#h)"/>                         <!-- login → dashboard -->
+    <path d="M155 289V434" marker-end="url(#h)"/>                         <!-- login → onboarding -->
+    <path d="M282 466L458 291" marker-end="url(#h)"/>                     <!-- onboarding → dashboard -->
+    <path d="M704 197H834" marker-end="url(#h)"/>                         <!-- dashboard → live -->
+    <path d="M1146 222H1254" marker-start="url(#h)" marker-end="url(#h)"/> <!-- live ↔ vision -->
+    <path d="M990 341V418" marker-start="url(#h)" marker-end="url(#h)"/>   <!-- live ↔ trends -->
+    <path d="M1146 330L1262 418" stroke-dasharray="10 8" marker-start="url(#h)" marker-end="url(#h)"/> <!-- live ↔ AI (engineer) -->
+    <path d="M560 289V428" stroke-dasharray="10 8" marker-end="url(#h)"/>                         <!-- dashboard → report -->
+    <path d="M560 669V764" stroke-dasharray="10 8" marker-end="url(#h)"/>                         <!-- report → export -->
+  </g>
+</svg>
+
+<!-- Trigger labels -->
+<div class="trig c" style="left:360px;top:132px">Verify<br>code</div>
+<div class="trig" style="left:166px;top:344px">first login</div>
+<div class="trig" style="left:262px;top:322px">done / skip</div>
+<div class="trig c" style="left:770px;top:132px">Open live<br>tap alert</div>
+<div class="trig c" style="left:1200px;top:170px">Vision tab</div>
+<div class="trig" style="left:1000px;top:362px">Trends tab</div>
+<div class="trig" style="left:1232px;top:348px">Review AI<br>(Engineer)</div>
+<div class="trig" style="left:572px;top:316px">Sessions → report<br>(Manager / Engineer)</div>
+<div class="trig" style="left:572px;top:690px">Export<br>(Manager / Engineer)</div>
+
+<!-- Legend -->
+<div style="position:absolute;left:830px;top:730px;width:750px;display:grid;grid-template-columns:1fr 1fr;gap:16px 28px;font-size:21px">
+  <div class="row" style="gap:12px;align-items:center"><svg width="56" height="14"><path d="M2 7H46" stroke="#1F5F8B" stroke-width="3.5"/><path d="M44 1L54 7L44 13z" fill="#1F5F8B"/></svg>Navigation (label = trigger)</div>
+  <div class="row" style="gap:12px;align-items:center"><svg width="56" height="14"><path d="M2 7H46" stroke="#1F5F8B" stroke-width="3.5" stroke-dasharray="10 8"/><path d="M44 1L54 7L44 13z" fill="#1F5F8B"/></svg>Role-restricted (roles in label)</div>
+  <div class="row" style="gap:12px;align-items:center"><span style="width:56px;height:28px;border-radius:6px;background:var(--brand-50);display:inline-block"></span>Inside a print: control bar fixed</div>
+  <div class="row" style="gap:12px;align-items:center"><span style="width:56px;height:28px;border-radius:6px;border:2px dashed var(--text);display:inline-block"></span>Step / action (no full screen)</div>
+</div>
+</body></html>

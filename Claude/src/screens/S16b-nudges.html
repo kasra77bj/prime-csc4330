@@ -1,0 +1,111 @@
+<!doctype html>
+<!-- S16b · Nudge toasts (6 variants) on a cropped Live Monitor · /prints/:jobId/live · US-06,07,09 · plan/06 Part B -->
+<!-- Each panel is a 1:1 crop of exports/S08-live-monitor@2x.png (render S08 first) with ONE toast: max 1 visible. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PRIME · Nudges</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/app.css">
+<style>
+  .panel { position: relative; width: 437px; height: 290px; border-radius: 10px; overflow: hidden;
+    background: url(../../exports/S08-live-monitor@2x.png) -1003px -610px / 1440px 900px no-repeat;
+    box-shadow: 0 1px 2px rgba(28,30,33,.06), 0 1px 3px rgba(28,30,33,.10); }
+  .panel .toast { position: absolute; right: 16px; bottom: 86px; width: 405px; font-size: 13.5px; }
+  .x { margin-left: auto; opacity: .6; }
+  .num-chip { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 999px; background: var(--charcoal); color: #fff; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+</style>
+</head>
+<body data-frame="desktop" class="bg-canvas">
+<main class="px-12 pt-10 pb-8 flex flex-col gap-8">
+  <header class="flex items-end justify-between">
+    <div>
+      <h1 class="h1">Nudges</h1>
+      <p class="text-text-muted mt-1">Calm, timely prompts on the Live Monitor. Shown one at a time, above the controls.</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="pill pill-neutral bg-surface"><svg data-lucide="layers-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 13.74a2 2 0 0 1-2 0L2.5 8.87a1 1 0 0 1 0-1.74L11 2.26a2 2 0 0 1 2 0l8.5 4.87a1 1 0 0 1 0 1.74z"/><path d="m20 14.285 1.5.845a1 1 0 0 1 0 1.74L13 21.74a2 2 0 0 1-2 0l-8.5-4.87a1 1 0 0 1 0-1.74l1.5-.845"/></svg>Max 1 visible</span>
+      <span class="pill pill-neutral bg-surface"><svg data-lucide="timer" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/></svg>Auto-dismiss 8 s</span>
+      <span class="pill pill-neutral bg-surface"><svg data-lucide="octagon-x" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 9-6 6"/><path d="M2.586 16.726A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2h6.624a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586z"/><path d="m9 9 6 6"/></svg>Never during a critical alert</span>
+      <span class="pill pill-neutral bg-surface"><svg data-lucide="bell-off" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M17 17H4a1 1 0 0 1-.74-1.673C4.59 13.956 6 12.499 6 8a6 6 0 0 1 .258-1.742"/><path d="m2 2 20 20"/><path d="M8.668 3.01A6 6 0 0 1 18 8c0 2.687.77 4.653 1.707 6.05"/></svg>Mute per type</span>
+    </div>
+  </header>
+
+  <section class="grid grid-cols-3 gap-x-[24px] gap-y-8">
+    <!-- 1 · Predictive heads-up -->
+    <figure class="flex flex-col gap-2">
+      <div class="panel">
+        <div class="toast toast-ai"><svg data-lucide="sparkles" class="ic mt-0.5" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>
+          <div class="flex-1"><span data-bind="nudges.predictive.text">Heads-up: interlayer delay is predicted to reach 228 s in ~6 layers (limit 240 s).</span>
+            <div class="mt-2"><a class="link text-[13px]">Review AI suggestion →</a></div></div>
+          <svg data-lucide="x" class="ic-sm x" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></div>
+      </div>
+      <figcaption class="flex gap-2 text-[13px]"><span class="num-chip">1</span><span><b>Predictive heads-up</b> · AI expects a value to leave its range soon</span></figcaption>
+    </figure>
+
+    <!-- 2 · Unacknowledged alert -->
+    <figure class="flex flex-col gap-2">
+      <div class="panel">
+        <div class="toast toast-warn"><svg data-lucide="triangle-alert" class="ic mt-0.5" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+          <div class="flex-1"><span data-bind="nudges.unacknowledged.text">Layer width warning has been open for 30 s. Acknowledge or escalate?</span>
+            <div class="flex gap-2 mt-2"><button class="btn btn-sm btn-primary">Acknowledge</button><button class="btn btn-sm btn-secondary">Escalate</button></div></div>
+          <svg data-lucide="x" class="ic-sm x" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></div>
+      </div>
+      <figcaption class="flex gap-2 text-[13px]"><span class="num-chip">2</span><span><b>Unacknowledged alert</b> · a warning is open for more than 30 s</span></figcaption>
+    </figure>
+
+    <!-- 3 · Escalation receipt -->
+    <figure class="flex flex-col gap-2">
+      <div class="panel">
+        <div class="toast"><svg data-lucide="user-round-check" class="ic mt-0.5" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 21a8 8 0 0 1 13.292-6"/><circle cx="10" cy="8" r="5"/><path d="m16 19 2 2 4-4"/></svg>
+          <div class="flex-1" data-bind="nudges.escalation.text">Dev Patel (Engineer) was notified · usually responds in ~2 min.</div>
+          <svg data-lucide="x" class="ic-sm x" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></div>
+      </div>
+      <figcaption class="flex gap-2 text-[13px]"><span class="num-chip">3</span><span><b>Escalation receipt</b> · reassures the operator after escalating</span></figcaption>
+    </figure>
+
+    <!-- 4 · Decision closure -->
+    <figure class="flex flex-col gap-2">
+      <div class="panel">
+        <div class="toast toast-ok items-center"><svg data-lucide="circle-check" class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16 9-5.5 5.5L8 12"/></svg>
+          <div class="flex-1" data-bind="nudges.closure.text">Applied at layer 43. Width is recovering: 38.9 mm (+2.5 mm). Nice catch.</div>
+          <div id="spark-closure"></div></div>
+      </div>
+      <figcaption class="flex gap-2 text-[13px]"><span class="num-chip">4</span><span><b>Decision closure</b> · shows the result of an accepted change</span></figcaption>
+    </figure>
+
+    <!-- 5 · Shift hand-off -->
+    <figure class="flex flex-col gap-2">
+      <div class="panel">
+        <div class="toast"><svg data-lucide="notebook-pen" class="ic mt-0.5" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg>
+          <div class="flex-1"><span data-bind="nudges.handoff.text">Shift ends in 10 min. Leave a hand-off note for the next operator?</span>
+            <div class="mt-2"><button class="btn btn-sm btn-primary">Write note</button></div></div>
+          <svg data-lucide="x" class="ic-sm x" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></div>
+      </div>
+      <figcaption class="flex gap-2 text-[13px]"><span class="num-chip">5</span><span><b>Shift hand-off</b> · 10 min before the shift ends</span></figcaption>
+    </figure>
+
+    <!-- 6 · End of print -->
+    <figure class="flex flex-col gap-2">
+      <div class="panel">
+        <div class="toast"><svg data-lucide="flag" class="ic mt-0.5" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/></svg>
+          <div class="flex-1"><span data-bind="nudges.endOfPrint.text">WP-03 finished: Quality 94 · 0 critical alerts · Report ready</span>
+            <div class="mt-2"><button class="btn btn-sm btn-primary">Open report</button></div></div>
+          <svg data-lucide="x" class="ic-sm x" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></div>
+      </div>
+      <figcaption class="flex gap-2 text-[13px]"><span class="num-chip">6</span><span><b>End of print</b> · summary and report link when a print completes</span></figcaption>
+    </figure>
+  </section>
+</main>
+
+<script type="module">
+  import { mount } from '../lib/mount.js';
+  mount(({ mock, chart, $ }) => {
+    // width recovering after the change: 30 s samples from 14:34:00 (36.4) to 14:38:30 (38.9)
+    const se = mock.series, from = se.nowIndex, to = se.nowIndex + 27;
+    const pts = se.layerWidth.slice(from, to + 1).filter((_, i) => i % 3 === 0);
+    $('#spark-closure').innerHTML = chart.sparkline(pts, { width: 72, height: 32, stroke: chart.T.ok, strokeWidth: 2 });
+  });
+</script>
+</body>
+</html>

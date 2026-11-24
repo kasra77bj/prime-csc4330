@@ -1,0 +1,159 @@
+<!doctype html>
+<!-- S15 · Admin › Users · /admin/users · US-02 -->
+<!-- Source for S15b (create-user modal): scripts/build-s15-variants.mjs fills the OVERLAY marker. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PRIME · Users</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/app.css">
+<style>
+  .table td { padding: 14px 20px; font-size: 14px; white-space: nowrap; }
+  .table th { padding: 10px 20px; }
+</style>
+</head>
+<body data-frame="desktop" class="flex bg-canvas relative">
+
+<!-- SIDEBAR · identical on every signed-in screen (scripts/lib/shell.mjs; run npm run sidebar) -->
+<!-- SIDEBAR · identical on every signed-in screen (scripts/lib/shell.mjs; run npm run sidebar) -->
+<aside class="sidebar">
+  <div class="flex items-center gap-2 px-3 h-10 mb-6">
+    <img src="../../assets/logo/prime-logo-horizontal-white.svg" alt="PRIME" class="h-7">
+  </div>
+  <nav class="flex flex-col gap-1">
+    <a class="nav-item"><svg data-lucide="layout-dashboard" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>Dashboard</a>
+    <a class="nav-item"><svg data-lucide="brick-wall" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 9v6"/><path d="M16 15v6"/><path d="M16 3v6"/><path d="M3 15h18"/><path d="M3 9h18"/><path d="M8 15v6"/><path d="M8 3v6"/></svg>Live prints</a>
+    <a class="nav-item"><svg data-lucide="bell" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>Alerts<span class="count-badge count-badge-neutral">2</span></a>
+    <a class="nav-item"><svg data-lucide="sparkles" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>AI suggestions<span class="count-badge count-badge-neutral">1</span></a>
+    <a class="nav-item"><svg data-lucide="history" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>Sessions</a>
+    <a class="nav-item"><svg data-lucide="trophy" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14.66V17a1 1 0 0 1-1 1 2 2 0 0 0-2 2v2"/><path d="M14 14.66V17a1 1 0 0 0 1 1 2 2 0 0 1 2 2v2"/><path d="M17.916 10H19.5A2.5 2.5 0 0 0 22 7.5V5a1 1 0 0 0-1-1h-3"/><path d="M4 22h16"/><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/><path d="M6.084 10H4.5A2.5 2.5 0 0 1 2 7.5V5a1 1 0 0 1 1-1h3"/></svg>Achievements</a>
+    <a class="nav-item nav-item-active"><svg data-lucide="shield" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>Admin</a>
+    <a class="nav-item"><svg data-lucide="settings" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>Settings</a>
+  </nav>
+  <div class="mt-auto flex flex-col gap-1">
+    <a class="nav-item"><svg data-lucide="circle-help" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>Help</a>
+    <a class="nav-item"><svg data-lucide="panel-left-close" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/></svg>Collapse</a>
+  </div>
+</aside>
+
+<div class="flex-1 flex flex-col min-w-0">
+  <header class="topbar">
+    <div class="flex flex-col leading-tight">
+      <span class="h3">Admin</span>
+      <span class="caption flex items-center gap-1.5">Fri Oct 9 · Shift B<span class="text-border">|</span><svg data-lucide="clock" class="ic-xs" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span class="num font-medium text-text" data-bind="meta.clock">14:34</span></span>
+    </div>
+    <nav class="flex self-stretch ml-8">
+      <a class="tab tab-active h-full"><svg data-lucide="users" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>Users</a>
+      <a class="tab h-full"><svg data-lucide="brick-wall" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 9v6"/><path d="M16 15v6"/><path d="M16 3v6"/><path d="M3 15h18"/><path d="M3 9h18"/><path d="M8 15v6"/><path d="M8 3v6"/></svg>Printers</a>
+      <a class="tab h-full"><svg data-lucide="scroll-text" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 12h-5"/><path d="M15 8h-5"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"/></svg>Audit log</a>
+    </nav>
+    <div class="ml-auto"></div>
+    <span class="conn conn-live"><svg data-lucide="wifi" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/></svg>All sensors live</span>
+    <span class="icon-btn"><svg data-lucide="bell" class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg><span class="count-badge count-badge-dark">2</span></span>
+    <span class="role-badge">Admin</span>
+    <span class="avatar">SL</span>
+  </header>
+
+  <main class="flex-1 px-10 py-8 flex flex-col gap-6 min-h-0">
+    <div class="flex items-center gap-4">
+      <h1 class="h1">Users</h1>
+      <span class="caption text-[14px] mt-1">4 people · 1 MFA setup pending</span>
+      <div class="search ml-auto w-[260px] bg-surface border border-border"><svg data-lucide="search" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>Search name or email</div>
+      <button class="btn btn-primary"><svg data-lucide="user-round-plus" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 21a8 8 0 0 1 13.292-6"/><circle cx="10" cy="8" r="5"/><path d="M19 16v6"/><path d="M22 19h-6"/></svg>Create user</button>
+    </div>
+
+    <section class="card overflow-hidden">
+      <table class="table">
+        <thead><tr><th>Name</th><th>Role</th><th>Bay access</th><th>2-factor</th><th>Last active</th><th class="w-[56px]"></th></tr></thead>
+        <tbody>
+          <tr>
+            <td><div class="flex items-center gap-3"><span class="avatar">MO</span><div class="leading-tight"><div class="font-semibold" data-bind="people.maya.name">Maya Ortiz</div><div class="caption" data-bind="people.maya.email">maya.ortiz@prime.example</div></div></div></td>
+            <td><span class="role-badge">Operator</span></td>
+            <td>Bay 2</td>
+            <td><span class="status-inline"><svg data-lucide="circle-check" class="ic-sm text-ok" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16 9-5.5 5.5L8 12"/></svg>Enrolled</span></td>
+            <td class="text-text-muted" data-bind="people.maya.lastActive">Now</td>
+            <td class="text-text-muted"><svg data-lucide="ellipsis" class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></td>
+          </tr>
+          <tr>
+            <td><div class="flex items-center gap-3"><span class="avatar">DP</span><div class="leading-tight"><div class="font-semibold" data-bind="people.dev.name">Dev Patel</div><div class="caption" data-bind="people.dev.email">dev.patel@prime.example</div></div></div></td>
+            <td><span class="role-badge">Engineer</span></td>
+            <td>Bay 1 · Bay 2 · Bay 3</td>
+            <td><span class="status-inline"><svg data-lucide="circle-check" class="ic-sm text-ok" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16 9-5.5 5.5L8 12"/></svg>Enrolled</span></td>
+            <td class="text-text-muted" data-bind="people.dev.lastActive">2 min ago</td>
+            <td class="text-text-muted"><svg data-lucide="ellipsis" class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></td>
+          </tr>
+          <tr>
+            <td><div class="flex items-center gap-3"><span class="avatar">SL</span><div class="leading-tight"><div class="font-semibold" data-bind="people.sam.name">Sam Lee</div><div class="caption" data-bind="people.sam.email">sam.lee@prime.example</div></div></div></td>
+            <td><span class="role-badge">Admin</span></td>
+            <td>All bays</td>
+            <td><span class="status-inline"><svg data-lucide="circle-check" class="ic-sm text-ok" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16 9-5.5 5.5L8 12"/></svg>Enrolled</span></td>
+            <td class="text-text-muted" data-bind="people.sam.lastActive">Today 09:12</td>
+            <td class="text-text-muted"><svg data-lucide="ellipsis" class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></td>
+          </tr>
+          <tr>
+            <td><div class="flex items-center gap-3"><span class="avatar">JB</span><div class="leading-tight"><div class="font-semibold" data-bind="people.jordan.name">Jordan Brooks</div><div class="caption" data-bind="people.jordan.email">jordan.brooks@prime.example</div></div></div></td>
+            <td><span class="role-badge">Manager</span></td>
+            <td>All bays</td>
+            <td><span class="pill pill-neutral"><svg data-lucide="clock" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Setup pending</span></td>
+            <td class="text-text-muted" data-bind="people.jordan.lastActive">Yesterday 17:40</td>
+            <td class="text-text-muted"><svg data-lucide="ellipsis" class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
+
+<!-- VARIANT:OVERLAY -->
+<div class="absolute inset-0 z-20 flex items-center justify-center" style="background:rgba(35,39,43,.5)">
+  <section class="card w-[600px] flex flex-col" style="box-shadow:0 16px 48px rgba(28,30,33,.28)">
+    <div class="flex items-center justify-between px-8 py-5 border-b border-border">
+      <h2 class="h2">Create user</h2>
+      <span class="icon-btn -mr-2"><svg data-lucide="x" class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span>
+    </div>
+    <div class="px-8 py-6 flex flex-col gap-5">
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="field-label">Full name</label><div class="input input-focus"><span class="placeholder">First and last name</span></div></div>
+        <div><label class="field-label">Work email</label><div class="input"><span class="placeholder">name@prime.example</span></div></div>
+      </div>
+      <div>
+        <label class="field-label">Role</label>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="rounded-card border border-brand-600 bg-brand-50 p-4 flex gap-3">
+          <span class="w-[18px] h-[18px] mt-0.5 rounded-full border-2 border-brand-600 flex items-center justify-center shrink-0"><span class="w-2 h-2 rounded-full bg-brand-600"></span></span>
+          <span><span class="block font-semibold text-[14px]">Operator</span><span class="block caption text-[13px] mt-0.5">Live view, pause/stop, alerts</span></span>
+        </label>
+          <label class="rounded-card border border-border p-4 flex gap-3">
+          <span class="w-[18px] h-[18px] mt-0.5 rounded-full border-2 border-text-muted flex items-center justify-center shrink-0"></span>
+          <span><span class="block font-semibold text-[14px]">Engineer</span><span class="block caption text-[13px] mt-0.5">Plus AI review and adjustments</span></span>
+        </label>
+          <label class="rounded-card border border-border p-4 flex gap-3">
+          <span class="w-[18px] h-[18px] mt-0.5 rounded-full border-2 border-text-muted flex items-center justify-center shrink-0"></span>
+          <span><span class="block font-semibold text-[14px]">Manager</span><span class="block caption text-[13px] mt-0.5">Reports and exports only</span></span>
+        </label>
+          <label class="rounded-card border border-border p-4 flex gap-3">
+          <span class="w-[18px] h-[18px] mt-0.5 rounded-full border-2 border-text-muted flex items-center justify-center shrink-0"></span>
+          <span><span class="block font-semibold text-[14px]">Admin</span><span class="block caption text-[13px] mt-0.5">Users, roles and printers</span></span>
+        </label>
+        </div>
+      </div>
+      <div>
+        <label class="field-label">Bay access</label>
+        <div class="flex gap-2"><span class="chip">Bay 1</span><span class="chip chip-selected"><svg data-lucide="check" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Bay 2</span><span class="chip">Bay 3</span></div>
+      </div>
+      <label class="flex items-center gap-3 text-[14px]"><span class="checkbox checkbox-locked"><svg data-lucide="lock" class="ic-xs" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>2-factor setup required at first sign-in</label>
+    </div>
+    <div class="px-8 py-5 border-t border-border flex justify-end gap-3">
+      <button class="btn btn-ghost">Cancel</button>
+      <button class="btn btn-primary"><svg data-lucide="send" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg>Send invite</button>
+    </div>
+  </section>
+</div>
+<!-- /VARIANT:OVERLAY -->
+
+<script type="module">
+  import { mount } from '../lib/mount.js';
+  mount();
+</script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!doctype html>
+<!-- S14 · Session Report + Export · /sessions/:sessionId/report · US-12,13 -->
+<!-- Manager + Engineer only (Operators have no access to sessions or exports; team review Oct 9). -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PRIME · Session report · WP-03</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/app.css">
+<style>
+  .kpi { padding: 12px 20px; display: flex; flex-direction: column; gap: 0; }
+  .kpi b { font-size: 28px; line-height: 34px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+  .table td { padding: 5px 12px; white-space: nowrap; }
+  .table th { padding: 8px 12px; }
+</style>
+</head>
+<body data-frame="desktop" class="flex bg-canvas">
+
+<!-- SIDEBAR · identical on every signed-in screen (scripts/lib/shell.mjs; run npm run sidebar) -->
+<!-- SIDEBAR · identical on every signed-in screen (scripts/lib/shell.mjs; run npm run sidebar) -->
+<aside class="sidebar">
+  <div class="flex items-center gap-2 px-3 h-10 mb-6">
+    <img src="../../assets/logo/prime-logo-horizontal-white.svg" alt="PRIME" class="h-7">
+  </div>
+  <nav class="flex flex-col gap-1">
+    <a class="nav-item"><svg data-lucide="layout-dashboard" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>Dashboard</a>
+    <a class="nav-item"><svg data-lucide="brick-wall" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 9v6"/><path d="M16 15v6"/><path d="M16 3v6"/><path d="M3 15h18"/><path d="M3 9h18"/><path d="M8 15v6"/><path d="M8 3v6"/></svg>Live prints</a>
+    <a class="nav-item"><svg data-lucide="bell" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>Alerts<span class="count-badge count-badge-neutral">2</span></a>
+    <a class="nav-item"><svg data-lucide="sparkles" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>AI suggestions<span class="count-badge count-badge-neutral">1</span></a>
+    <a class="nav-item nav-item-active"><svg data-lucide="history" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>Sessions</a>
+    <a class="nav-item"><svg data-lucide="trophy" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14.66V17a1 1 0 0 1-1 1 2 2 0 0 0-2 2v2"/><path d="M14 14.66V17a1 1 0 0 0 1 1 2 2 0 0 1 2 2v2"/><path d="M17.916 10H19.5A2.5 2.5 0 0 0 22 7.5V5a1 1 0 0 0-1-1h-3"/><path d="M4 22h16"/><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/><path d="M6.084 10H4.5A2.5 2.5 0 0 1 2 7.5V5a1 1 0 0 1 1-1h3"/></svg>Achievements</a>
+    <a class="nav-item"><svg data-lucide="shield" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>Admin<svg data-lucide="lock" class="ic-sm ml-auto opacity-70" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></a>
+    <a class="nav-item"><svg data-lucide="settings" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>Settings</a>
+  </nav>
+  <div class="mt-auto flex flex-col gap-1">
+    <a class="nav-item"><svg data-lucide="circle-help" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>Help</a>
+    <a class="nav-item"><svg data-lucide="panel-left-close" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/></svg>Collapse</a>
+  </div>
+</aside>
+
+<div class="flex-1 flex flex-col min-w-0">
+  <header class="topbar">
+    <div class="flex flex-col leading-tight">
+      <span class="h3">Session report</span>
+      <span class="caption flex items-center gap-1.5">Fri Oct 9 · Shift B<span class="text-border">|</span><svg data-lucide="clock" class="ic-xs" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span class="num font-medium text-text" data-bind="meta.clock">14:34</span></span>
+    </div>
+    <div class="search ml-10"><svg data-lucide="search" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>Search sessions</div>
+    <div class="ml-auto"></div>
+    <span class="conn conn-live"><svg data-lucide="wifi" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/></svg>All sensors live</span>
+    <span class="icon-btn"><svg data-lucide="bell" class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg><span class="count-badge count-badge-dark">2</span></span>
+    <span class="role-badge">Manager</span>
+    <span class="avatar">JB</span>
+  </header>
+
+  <main class="flex-1 px-8 pt-6 pb-6 flex flex-col gap-4 min-h-0">
+    <!-- Title row -->
+    <div class="flex items-end gap-4">
+      <div>
+        <div class="caption flex items-center gap-1"><a class="link">Sessions</a><svg data-lucide="chevron-right" class="ic-xs" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>S-1008-02</div>
+        <h1 class="h1 mt-0.5">WP-03 · Gantry-02</h1>
+        <div class="flex items-center gap-3 mt-1 text-[14px] text-text-muted">
+          <span class="num"><span data-bind="session.date">Oct 8, 2026</span> · <span data-bind="session.from">13:20</span>–<span data-bind="session.to">15:25</span> · <span data-bind="session.duration">2 h 05 m</span></span>
+          <span class="pill pill-ok"><svg data-lucide="circle-check" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16 9-5.5 5.5L8 12"/></svg>Completed</span>
+        </div>
+      </div>
+      <div class="ml-auto flex items-center gap-3">
+        <button class="btn btn-ghost"><svg data-lucide="link" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Share link</button>
+        <button class="btn btn-secondary"><svg data-lucide="sheet" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="3" x2="21" y1="9" y2="9"/><line x1="3" x2="21" y1="15" y2="15"/><line x1="9" x2="9" y1="9" y2="21"/><line x1="15" x2="15" y1="9" y2="21"/></svg>CSV</button>
+        <button class="btn btn-secondary"><svg data-lucide="braces" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></svg>JSON</button>
+        <button class="btn btn-primary"><svg data-lucide="file-down" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg>Export PDF report</button>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <section class="grid grid-cols-5 gap-4">
+      <div class="card kpi"><span class="caption">Quality score</span><b data-bind="session.kpis.qualityScore">94</b></div>
+      <div class="card kpi"><span class="caption">Layers</span><b><span data-bind="session.kpis.layersDone">120</span><span class="text-[16px] font-medium text-text-muted"> / 120</span></b></div>
+      <div class="card kpi"><span class="caption">Alerts</span><b data-bind="session.kpis.alerts">5</b><span class="caption">0 critical</span></div>
+      <div class="card kpi"><span class="caption">Adjustments</span><b data-bind="session.kpis.adjustments">6</b><span class="caption">4 AI · 1 modified · 1 manual</span></div>
+      <div class="card kpi"><span class="caption flex items-center gap-1"><svg data-lucide="sparkles" class="ic-xs text-viz-violet" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>AI prediction accuracy</span><b><span data-bind="session.kpis.predictionAccuracyPct">91</span><span class="text-[16px] font-medium text-text-muted"> %</span></b><span class="caption">Avg. error 0.7 mm</span></div>
+    </section>
+
+    <!-- Chart + alerts timeline (shared layer axis) -->
+    <section class="card px-5 pt-4 pb-3">
+      <span class="h3">Layer width</span>
+      <div id="chart-pvo" class="mt-1"></div>
+    </section>
+
+    <!-- Summary + log -->
+    <section class="grid grid-cols-[1fr_1.45fr] gap-4 flex-1 min-h-0">
+      <div class="ai-card flex flex-col gap-3 py-5">
+        <div class="flex items-center gap-2"><span class="ai-chip"><svg data-lucide="sparkles" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>AI</span><span class="h3">Summary</span><span class="ml-auto link text-[13px] flex items-center gap-1"><svg data-lucide="pencil" class="ic-xs" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>Edit</span></div>
+        <p class="text-[14px] leading-relaxed" data-bind="session.summary">The print finished on schedule. One under-extrusion episode at layer 41 was corrected by a +16 RPM adjustment and width was back within tolerance by layer 44. No critical alerts were raised. AI predictions of layer width were within 0.7 mm on average (91 % accuracy).</p>
+        <span class="caption mt-auto">Generated by PRIME AI · editable before sharing</span>
+      </div>
+      <div class="card flex flex-col min-h-0">
+        <div class="tabs px-3">
+          <a class="tab tab-active">Adjustments <span class="caption">6</span></a>
+          <a class="tab">Parameters used</a>
+          <span class="caption ml-auto self-center pr-2">All by Dev Patel · Engineer</span>
+        </div>
+        <table class="table">
+          <thead><tr><th>Time</th><th>Type</th><th>Change</th><th>Note</th></tr></thead>
+          <tbody id="log"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script type="module">
+  import { mount } from '../lib/mount.js';
+  mount(({ mock, chart, $ }) => {
+    const T = chart.T, se = mock.session, w = mock.signals.layerWidth;
+    const box = $('#chart-pvo'), W = box.clientWidth, M = { left: 40, right: 12, top: 26, bottom: 22 };
+    const obs = se.widthObserved.map((v, i) => [i + 1, v]), pred = se.widthPredicted.map((v, i) => [i + 1, v]);
+    box.innerHTML = chart.lineChart({
+      width: W, height: 196, margin: M, x: { min: 1, max: 120, ticks: [1, 20, 40, 60, 80, 100, 120].map((n) => [n, `L${n}`]) },
+      y: { min: 34, max: 44, ticks: [36, 40, 44] }, band: [w.min, w.max], limits: [w.min, w.max],
+      events: se.alertsTimeline.map((a) => ({ x: a.layer, severity: a.severity })), // alerts as overlays
+      series: [{ points: obs, color: T.text, width: 1.75 }, { points: pred, color: T.violet, width: 1.75, dash: '5 4' }],
+      legend: [{ label: 'Observed', color: T.text }, { label: 'AI predicted', color: T.violet, dash: '5 4' }, { label: 'Target 40 ± 3 mm', color: T.brand50, swatch: true }, { label: 'Warning alert', marker: 'warning' }, { label: 'Info alert', marker: 'info' }],
+    });
+
+    const pill = (t) => t.startsWith('AI') && t !== 'AI rejected'
+      ? `<span class="pill pill-ai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4z"/></svg>${t}</span>`
+      : `<span class="pill pill-neutral">${t}</span>`;
+    // Only actual parameter changes (the rejected suggestion changed nothing), so the count matches the KPI (6)
+    $('#log').innerHTML = se.adjustments.filter((a) => a.type !== 'AI rejected').map((a) => `<tr><td class="num">${a.time}</td><td>${pill(a.type)}</td>
+      <td class="num">${a.param} <b class="font-semibold">${a.from} → ${a.to}</b> <span class="caption">${a.unit}</span></td>
+      <td class="text-text-muted truncate max-w-[220px]">${a.note}</td></tr>`).join('');
+  });
+</script>
+</body>
+</html>

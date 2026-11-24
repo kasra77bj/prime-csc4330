@@ -1,0 +1,36 @@
+<!doctype html>
+<!-- S16c · Print Quality Score · close-up (Live Monitor strip ring + its explanation) · /prints/:jobId/live · gamification -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PRIME · Quality score</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/app.css">
+</head>
+<body data-frame="desktop" class="bg-canvas flex items-center justify-center">
+  <section class="card w-[640px] p-8 flex gap-8 items-center" style="zoom:1.8">
+    <div class="flex flex-col items-center gap-2 shrink-0">
+      <div id="ring"></div>
+      <span class="label">Print quality</span>
+      <span class="caption">WP-03 · layer 42</span>
+    </div>
+    <div class="flex-1 flex flex-col gap-3">
+      <div class="h3">How the score is made</div>
+      <table class="w-full text-[14px]">
+        <tbody id="rows"></tbody>
+        <tfoot><tr class="border-t-2 border-text"><td class="pt-2 font-semibold">Score</td><td></td><td class="pt-2 text-right font-semibold num" data-bind="gamification.qualityScore.live">91</td></tr></tfoot>
+      </table>
+      <p class="caption text-[13px] flex gap-2 mt-1"><svg data-lucide="shield-check" class="ic-sm shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>Rewards attention and quality, never speed.</p>
+    </div>
+  </section>
+
+<script type="module">
+  import { mount } from '../lib/mount.js';
+  mount(({ mock, chart, $ }) => {
+    const q = mock.gamification.qualityScore;
+    $('#ring').innerHTML = chart.ring({ size: 150, pct: q.live, stroke: 11, color: chart.T.teal, label: String(q.live), labelSize: 46 });
+    $('#rows').innerHTML = q.breakdown.map((r) => `<tr class="border-b border-border"><td class="py-2">${r.label}</td><td class="py-2 text-text-muted num">${r.value}</td><td class="py-2 text-right num font-medium">${r.factor}</td></tr>`).join('');
+  });
+</script>
+</body>
+</html>

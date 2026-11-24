@@ -1,0 +1,165 @@
+<!doctype html>
+<!-- S12 · Alerts center · /alerts · US-06 -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PRIME · Alerts</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/app.css">
+<style>
+  .table td { padding: 12px 16px; font-size: 14px; white-space: nowrap; }
+  .what b { display: block; font-weight: 600; }
+  .what span { color: var(--text-muted); font-size: 13px; }
+  .table th { padding: 10px 16px; }
+  .who { display: inline-flex; align-items: center; gap: 8px; }
+  .who .avatar { width: 26px; height: 26px; font-size: 11px; background: var(--text-muted); }
+</style>
+</head>
+<body data-frame="desktop" class="flex bg-canvas">
+
+<!-- SIDEBAR (components.html §8) -->
+<!-- SIDEBAR · identical on every signed-in screen (scripts/lib/shell.mjs; run npm run sidebar) -->
+<aside class="sidebar">
+  <div class="flex items-center gap-2 px-3 h-10 mb-6">
+    <img src="../../assets/logo/prime-logo-horizontal-white.svg" alt="PRIME" class="h-7">
+  </div>
+  <nav class="flex flex-col gap-1">
+    <a class="nav-item"><svg data-lucide="layout-dashboard" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>Dashboard</a>
+    <a class="nav-item"><svg data-lucide="brick-wall" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 9v6"/><path d="M16 15v6"/><path d="M16 3v6"/><path d="M3 15h18"/><path d="M3 9h18"/><path d="M8 15v6"/><path d="M8 3v6"/></svg>Live prints</a>
+    <a class="nav-item nav-item-active"><svg data-lucide="bell" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>Alerts<span class="count-badge count-badge-neutral">2</span></a>
+    <a class="nav-item"><svg data-lucide="sparkles" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>AI suggestions<span class="count-badge count-badge-neutral">1</span></a>
+    <a class="nav-item"><svg data-lucide="history" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>Sessions</a>
+    <a class="nav-item"><svg data-lucide="trophy" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14.66V17a1 1 0 0 1-1 1 2 2 0 0 0-2 2v2"/><path d="M14 14.66V17a1 1 0 0 0 1 1 2 2 0 0 1 2 2v2"/><path d="M17.916 10H19.5A2.5 2.5 0 0 0 22 7.5V5a1 1 0 0 0-1-1h-3"/><path d="M4 22h16"/><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/><path d="M6.084 10H4.5A2.5 2.5 0 0 1 2 7.5V5a1 1 0 0 1 1-1h3"/></svg>Achievements</a>
+    <a class="nav-item"><svg data-lucide="shield" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>Admin<svg data-lucide="lock" class="ic-sm ml-auto opacity-70" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></a>
+    <a class="nav-item"><svg data-lucide="settings" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>Settings</a>
+  </nav>
+  <div class="mt-auto flex flex-col gap-1">
+    <a class="nav-item"><svg data-lucide="circle-help" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>Help</a>
+    <a class="nav-item"><svg data-lucide="panel-left-close" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/></svg>Collapse</a>
+  </div>
+</aside>
+
+<div class="flex-1 flex flex-col min-w-0">
+  <header class="topbar">
+    <div class="flex flex-col leading-tight">
+      <span class="h3">Alerts</span>
+      <span class="caption flex items-center gap-1.5">Fri Oct 9 · Shift B<span class="text-border">|</span><svg data-lucide="clock" class="ic-xs" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span class="num font-medium text-text" data-bind="meta.clock">14:34</span></span>
+    </div>
+    <div class="search ml-10"><svg data-lucide="search" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>Search alerts</div>
+    <div class="ml-auto"></div>
+    <span class="conn conn-live"><svg data-lucide="wifi" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/></svg>All sensors live</span>
+    <span class="icon-btn"><svg data-lucide="bell" class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg><span class="count-badge count-badge-dark">2</span></span>
+    <span class="role-badge">Engineer</span>
+    <span class="avatar">DP</span>
+  </header>
+
+  <main class="flex-1 px-10 py-8 flex flex-col gap-5 min-h-0">
+    <div class="flex items-center gap-2">
+      <span class="chip chip-selected">All <span class="font-normal">6</span></span>
+      <span class="chip">Open <span class="text-text-muted">2</span></span>
+      <span class="chip">Acknowledged <span class="text-text-muted">1</span></span>
+      <span class="chip">Resolved <span class="text-text-muted">3</span></span>
+      <span class="caption ml-auto">Today and yesterday · newest first</span>
+    </div>
+
+    <section class="card overflow-hidden">
+      <table class="table">
+        <thead>
+          <tr><th class="w-[150px]">Severity</th><th>What happened</th><th>Printer · job</th><th>Raised</th><th>Status</th><th>Owner</th><th class="w-[48px]"></th></tr>
+        </thead>
+        <tbody>
+          <!-- A-312 · expanded -->
+          <tr class="is-selected">
+            <td><span class="pill pill-warn"><svg data-lucide="triangle-alert" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>Warning</span></td>
+            <td class="what"><b>Layer width</b></td>
+            <td>Gantry-02 · WP-03</td>
+            <td class="num" data-bind="alerts.0.raisedAt">14:33:18</td>
+            <td><span class="font-semibold">Open</span></td>
+            <td><span class="who"><span class="avatar">MO</span>Maya</span></td>
+            <td class="text-text-muted"><svg data-lucide="chevron-down" class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></td>
+          </tr>
+          <tr class="is-selected">
+            <td colspan="7" class="!pt-0 !pb-5">
+              <div class="bg-surface rounded-card p-4 flex items-center gap-6">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-baseline justify-between"><span class="label">Width <span data-bind="signals.layerWidth.value">36.4</span> mm, below the 37 mm limit</span><span class="caption">Last 30 min</span></div>
+                  <div id="chart-alert" class="mt-1"></div>
+                </div>
+                <div class="flex flex-col gap-2 w-[200px]">
+                  <button class="btn btn-primary w-full"><svg data-lucide="gauge" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>Open live</button>
+                  <button class="btn btn-secondary w-full">Acknowledge</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr class="cursor-pointer">
+            <td><span class="pill pill-neutral"><svg data-lucide="info" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>Info</span></td>
+            <td class="what"><b>Camera</b></td>
+            <td>Arm-01 · C-12</td>
+            <td class="num" data-bind="alerts.1.raisedAt">13:05:00</td>
+            <td><span class="font-semibold">Open</span></td>
+            <td><span class="who"><span class="avatar">DP</span>Dev</span></td>
+            <td class="text-text-muted"><svg data-lucide="chevron-right" class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></td>
+          </tr>
+          <tr class="cursor-pointer">
+            <td><span class="pill pill-warn"><svg data-lucide="triangle-alert" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>Warning</span></td>
+            <td class="what"><b>Layer width</b></td>
+            <td>Gantry-02 · WP-03</td>
+            <td class="num" data-bind="alerts.2.raisedAt">14:31:00</td>
+            <td class="text-text-muted">Acknowledged · 11 s</td>
+            <td><span class="who"><span class="avatar">MO</span>Maya</span></td>
+            <td class="text-text-muted"><svg data-lucide="chevron-right" class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></td>
+          </tr>
+          <tr class="cursor-pointer">
+            <td><span class="pill pill-critical"><svg data-lucide="octagon-alert" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16h.01"/><path d="M12 8v4"/><path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z"/></svg>Critical</span></td>
+            <td class="what"><b>Pump power</b></td>
+            <td>Arm-01 · C-12</td>
+            <td class="num" data-bind="alerts.3.raisedAt">11:52:40</td>
+            <td class="text-text-muted"><span class="inline-flex items-center gap-1"><svg data-lucide="check" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Resolved</span></td>
+            <td><span class="who"><span class="avatar">DP</span>Dev</span></td>
+            <td class="text-text-muted"><svg data-lucide="chevron-right" class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></td>
+          </tr>
+          <tr class="cursor-pointer">
+            <td><span class="pill pill-critical"><svg data-lucide="octagon-alert" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16h.01"/><path d="M12 8v4"/><path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z"/></svg>Critical</span></td>
+            <td class="what"><b>Material temperature</b></td>
+            <td>Arm-01 · C-12</td>
+            <td class="num" data-bind="alerts.4.raisedAt">10:14:05</td>
+            <td class="text-text-muted"><span class="inline-flex items-center gap-1"><svg data-lucide="check" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Resolved</span></td>
+            <td><span class="who"><span class="avatar">MO</span>Maya</span></td>
+            <td class="text-text-muted"><svg data-lucide="chevron-right" class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></td>
+          </tr>
+          <tr class="cursor-pointer">
+            <td><span class="pill pill-warn"><svg data-lucide="triangle-alert" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>Warning</span></td>
+            <td class="what"><b>Interlayer delay</b></td>
+            <td>Gantry-02 · WP-02</td>
+            <td class="num" data-bind="alerts.5.raisedAt">Oct 8 15:41</td>
+            <td class="text-text-muted"><span class="inline-flex items-center gap-1"><svg data-lucide="check" class="ic-sm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Resolved</span></td>
+            <td><span class="who"><span class="avatar">DP</span>Dev</span></td>
+            <td class="text-text-muted"><svg data-lucide="chevron-right" class="ic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
+
+<script type="module">
+  import { mount } from '../lib/mount.js';
+  mount(({ mock, chart, $ }) => {
+    const T = chart.T, se = mock.series, w = mock.signals.layerWidth;
+    const from = se.nowIndex - 180; // 30 min of 10 s samples, ending 14:34:00
+    const pts = se.layerWidth.slice(from, se.nowIndex + 1).map((v, i) => [(from + i) * 10, v]);
+    const start = 13 * 3600 + 21 * 60 + 20;
+    const hhmm = (t) => { const s = start + t; return `${String(Math.floor(s / 3600)).padStart(2, '0')}:${String(Math.floor(s / 60) % 60).padStart(2, '0')}`; };
+    const box = $('#chart-alert');
+    box.innerHTML = chart.lineChart({
+      width: box.clientWidth, height: 150, margin: { left: 36, right: 24, top: 18, bottom: 24 },
+      x: { min: from * 10, max: se.nowIndex * 10, ticks: [2560, 3160, 3760, 4360].map((t) => [t, hhmm(t)]) },
+      y: { min: 35, max: 44, ticks: [36, 38, 40, 42] }, band: [w.min, w.max], limits: [w.min, w.max], warnZones: [[35, w.min]],
+      annotations: [{ x: mock.moments.alertBelow.t, label: '14:33', align: 'end' }],
+      series: [{ points: pts, color: T.text, width: 1.75, endDot: true }],
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{
+  "name": "prime-m2",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PRIME Milestone II UI/UX design mockups (static HTML -> PNG/PDF)",
+  "type": "module",
+  "scripts": {
+    "mock": "node scripts/gen-mock.mjs",
+    "icons": "node scripts/inline-icons.mjs",
+    "css": "tailwindcss -i src/styles/tailwind.css -o src/styles/app.css",
+    "render": "npm run sidebar && npm run generate && npm run icons && npm run css && node scripts/render.mjs",
+    "serve": "node scripts/serve.mjs",
+    "logo": "node scripts/build-logo.mjs",
+    "lofi": "node scripts/build-lofi.mjs",
+    "mermaid": "node scripts/render-mermaid.mjs",
+    "preview": "node scripts/pdf-preview.mjs",
+    "sidebar": "node scripts/sync-sidebar.mjs",
+    "generate": "node scripts/build-lofi.mjs && node scripts/build-s08-variants.mjs && node scripts/build-onboarding.mjs && node scripts/build-s11-variants.mjs && node scripts/build-s15-variants.mjs && node scripts/build-journey.mjs",
+    "consistency": "node scripts/consistency.mjs",
+    "docx": "node scripts/build-docx-assets.mjs && node scripts/build-docx.cjs",
+    "lofi-guide": "node scripts/build-lofi-guide.mjs"
+  },
+  "devDependencies": {
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/montserrat": "^5.3.0",
+    "docx": "^9.10.0",
+    "lucide-static": "^1.54.0",
+    "opentype.js": "^2.0.0",
+    "pdfjs-dist": "^4.10.38",
+    "playwright": "^1.64.0",
+    "tailwindcss": "^3.4.19"
+  }
+}

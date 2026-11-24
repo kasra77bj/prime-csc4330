@@ -1,0 +1,670 @@
+[
+ {
+  "kind": "cover",
+  "blocks": [],
+  "logo": "img01",
+  "hero": "img02",
+  "title": "PRIME: Process Real-time Intelligence for Manufacturing Excellence",
+  "subtitle": "Milestone II: UI/UX Design",
+  "lines": [
+   "Team: Kasra Banijamali · Carlos Manosalvas",
+   "Professor: Dr. Nash Mahmoud",
+   "CSC 4330 Software System Development · Milestone #2 · Fall 2026",
+   "Figma: [Figma link added after import]"
+  ]
+ },
+ {
+  "kind": "page",
+  "blocks": [
+   {
+    "type": "p",
+    "text": "Sixteen colors from our Figma frame plus one derived warning tint, grouped by job. A warm, quiet base keeps attention free for the moments that need it; blue only marks things you can act on.",
+    "italic": false
+   },
+   {
+    "type": "palette",
+    "group": "NEUTRALS",
+    "swatches": [
+     {
+      "token": "canvas",
+      "hex": "#F5F4F1",
+      "role": "App background; warm off-white, like cured concrete"
+     },
+     {
+      "token": "surface",
+      "hex": "#FFFFFF",
+      "role": "Cards, panels, modals"
+     },
+     {
+      "token": "border",
+      "hex": "#DCD9D3",
+      "role": "Dividers, chart grid, disabled fills (never text)"
+     },
+     {
+      "token": "text",
+      "hex": "#1C1E21",
+      "role": "Primary text and live values · 15.2:1 on canvas"
+     },
+     {
+      "token": "text-muted",
+      "hex": "#5F6368",
+      "role": "Units, ranges, captions · 6.1:1 on white"
+     },
+     {
+      "token": "charcoal",
+      "hex": "#23272B",
+      "role": "Sidebar, tablet top bar, coach marks, toasts"
+     }
+    ]
+   },
+   {
+    "type": "palette",
+    "group": "BRAND AND INTERACTION",
+    "swatches": [
+     {
+      "token": "brand-600",
+      "hex": "#1F5F8B",
+      "role": "Primary buttons, links, selected tab, focus · white 6.8:1"
+     },
+     {
+      "token": "brand-700",
+      "hex": "#174A6D",
+      "role": "Hover / pressed, report headings, logo"
+     },
+     {
+      "token": "brand-50",
+      "hex": "#E6EEF4",
+      "role": "Selected rows, AI cards, chart target band"
+     }
+    ]
+   },
+   {
+    "type": "palette",
+    "group": "STATUS",
+    "swatches": [
+     {
+      "token": "critical",
+      "hex": "#C62828",
+      "role": "Out of range, sensor lost, STOP button (ISO 3864)"
+     },
+     {
+      "token": "critical-50",
+      "hex": "#FDECEA",
+      "role": "Critical banner and card background"
+     },
+     {
+      "token": "ok",
+      "hex": "#2E7D32",
+      "role": "In range, connected, success; shown small, never as big fills"
+     },
+     {
+      "token": "ok-50",
+      "hex": "#E8F5E9",
+      "role": "Success toast, \"decision applied\""
+     },
+     {
+      "token": "warn-50",
+      "hex": "#FBF3E4",
+      "role": "Warning banner background (tint derived from viz-ochre)"
+     }
+    ]
+   },
+   {
+    "type": "palette",
+    "group": "DATA VISUALIZATION",
+    "swatches": [
+     {
+      "token": "viz-teal",
+      "hex": "#3C665E",
+      "role": "Second measured series (layer height, pump power)"
+     },
+     {
+      "token": "viz-violet",
+      "hex": "#7E57A6",
+      "role": "AI predictions (dashed) and confidence; no status meaning"
+     },
+     {
+      "token": "viz-ochre",
+      "hex": "#B7791F",
+      "role": "Third series and warning zones; icons and borders only, never text"
+     }
+    ]
+   },
+   {
+    "type": "h2",
+    "text": "WHY THESE COLORS"
+   },
+   {
+    "type": "principle",
+    "bold": "Calm until it matters.",
+    "text": "Following ISA-101 high-performance HMI practice, the normal state is warm gray and white. Saturated color appears only when an operator must act, so it is never ignored."
+   },
+   {
+    "type": "principle",
+    "bold": "Blue means \"you can act here.\"",
+    "text": "Steel blue from the logo is reserved for buttons, links and focus. Structural surfaces use charcoal so blue never gets diluted."
+   },
+   {
+    "type": "principle",
+    "bold": "AI advises, people decide.",
+    "text": "Predictions are always violet and dashed, so a model suggestion is never confused with a measured value or an alarm."
+   },
+   {
+    "type": "principle",
+    "bold": "Never color alone.",
+    "text": "Every status pairs color with an icon and a text label, which keeps our red/green pair readable for the ~8 % of men with color-vision deficiency."
+   },
+   {
+    "type": "note",
+    "text": "All text/background pairs checked: WCAG 2.1 AA. Ochre fails text contrast on white (3.6:1), so warning text stays in text on warn-50."
+   }
+  ],
+  "title": "2. Color Palette",
+  "number": "2"
+ },
+ {
+  "kind": "page",
+  "blocks": [
+   {
+    "type": "p",
+    "text": "We sketched the seven main screens on paper together, then redrew them digitally so every route stays readable. Arrows show how people move between screens; each label names the trigger.",
+    "italic": false
+   },
+   {
+    "type": "slot",
+    "lines": [
+     "Team photo with the paper sketches",
+     "Paper lo-fi session · Oct 10, 2026 · to be added by the team"
+    ]
+   },
+   {
+    "type": "fig",
+    "screen": "flow",
+    "img": "img03",
+    "widthPx": 701,
+    "caption": "Navigation routes · the 7 main screens · dashed = role-restricted (Engineer / Manager)",
+    "legend": []
+   }
+  ],
+  "title": "3. Lo-Fi Wireframes & Navigation Routes",
+  "number": "3"
+ },
+ {
+  "kind": "page",
+  "blocks": [
+   {
+    "type": "fig",
+    "screen": "S07-dashboard",
+    "img": "img04",
+    "widthPx": 701,
+    "caption": "Home / Dashboard · /dashboard · US-03, 04, 06",
+    "legend": [
+     "1 Color only where it matters: one warning; everything else stays calm.",
+     "2 A waiting AI suggestion is one click away.",
+     "3 A shared team goal instead of an individual leaderboard."
+    ]
+   },
+   {
+    "type": "row",
+    "figs": [
+     {
+      "type": "fig",
+      "screen": "S01-login",
+      "img": "img05",
+      "widthPx": 340,
+      "caption": "Login · /login · US-01",
+      "legend": [
+       "1 Remember this device for 30 days: fewer codes with gloves."
+      ]
+     },
+     {
+      "type": "fig",
+      "screen": "S02-mfa",
+      "img": "img06",
+      "widthPx": 340,
+      "caption": "2-factor code · /login/verify · US-01",
+      "legend": [
+       "1 Large 56 px code boxes with a visible expiry timer."
+      ]
+     }
+    ]
+   }
+  ],
+  "title": "4. Hi-Fi · Home",
+  "number": "4"
+ },
+ {
+  "kind": "page",
+  "blocks": [
+   {
+    "type": "fig",
+    "screen": "S08-live-monitor",
+    "img": "img07",
+    "widthPx": 540,
+    "caption": "Live Print Monitor · /prints/:jobId/live · US-03, 04, 06, 07",
+    "legend": [
+     "1 Only the out-of-range value gets color, icon and label.",
+     "2 Pause · Resume · Hold-to-STOP sit in the same place on every print screen.",
+     "3 One tap reaches the engineer."
+    ]
+   },
+   {
+    "type": "row",
+    "figs": [
+     {
+      "type": "fig",
+      "screen": "S09-vision",
+      "img": "img08",
+      "widthPx": 340,
+      "caption": "Vision · /prints/:jobId/vision · US-05",
+      "legend": [
+       "1 Width and height measured on the live bead.",
+       "2 Flag a camera glitch instead of acting on it."
+      ]
+     },
+     {
+      "type": "fig",
+      "screen": "S08c-hold-to-stop",
+      "img": "img09",
+      "widthPx": 340,
+      "caption": "Hold to stop · /prints/:jobId/live · US-07",
+      "legend": [
+       "1 A 1.5 s hold fills a ring; letting go cancels."
+      ]
+     }
+    ]
+   }
+  ],
+  "title": "5. Hi-Fi · Core I: The Live Print",
+  "number": "5"
+ },
+ {
+  "kind": "page",
+  "blocks": [
+   {
+    "type": "fig",
+    "screen": "S11-ai-recommendations",
+    "img": "img10",
+    "widthPx": 701,
+    "caption": "AI Recommendations · /prints/:jobId/ai · US-09, 10, 11",
+    "legend": [
+     "1 The predicted effect is shown before anyone decides.",
+     "2 Reasons in plain language, with the risk.",
+     "3 Accept, modify or reject; every choice is logged."
+    ]
+   },
+   {
+    "type": "row",
+    "figs": [
+     {
+      "type": "fig",
+      "screen": "S14-session-report",
+      "img": "img11",
+      "widthPx": 340,
+      "caption": "Session Report · /sessions/:id/report · US-12, 13",
+      "legend": [
+       "1 Export CSV, JSON or PDF (Manager / Engineer only).",
+       "2 Alerts overlaid on the layer chart."
+      ]
+     },
+     {
+      "type": "fig",
+      "screen": "S10-trends",
+      "img": "img12",
+      "widthPx": 340,
+      "caption": "Trends · /prints/:jobId/trends · US-08",
+      "legend": [
+       "1 Any signal over any time window.",
+       "2 Events and the AI prediction on one chart."
+      ]
+     }
+    ]
+   }
+  ],
+  "title": "6. Hi-Fi · Core II: Decide and Report",
+  "number": "6"
+ },
+ {
+  "kind": "page",
+  "blocks": [
+   {
+    "type": "p",
+    "text": "First sign-in takes about three minutes and can be skipped or resumed. It explains roles before anyone meets a locked button, and lets operators practice stopping a print safely.",
+    "italic": false
+   },
+   {
+    "type": "fig",
+    "screen": "S05-tour",
+    "img": "img13",
+    "widthPx": 560,
+    "caption": "Guided tour · step 4 of 4 · /onboarding/tour · US-06, 07",
+    "legend": [
+     "1 Practice hold-to-stop in a simulation, on the real Live Monitor."
+    ]
+   },
+   {
+    "type": "row",
+    "figs": [
+     {
+      "type": "fig",
+      "screen": "S03-welcome",
+      "img": "img14",
+      "widthPx": 340,
+      "caption": "Welcome · /onboarding/welcome · first sign-in",
+      "legend": [
+       "1 About 3 minutes; skip any time."
+      ]
+     },
+     {
+      "type": "fig",
+      "screen": "S04-role",
+      "img": "img15",
+      "widthPx": 340,
+      "caption": "Your role · /onboarding/role · US-02",
+      "legend": [
+       "1 Shows what needs an engineer before users hit a lock."
+      ]
+     }
+    ]
+   }
+  ],
+  "title": "7. Onboarding",
+  "number": "7"
+ },
+ {
+  "kind": "page",
+  "blocks": [
+   {
+    "type": "p",
+    "text": "Rewards attention and quality, never speed. Goals are shared by the team, and nudges stay calm: one at a time, gone after 8 seconds, never over the controls.",
+    "italic": false
+   },
+   {
+    "type": "row",
+    "figs": [
+     {
+      "type": "fig",
+      "screen": "S16-achievements",
+      "img": "img16",
+      "widthPx": 466,
+      "caption": "Achievements & shift summary · /me/achievements · gamification",
+      "legend": [
+       "1 Badges for good habits, with progress on locked ones.",
+       "2 A team goal instead of a leaderboard."
+      ]
+     },
+     {
+      "type": "fig",
+      "screen": "S16c-quality-score",
+      "img": "img17",
+      "widthPx": 214,
+      "caption": "Quality score · explained, not a black box",
+      "legend": []
+     }
+    ]
+   },
+   {
+    "type": "fig",
+    "screen": "nudges-pair",
+    "img": "img18",
+    "widthPx": 701,
+    "caption": "Nudges on the Live Monitor · US-06, 09 · a predictive heads-up and a decision closure, shown above the controls (all six in Appendix A3)",
+    "legend": []
+   }
+  ],
+  "title": "8. Cool Features: Nudges & Gamification",
+  "number": "8"
+ },
+ {
+  "kind": "landscape",
+  "blocks": []
+ },
+ {
+  "kind": "page",
+  "blocks": [
+   {
+    "type": "slot",
+    "lines": [
+     "Figma file (view)",
+     "[link added after import]"
+    ]
+   },
+   {
+    "type": "slot",
+    "lines": [
+     "Clickable prototype",
+     "[link added after import]"
+    ]
+   },
+   {
+    "type": "h2",
+    "text": "USER STORIES → SCREENS"
+   },
+   {
+    "type": "table",
+    "rows": [
+     [
+      "Story",
+      "What it needs",
+      "Screens"
+     ],
+     [
+      "US-01",
+      "Login + 2-factor",
+      "S01, S02"
+     ],
+     [
+      "US-02",
+      "Create users, assign roles",
+      "S15, S15b, S04"
+     ],
+     [
+      "US-03",
+      "Live temperature",
+      "S07, S08"
+     ],
+     [
+      "US-04",
+      "Print speed + nozzle size",
+      "S07, S08"
+     ],
+     [
+      "US-05",
+      "Camera with width/height overlay",
+      "S09"
+     ],
+     [
+      "US-06",
+      "Out-of-range alert",
+      "S07, S08, S12"
+     ],
+     [
+      "US-07",
+      "Pause / resume / stop always reachable",
+      "S08–S11, S08c, S05"
+     ],
+     [
+      "US-08",
+      "Graph any value over a window",
+      "S10"
+     ],
+     [
+      "US-09",
+      "AI proposes a change with a reason",
+      "S11"
+     ],
+     [
+      "US-10",
+      "Accept / modify / reject",
+      "S11, S11c"
+     ],
+     [
+      "US-11",
+      "Manual change logged separately",
+      "S11b"
+     ],
+     [
+      "US-12",
+      "Download session data",
+      "S14"
+     ],
+     [
+      "US-13",
+      "Generated summary report",
+      "S14"
+     ]
+    ]
+   },
+   {
+    "type": "h2",
+    "text": "CONTRIBUTIONS"
+   },
+   {
+    "type": "table",
+    "rows": [
+     [
+      "Member",
+      "Contribution"
+     ],
+     [
+      "Kasra Banijamali",
+      "[to be written by the team]"
+     ],
+     [
+      "Carlos Manosalvas",
+      "[to be written by the team]"
+     ]
+    ]
+   },
+   {
+    "type": "h2",
+    "text": "USE OF AI"
+   },
+   {
+    "type": "p",
+    "text": "[to be written by the team: which tools were used, for what, and how the team reviewed and decided]",
+    "italic": true
+   }
+  ],
+  "title": "10. Figma, Traceability, Contributions & Use of AI",
+  "number": "10"
+ },
+ {
+  "kind": "page",
+  "blocks": [
+   {
+    "type": "fig",
+    "screen": "S12-alerts",
+    "img": "img19",
+    "widthPx": 701,
+    "caption": "Alerts center · /alerts · US-06",
+    "legend": [
+     "1 One line per alert; details only when opened."
+    ]
+   },
+   {
+    "type": "row",
+    "figs": [
+     {
+      "type": "fig",
+      "screen": "S15-admin-users",
+      "img": "img20",
+      "widthPx": 340,
+      "caption": "Admin › Users · /admin/users · US-02",
+      "legend": []
+     },
+     {
+      "type": "fig",
+      "screen": "S15b-create-user",
+      "img": "img21",
+      "widthPx": 340,
+      "caption": "Create user · /admin/users?new=1 · US-02",
+      "legend": [
+       "1 2-factor setup is always required."
+      ]
+     }
+    ]
+   }
+  ],
+  "title": "A1 Appendix · Alerts & Administration",
+  "number": "A1"
+ },
+ {
+  "kind": "page",
+  "blocks": [
+   {
+    "type": "fig",
+    "screen": "S11b-manual-adjust",
+    "img": "img22",
+    "widthPx": 701,
+    "caption": "Manual adjustment · /prints/:jobId/ai · US-11",
+    "legend": [
+     "1 Logged as the engineer's own decision."
+    ]
+   },
+   {
+    "type": "row",
+    "figs": [
+     {
+      "type": "fig",
+      "screen": "S08b-live-reconnecting",
+      "img": "img23",
+      "widthPx": 340,
+      "caption": "Reconnecting · /prints/:jobId/live · US-07 · reliability",
+      "legend": [
+       "1 Readings are buffered; nothing is lost."
+      ]
+     },
+     {
+      "type": "fig",
+      "screen": "S11c-operator-locked",
+      "img": "img24",
+      "widthPx": 340,
+      "caption": "Operator view · /prints/:jobId/ai · US-10 · security",
+      "legend": [
+       "1 Locked actions say who can help."
+      ]
+     }
+    ]
+   }
+  ],
+  "title": "A2 Appendix · Variants",
+  "number": "A2"
+ },
+ {
+  "kind": "page",
+  "blocks": [
+   {
+    "type": "fig",
+    "screen": "S16b-nudges",
+    "img": "img25",
+    "widthPx": 701,
+    "caption": "All six nudges · /prints/:jobId/live · US-06, 07, 09",
+    "legend": []
+   },
+   {
+    "type": "row",
+    "figs": [
+     {
+      "type": "fig",
+      "screen": "S06-connect-printer",
+      "img": "img26",
+      "widthPx": 340,
+      "caption": "Connect printer · /onboarding/printer · setup",
+      "legend": []
+     },
+     {
+      "type": "fig",
+      "screen": "S07b-dashboard-checklist",
+      "img": "img27",
+      "widthPx": 340,
+      "caption": "Getting-started checklist · /dashboard · onboarding",
+      "legend": []
+     }
+    ]
+   }
+  ],
+  "title": "A3 Appendix · Setup & All Nudges",
+  "number": "A3"
+ }
+]
