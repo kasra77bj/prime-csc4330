@@ -14,7 +14,7 @@
 | **Phase 1 · Backend core** | ✅ **Done Nov 20** (T1.1–T1.6). See "Phase 1 results". |
 | **Phase 2 · ML + front-end shell** | ✅ **Done Nov 20** (T2.1–T2.5). See "Phase 2 results". |
 | **Phase 3 · Features** | ✅ **Done Nov 24** (T3.1–T3.8). See "Phase 3 results". |
-| **Phase 4 · Hardening** | ✅ T4.2–T4.4 **done Nov 24**; **T4.1 waits for Kasra** (timeline + proposal in docs/18 §5); H (rehearsals, video, slides) is human work |
+| **Phase 4 · Hardening** | ✅ T4.2–T4.4 **done Nov 24**; T4.1: pause step applied to the demo script (docs/18 §2); `demo.yaml` `speed: 8` still waits for Kasra; H (rehearsals, video, slides) is human work |
 
 ### Phase 4 results
 - **T4.1** Demo timing measured from the data (docs/18 §5): at 8× the layer-5 decision window is ~9 s and the print ends ~2 min after Start, so the §2 script cannot run as written. Proposal: Maya pauses at the warning, Dev decides, Maya resumes (optional 4× for layers 6–8). `demo.yaml` unchanged until Kasra approves.
