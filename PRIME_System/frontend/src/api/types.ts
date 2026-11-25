@@ -132,3 +132,93 @@ export interface WsEnvelope<T = unknown> {
   ts?: string;
   data: T;
 }
+
+// ---------------- Phase 3 (hand-written: backend returns free-form JSON for these) ----------------
+export interface LayerRow {
+  layer: number;
+  started_at: string | null;
+  ended_at: string | null;
+  measured_width_mm: number | null;
+  measured_height_mm: number | null;
+  total_height_mm: number | null;
+  interlayer_delay_min: number | null;
+  avg_rpm: number | null;
+  avg_temperature: number | null;
+  within_tolerance: boolean | null;
+  checkpoints: { id: string; checkpoint: number; sll_width_mm: number; sll_height_mm: number; temperature: number; pump_rpm: number }[];
+}
+
+export interface FrameOut {
+  layer: number;
+  checkpoint_id: string;
+  checkpoint: number;
+  width_mm: number;
+  height_mm: number;
+  image_url: string | null;
+  measurement_confidence: number;
+  flagged_artifact: boolean;
+}
+
+export interface Quality {
+  score: number;
+  layers_within_ratio: number;
+  alert_response_factor: number;
+  decision_factor: number;
+  median_ack_s: number | null;
+  streak: number;
+  layers_scored: number;
+  layers_within: number;
+}
+
+export interface ParamRow { signal: string; label: string; unit: string; start: number; end: number; min: number; max: number; avg: number }
+
+export interface ReportKpis {
+  duration_s: number;
+  started_at: string | null;
+  ended_at: string | null;
+  status: SessionStatus;
+  layers_done: number;
+  layers_total: number;
+  layers_within: number;
+  alerts: { info: number; warning: number; critical: number; total: number };
+  median_ack_s: number | null;
+  adjustments: { ai_accepted: number; ai_modified: number; manual: number; total: number };
+  recommendations: Record<RecStatus, number>;
+  accuracy: { extrusion_rate: { n: number; pct: number; mae_rpm: number | null }; interlayer_delay: { n: number; pct: number } };
+  quality_score: number;
+  quality: Quality;
+  width: { avg: number | null; min: number | null; max: number | null; target: number; tolerance: number };
+}
+
+export interface Report {
+  session_id: string;
+  generated_at: string;
+  kpis: ReportKpis;
+  summary_text: string;
+  parameters_table: ParamRow[];
+  charts: {
+    layers: { layer: number; width_mm: number | null; within: boolean | null; avg_rpm: number | null; model_rpm: number | null; delay_min: number | null; model_delay_min: number | null; temperature: number | null }[];
+    alerts: { id: string; layer: number; severity: Severity; signal: string; message: string; raised_at: string; status: string }[];
+  };
+  adjustments: Adjustment[];
+}
+
+export interface BadgeOut { code: string; name: string; description: string; icon: string; threshold: number; progress: number; earned_at: string | null }
+export interface ShiftGoal { id: string; shift_label: string; date: string; goal_text: string; target: number; progress: number }
+export interface Achievements {
+  badges: BadgeOut[];
+  earned: number;
+  streak: number;
+  shift: { since: string; layers_monitored: number; alerts_handled: number; avg_response_s: number | null; defects_prevented: number; badges_earned: string[] };
+  goal: ShiftGoal | null;
+}
+
+export interface AuditRow {
+  id: string; at: string; action: string; entity_type: string | null; entity_id: string | null;
+  before: Record<string, unknown> | null; after: Record<string, unknown> | null; ip: string | null;
+  user_id: string | null; user_name: string | null; user_email: string | null;
+}
+
+export interface SensorTest { printer_id: string; passed: boolean; sensors: { sensor_id: string; label: string; signal: string; status: string; samples: number; last_value: number | null; unit: string }[] }
+export type UserCreateOut = S["UserCreateOut"];
+export type SiteOut = S["SiteOut"];

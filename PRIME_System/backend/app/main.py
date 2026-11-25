@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import select, text
 
-from app.api.v1 import ai, alerts, auth, data, demo, sessions, users
+from app.api.v1 import ai, alerts, auth, data, demo, reports, sessions, users
 from app.config import get_settings
 from app.core.errors import install_error_handlers
 from app.db import SessionLocal, engine
@@ -58,7 +58,8 @@ def create_app() -> FastAPI:
         return {"status": "ok", "db": db_ok, "demo_mode": settings.demo_mode,
                 "active_runners": len(manager.runners)}
 
-    for r in (auth.router, users.router, sessions.router, data.router, alerts.router, ai.router):
+    for r in (auth.router, users.router, sessions.router, data.router, alerts.router, ai.router,
+              reports.router):
         app.include_router(r, prefix="/api/v1")
     if settings.demo_mode:
         app.include_router(demo.router, prefix="/api/v1")

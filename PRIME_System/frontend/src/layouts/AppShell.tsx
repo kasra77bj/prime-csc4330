@@ -1,7 +1,9 @@
-import { Bell, BellRing, ChartLine, ClipboardList, Gauge, LayoutDashboard, LogOut, Settings, ShieldCheck, Sparkles, Trophy, Users } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Bell, BellRing, ChartLine, ClipboardList, Gauge, LayoutDashboard, LogOut, OctagonAlert, Settings, ShieldCheck, Sparkles, Trophy, Users } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { post } from "../api/client";
+import { get, post } from "../api/client";
+import type { AlertOut } from "../api/types";
 import { ConnectionPill } from "../components/ConnectionPill";
 import { Logo, LogoMark } from "../components/Logo";
 import { useNotes } from "../hooks/useNotifications";
@@ -20,7 +22,24 @@ function NavItem({ to, icon: Icon, label, locked }: { to: string; icon: typeof G
   );
 }
 
-export function AppShell({ title, subtitle, children, actions }: { title: string; subtitle?: string; children: ReactNode; actions?: ReactNode }) {
+/** Critical alerts follow the user to every route (docs/02 global elements). The print page of the same
+ *  session shows its own banner, so it passes `quietSession`. */
+function GlobalCritical({ quietSession }: { quietSession?: string }) {
+  const nav = useNavigate();
+  const q = useQuery({ queryKey: ["alerts", "critical"], queryFn: () => get<AlertOut[]>("/alerts?status=open&severity=critical&active=true&limit=5"), refetchInterval: 5000 });
+  const a = (q.data ?? []).find((x) => x.session_id !== quietSession);
+  if (!a) return null;
+  return (
+    <div role="alert" className="no-print flex flex-wrap items-center gap-3 border-l-4 border-critical bg-critical-50 px-4 py-2 text-sm">
+      <OctagonAlert aria-hidden className="h-5 w-5 text-critical" />
+      <span className="font-semibold text-critical">Critical</span>
+      <span className="flex-1">{a.message}{a.printer_name ? ` · ${a.printer_name}` : ""}</span>
+      <button type="button" className="font-semibold text-brand-700 underline" onClick={() => nav(`/prints/${a.session_id}/live`)}>Open print</button>
+    </div>
+  );
+}
+
+export function AppShell({ title, subtitle, children, actions, quietSession }: { title: string; subtitle?: string; children: ReactNode; actions?: ReactNode; quietSession?: string }) {
   const me = useAuth((s) => s.me);
   const signOut = useAuth((s) => s.signOut);
   const nav = useNavigate();
@@ -35,7 +54,7 @@ export function AppShell({ title, subtitle, children, actions }: { title: string
   };
   return (
     <div className="flex min-h-screen bg-canvas">
-      <aside className="sticky top-0 flex h-screen w-16 shrink-0 flex-col bg-charcoal px-2 py-4 xl:w-60 xl:px-3">
+      <aside className="no-print sticky top-0 flex h-screen w-16 shrink-0 flex-col bg-charcoal px-2 py-4 xl:w-60 xl:px-3">
         <div className="mb-6 px-1">
           <div className="hidden xl:block"><Logo light tagline /></div>
           <div className="xl:hidden"><span className="inline-flex rounded-ctl bg-white p-1"><LogoMark className="h-7 w-7" /></span></div>
@@ -52,7 +71,7 @@ export function AppShell({ title, subtitle, children, actions }: { title: string
         <NavItem to="/settings" icon={Settings} label="Settings" />
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-border bg-surface px-4 sm:px-6">
+        <header className="no-print sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-border bg-surface px-4 sm:px-6">
           <div className="min-w-0 flex-1">
             <h1 className="truncate text-lg font-semibold">{title}</h1>
             {subtitle && <p className="truncate text-xs text-text-muted">{subtitle}</p>}
@@ -95,6 +114,7 @@ export function AppShell({ title, subtitle, children, actions }: { title: string
             </button>
           </div>
         </header>
+        <GlobalCritical quietSession={quietSession} />
         <main className="flex min-w-0 flex-1 flex-col">{children}</main>
       </div>
     </div>

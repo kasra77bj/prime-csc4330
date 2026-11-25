@@ -321,6 +321,7 @@ class SessionRunner:
         if not events:
             return
         readings, to_publish, other_pub = [], [], []
+        quality_due = False
         async with SessionLocal() as db:
             for ev in events:
                 kind = ev[0]
@@ -346,6 +347,7 @@ class SessionRunner:
                     await db.execute(update(Layer).where(Layer.id == self.layer_ids[layer])
                                      .values(ended_at=ts, **vals))
                     other_pub.append(("layer_completed", {"layer": layer, **vals}))
+                    quality_due = True
                 elif kind == "checkpoint":
                     _, layer, cp_no, ts, agg = ev
                     if None in (agg["sll_width"], agg["sll_height"], agg["motor_power"], agg["print_speed"]):
@@ -381,6 +383,12 @@ class SessionRunner:
                     other_pub.append(("scenario", ev[1]))
             if readings:
                 await db.execute(insert(Reading), readings)
+            if quality_due:          # quality score + clean-print streak, recomputed per layer (docs/17 s5)
+                from app.reports.service import quality
+                q = await quality(db, self.session_id)
+                await db.execute(update(PrintSession).where(PrintSession.id == self.session_id)
+                                 .values(quality_score=q["score"]))
+                other_pub.append(("quality", q))
             last = self.last_row or {}
             await db.execute(update(PrintSession).where(PrintSession.id == self.session_id).values(
                 replay_cursor=self.cursor, sim_time_s=self.sim_t, current_layer=self.layer,
@@ -475,12 +483,26 @@ class SessionRunner:
             self._close_layer()
             await self.flush()
             values["ended_at"] = self._now() if self.base_time else now
+        expired = []
         async with SessionLocal() as db:
             await db.execute(update(PrintSession).where(PrintSession.id == self.session_id).values(**values))
+            if status in (SessionStatus.completed, SessionStatus.aborted):   # nothing left to apply them to
+                from app.models import Recommendation, RecStatus
+                expired = (await db.scalars(select(Recommendation).where(
+                    Recommendation.session_id == self.session_id, Recommendation.status == RecStatus.pending))).all()
+                for rec in expired:
+                    rec.status = RecStatus.expired
             await db.commit()
+        if self.publish and expired:
+            from app.ml.recommend import publish_rec
+            for rec in expired:
+                await publish_rec(rec, self.printer.site_id)
         if self.publish:
             await hub.publish(self.channel, "control", {"status": status.value, "by": str(user_id) if user_id else None},
                               session_id=str(self.session_id))
             await hub.publish(f"site:{self.printer.site_id}", "control",
                               {"session_id": str(self.session_id), "status": status.value},
                               session_id=str(self.session_id))
+            if status in (SessionStatus.completed, SessionStatus.aborted):
+                from app.reports.service import on_session_end
+                await on_session_end(self.session_id)

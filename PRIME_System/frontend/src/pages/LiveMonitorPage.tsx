@@ -1,17 +1,40 @@
-import { Clock3, Hourglass, Megaphone, ScanLine, Wrench } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { Clock3, Hourglass, Layers, Megaphone, ScanLine, Wrench } from "lucide-react";
+import { useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import { ApiError, post } from "../api/client";
 import type { EscalateOut, LimitOut, Reading, SignalKey } from "../api/types";
 import { AiRecommendationCard } from "../components/AiRecommendationCard";
-import { AlertBanner, topAlert } from "../components/AlertBanner";
+import { topAlert } from "../components/AlertBanner";
 import { Button } from "../components/Button";
 import { MetricTile } from "../components/MetricTile";
 import type { Level } from "../components/StatusPill";
 import { toast } from "../components/Toaster";
 import { PrintLayout } from "../layouts/PrintLayout";
 import { duration, fmt, SIGNAL_META } from "../lib/format";
-import { useCan } from "../store/auth";
+import { useAuth, useCan } from "../store/auth";
 import { useSession } from "../store/live";
+import { saveOnboarding } from "./OnboardingPages";
+
+/** Print quality score ring (docs/06 part C.1): 0–100, formula in the tooltip. */
+function QualityRing({ score, streak }: { score: number | null; streak: number }) {
+  const r = 15, c = 2 * Math.PI * r, v = score ?? 0;
+  const color = v >= 90 ? "var(--ok)" : v >= 75 ? "var(--viz-ochre)" : "var(--critical)";
+  return (
+    <span className="group relative inline-flex items-center gap-3">
+      <span className="inline-flex items-center gap-2" tabIndex={0} aria-label={`Quality score ${score ?? "not available yet"} out of 100`}>
+        <svg viewBox="0 0 36 36" className="h-9 w-9 -rotate-90" aria-hidden>
+          <circle cx="18" cy="18" r={r} fill="none" stroke="var(--border)" strokeWidth="4" />
+          <circle cx="18" cy="18" r={r} fill="none" stroke={color} strokeWidth="4" strokeDasharray={c} strokeDashoffset={c * (1 - v / 100)} strokeLinecap="round" />
+        </svg>
+        <span className="leading-tight"><span className="tabular block font-semibold">{score != null ? Math.round(score) : "–"}</span><span className="text-xs text-text-muted">Quality</span></span>
+      </span>
+      <span className="inline-flex items-center gap-1 text-text-muted"><Layers aria-hidden className="h-4 w-4" /> {streak}-layer clean streak</span>
+      <span role="tooltip" className="pointer-events-none absolute left-0 top-11 z-20 hidden w-72 rounded-ctl bg-charcoal p-2 text-xs text-surface group-focus-within:block group-hover:block">
+        Quality = 60 % layers within tolerance + 25 % alert response speed + 15 % AI suggestions decided before they expired.
+      </span>
+    </span>
+  );
+}
 
 function levelFor(v: number | null | undefined, lim?: LimitOut): Level {
   if (v == null || !lim) return "ok";
@@ -30,6 +53,9 @@ export function LiveMonitorPage() {
   const { sessionId } = useParams();
   const s = useSession(sessionId);
   const canEscalate = useCan("escalate");
+  const canReport = useCan("view_reports");
+  const watched = useAuth((x) => !!x.me?.onboarding?.first_live_watched);
+  useEffect(() => { if (!watched) saveOnboarding({ first_live_watched: true }).catch(() => undefined); }, [watched]);
   const lim = Object.fromEntries((s.detail?.limits ?? []).map((l) => [l.signal, l])) as Record<string, LimitOut>;
   const r: Partial<Reading> = s.latest ?? {};
   const any = s.lastAny;
@@ -65,14 +91,14 @@ export function LiveMonitorPage() {
   const waiting = any?.phase === "interlayer_delay" && !ended;
   return (
     <PrintLayout>
-      <AlertBanner alert={alert} />
       {s.status === "prechecking" && (
         <div className="flex items-center gap-2 bg-brand-50 px-4 py-2 text-sm text-brand-700"><ScanLine className="h-4 w-4" /> Sensor pre-check: confirming every sensor is reporting…</div>
       )}
       {(s.status === "stopped" || s.status === "completed" || s.status === "aborted") && (
         <div className={`flex items-center gap-2 px-4 py-3 text-sm ${s.status === "completed" ? "bg-ok-50 text-ok" : "bg-critical-50 text-critical"}`}>
           <strong>{s.status === "completed" ? "Print completed" : s.status === "stopped" ? "Print stopped" : "Print aborted"}</strong>
-          <span className="text-text">at layer {any?.layer ?? s.detail?.current_layer}. Values below are the last readings; the session report arrives in Phase 3.</span>
+          <span className="text-text">at layer {any?.layer ?? s.detail?.current_layer}. Values below are the last readings.</span>
+          {canReport && <Link to={`/sessions/${sessionId}/report`} className="ml-auto font-semibold text-brand-700 underline">Open the session report</Link>}
         </div>
       )}
       {s.status === "scheduled" && (
@@ -90,6 +116,7 @@ export function LiveMonitorPage() {
             </span>
             <span className="text-text-muted"><Clock3 aria-hidden className="mr-1 inline h-4 w-4" />Print time {duration(any?.sim_t_s ?? s.detail?.sim_time_s ?? 0)}</span>
             <span className="text-text-muted">Wall height {fmt(r.total_height, 0)} mm</span>
+            <QualityRing score={s.quality?.score ?? s.detail?.quality_score ?? null} streak={s.quality?.streak ?? 0} />
             {canEscalate && !ended && (
               <Button variant="secondary" className="ml-auto" onClick={escalate}><Megaphone aria-hidden className="h-4 w-4" /> Escalate to engineer</Button>
             )}

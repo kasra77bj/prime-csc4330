@@ -49,4 +49,4 @@ API docs with a "Try it out" button: http://localhost:8000/docs. Demo controls (
 | `data/reports/` | Per-dataset value summaries |
 
 ## Status
-Phases 0–2 done (Nov 20, 2026): backend core, both ML models in the live replay with explainable suggestions, and the first screens (login + 2FA, dashboard, live monitor with Accept/Modify/Reject). Next: Phase 3 (Vision, Trends, AI page, alerts center, reports/export, admin, onboarding, gamification). See `docs/19_agent_tasks.md`.
+Phases 0–3 done (Nov 24, 2026): backend core, both ML models in the live replay with explainable suggestions, and every screen (login + 2FA, onboarding, dashboard, live monitor, vision, trends, AI review + manual adjust, alerts center, sessions + report with CSV/JSON/PDF export, admin users + audit, achievements, settings, `/demo` panel). Phase 4: `make e2e` runs the whole demo script (25 steps) and every user story is verified (docs/18 §6); the demo timing proposal in docs/18 §5 waits for team approval. See `docs/19_agent_tasks.md`.

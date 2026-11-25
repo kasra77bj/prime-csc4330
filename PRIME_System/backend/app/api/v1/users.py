@@ -127,3 +127,50 @@ async def patch_user(user_id: uuid.UUID, body: UserPatchIn, request: Request,
     await db.commit()
     await db.refresh(u)
     return u
+
+
+# ---------------- onboarding practice, gamification, audit (T3.6 / T3.7) ----------------
+@router.post("/me/onboarding/practice-stop")
+async def practice_stop(request: Request, user: User = Depends(current_user), db: AsyncSession = Depends(get_db)):
+    """Hold-to-stop practice in the onboarding tour: a no-op for the printers, earns Safety First."""
+    from app.gamification.service import award
+    ob = await _onboarding(db, user.id)
+    ob.practice_stop_done = True
+    earned = await award(db, user.id, "safety_first")
+    audit(db, user.id, "onboarding.practice_stop", "user", user.id, request=request)
+    await db.commit()
+    return {"ok": True, "badge_earned": earned, "onboarding": {f: getattr(ob, f) for f in ONBOARDING_FIELDS}}
+
+
+async def _site_id(db: AsyncSession, user: User) -> uuid.UUID | None:
+    u = await db.scalar(select(User).options(selectinload(User.sites)).where(User.id == user.id))
+    return u.sites[0].id if u.sites else await db.scalar(select(Site.id).order_by(Site.name).limit(1))
+
+
+@router.get("/me/achievements")
+async def my_achievements(user: User = Depends(current_user), db: AsyncSession = Depends(get_db)):
+    """Badges with progress, clean-print streak, shift summary and the team goal (no leaderboards)."""
+    from app.gamification.service import achievements
+    return await achievements(db, user.id, await _site_id(db, user))
+
+
+@router.get("/shift-goals/current")
+async def current_shift_goal(user: User = Depends(current_user), db: AsyncSession = Depends(get_db)):
+    from app.gamification.service import shift_goal
+    return await shift_goal(db, await _site_id(db, user))
+
+
+@router.get("/audit")
+async def audit_log(action: str | None = None, user_id: uuid.UUID | None = None, limit: int = 200,
+                    _: User = Depends(require(Permission.view_audit)), db: AsyncSession = Depends(get_db)):
+    from app.models import AuditLog
+    q = select(AuditLog, User.full_name, User.email).outerjoin(User, User.id == AuditLog.user_id)
+    if action:
+        q = q.where(AuditLog.action.ilike(f"{action}%"))
+    if user_id:
+        q = q.where(AuditLog.user_id == user_id)
+    rows = (await db.execute(q.order_by(AuditLog.created_at.desc()).limit(min(limit, 1000)))).all()
+    return [{"id": str(a.id), "at": a.created_at, "action": a.action, "entity_type": a.entity_type,
+             "entity_id": str(a.entity_id) if a.entity_id else None, "before": a.before, "after": a.after,
+             "ip": str(a.ip) if a.ip else None, "user_id": str(a.user_id) if a.user_id else None,
+             "user_name": name, "user_email": email} for a, name, email in rows]

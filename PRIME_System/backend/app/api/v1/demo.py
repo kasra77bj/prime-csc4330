@@ -6,11 +6,12 @@ import uuid
 
 from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel, Field
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.audit import audit
 from app.core.errors import APIError, not_found
 from app.core.rbac import Permission, require
-from app.db import SessionLocal
+from app.db import SessionLocal, get_db
 from app.models import User
 from app.replay.manager import manager
 from app.ws.hub import hub
@@ -49,9 +50,11 @@ async def _audit(user: User, action: str, entity_id: uuid.UUID | None, after: di
 
 
 @router.post("/reset")
-async def reset(request: Request, user: User = Depends(ADMIN)):
+async def reset(request: Request, user: User = Depends(ADMIN), db: AsyncSession = Depends(get_db)):
     """Stops all runners and restores the seeded demo state (about 5 s)."""
     from app.seed.seed import main as seed_main
+    # the sign-in check left this request's read transaction open; TRUNCATE would wait on it forever
+    await db.commit()
     await manager.shutdown()
     hub.reset()
     await asyncio.to_thread(seed_main, ["--reset", "--quiet", "--no-backfill"])

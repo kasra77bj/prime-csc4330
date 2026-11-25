@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import type {
-  Adjustment, AlertOut, Prediction, Reading, Recommendation, SessionDetail, SessionStatus, SignalKey,
+  Adjustment, AlertOut, Prediction, Quality, Reading, Recommendation, SessionDetail, SessionStatus, SignalKey,
 } from "../api/types";
 
 export interface Point { t: number; v: number }
@@ -16,12 +16,14 @@ export interface LiveSession {
   recs: Record<string, Recommendation>;
   preds: { extrusion_rate: Prediction[]; interlayer_delay: Prediction[] };
   adjustments: Adjustment[];
+  quality: Quality | null;
+  tick: number;                  // bumps on every closed checkpoint/layer (pages refetch layer data)
   loaded: boolean;
 }
 
 const empty = (): LiveSession => ({
   detail: null, status: null, latest: null, lastAny: null, series: {}, alerts: {}, recs: {},
-  preds: { extrusion_rate: [], interlayer_delay: [] }, adjustments: [], loaded: false,
+  preds: { extrusion_rate: [], interlayer_delay: [] }, adjustments: [], quality: null, tick: 0, loaded: false,
 });
 
 interface LiveStore {

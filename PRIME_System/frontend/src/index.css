@@ -11,3 +11,15 @@
 
 body { @apply bg-canvas text-text font-sans antialiased; }
 .tabular { font-variant-numeric: tabular-nums; }
+
+/* Report "Export > PDF": the browser prints the report page (docs/16 §5) */
+@media print {
+  @page { size: letter; margin: 12mm; }
+  .no-print { display: none !important; }
+  body { background: var(--surface); }
+  .print-break { break-inside: avoid; }
+}
+
+/* Modal / drawer / coach-mark backdrops (Tailwind opacity modifiers don't work on var() colors) */
+.backdrop { background: color-mix(in srgb, var(--charcoal) 45%, transparent); }
+.backdrop-strong { background: color-mix(in srgb, var(--charcoal) 65%, transparent); }

@@ -51,7 +51,7 @@ async function finishLogin(t: TokenOut | LoginOut, nav: ReturnType<typeof useNav
   st.setMe(me);
   socket.connect(t.access_token!);
   const ob = me.onboarding as Record<string, boolean>;
-  nav(ob && !ob.welcome_done && !ob.dismissed ? "/dashboard?welcome=1" : "/dashboard", { replace: true });
+  nav(ob && !ob.welcome_done && !ob.dismissed ? "/onboarding/welcome" : "/dashboard", { replace: true });
 }
 
 export function LoginPage() {
