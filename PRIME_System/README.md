@@ -36,6 +36,21 @@ Then copy the six model files from Box (`Milestone 2\PRIME_System\ml_models\`) i
 
 API docs with a "Try it out" button: http://localhost:8000/docs. Demo controls (Admin): `POST /api/v1/demo/reset`, `/demo/sessions/{id}/speed`, `/jump`, `/trigger`, `/disconnect`.
 
+## Tech stack
+| Layer | Tools |
+|---|---|
+| Backend | Python 3.12 · FastAPI 0.115 + Uvicorn · WebSockets · Pydantic v2 + pydantic-settings |
+| Database | PostgreSQL 16 · SQLAlchemy 2.0 (async, asyncpg; psycopg 3 for scripts) · Alembic migrations |
+| Security | argon2 password hashing · PyJWT tokens · pyotp 2FA + qrcode enrollment · cryptography (encrypted 2FA secrets) |
+| Data | pandas · pyarrow (Parquet) · openpyxl (lab `.xlsx`) · PyYAML (scenarios, mappings) |
+| Machine learning | XGBoost 3.4.1 (extrusion rate) · scikit-learn 1.8.0 Random Forest (interlayer delay) · joblib · SHAP explanations · NumPy |
+| Frontend | React 18 · TypeScript 5.6 · Vite 5 · Tailwind CSS 3 (team palette in `tokens.css`) · React Router 6 |
+| Frontend state + charts | TanStack Query 5 · Zustand 5 · Recharts 3 · Lucide icons · Inter / JetBrains Mono bundled via @fontsource (offline) |
+| API types | openapi-typescript, generated from the backend's OpenAPI schema (`npm run gen:api`) |
+| Tests | pytest + pytest-asyncio + httpx · Vitest + Testing Library + jsdom · playwright-core 1.56 end-to-end (`make e2e`, uses the installed Chrome) |
+| Quality | ruff · ESLint · TypeScript strict |
+| Infrastructure | Docker Compose (Postgres, backend :8000, frontend :5173) · Makefile · Git + GitHub |
+
 ## Where things are
 | Path | What |
 |---|---|
