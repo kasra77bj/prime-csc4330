@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, PauseCircle, Sparkles } from "lucide-react";
 import { useEffect, useRef, type ReactNode } from "react";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import { post } from "../api/client";
@@ -69,6 +69,19 @@ export function PrintLayout({ children }: { children: ReactNode }) {
         const geo = a?.signal === "sll_width" || a?.signal === "sll_height";
         return <AlertBanner alert={a} onView={geo && !pathname.endsWith("/vision") ? () => nav(`/prints/${sessionId}/vision`) : undefined} />;
       })()}
+      {s.status === "paused" && d?.auto_paused && (   // critical alert -> the runner paused the print and waits for a decision
+        <div role="alert" data-testid="auto-pause-banner" className="no-print flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-critical bg-critical-50 px-4 py-3 text-sm sm:px-6">
+          <PauseCircle aria-hidden className="h-5 w-5 shrink-0 text-critical" />
+          <span className="font-semibold text-critical">Print paused automatically</span>
+          <span className="text-text">PRIME paused this print because of a critical alert, so the team can review it. Accept or modify the AI suggestion to continue (the operator can also press Resume).</span>
+          {!pathname.endsWith("/ai") && (
+            <button type="button" onClick={() => nav(`/prints/${sessionId}/ai`)}
+              className="ml-auto inline-flex items-center gap-1 rounded-ctl bg-brand-600 px-3 py-1.5 font-semibold text-white hover:bg-brand-700">
+              <Sparkles aria-hidden className="h-4 w-4" /> Review AI suggestion
+            </button>
+          )}
+        </div>
+      )}
       <div className="flex-1">{children}</div>
       {sessionId && (
         <ControlBar sessionId={sessionId} status={s.status} title={d ? `${d.job_name}` : ""} layer={layer} totalLayers={d?.total_layers ?? null} />

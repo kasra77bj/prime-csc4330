@@ -33,6 +33,7 @@ Then copy the six model files from Box (`Milestone 2\PRIME_System\ml_models\`) i
 | Engineer | `engineer@prime.demo` | `engineer123` |
 | Operator (persona) | `maya@prime.demo` | `Prime!2026` |
 | Manager (persona) | `jordan@prime.demo` | `Prime!2026` |
+| Team lead (Kasra, Carlos: engineer + admin rights, can start prints) | `kasra@prime.demo`, `carlos@prime.demo` | `Prime!2026` |
 
 API docs with a "Try it out" button: http://localhost:8000/docs. Demo controls (Admin): `POST /api/v1/demo/reset`, `/demo/sessions/{id}/speed`, `/jump`, `/trigger`, `/disconnect`.
 

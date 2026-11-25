@@ -6,21 +6,21 @@ from app.core.rbac import has_permission
 from app.models import UserRole as R
 
 EXPECTED = {
-    P.view_live: {R.operator, R.engineer, R.admin, R.manager},
-    P.control_session: {R.operator, R.engineer},
-    P.acknowledge_alert: {R.operator, R.engineer},
-    P.flag_frame: {R.operator, R.engineer},
+    P.view_live: {R.operator, R.engineer, R.admin, R.manager, R.lead},
+    P.control_session: {R.operator, R.engineer, R.lead},
+    P.acknowledge_alert: {R.operator, R.engineer, R.lead},
+    P.flag_frame: {R.operator, R.engineer, R.lead},
     P.escalate: {R.operator},
-    P.view_raw_data: {R.engineer, R.admin},
-    P.decide_recommendation: {R.engineer},
-    P.manual_adjust: {R.engineer},
-    P.resolve_alert: {R.engineer},
-    P.manage_sessions: {R.engineer, R.admin},
-    P.view_reports: {R.engineer, R.admin, R.manager},
-    P.export_data: {R.engineer, R.manager},
-    P.manage_users: {R.admin},
-    P.demo_controls: {R.admin},
-    P.view_audit: {R.admin},
+    P.view_raw_data: {R.engineer, R.admin, R.lead},
+    P.decide_recommendation: {R.engineer, R.lead},
+    P.manual_adjust: {R.engineer, R.lead},
+    P.resolve_alert: {R.engineer, R.lead},
+    P.manage_sessions: {R.engineer, R.admin, R.lead},
+    P.view_reports: {R.engineer, R.admin, R.manager, R.lead},
+    P.export_data: {R.engineer, R.manager, R.lead},
+    P.manage_users: {R.admin, R.lead},
+    P.demo_controls: {R.admin, R.lead},
+    P.view_audit: {R.admin, R.lead},
 }
 
 
@@ -48,3 +48,11 @@ async def test_endpoints_enforce_roles(client, auth):
     assert (await client.post("/api/v1/demo/reset", headers=eng)).status_code == 403
     assert (await client.post(f"/api/v1/sessions/{s['id']}/escalate", headers=eng, json={})).status_code == 403
     assert (await client.get("/api/v1/me")).status_code == 401
+
+
+async def test_team_lead_can_start_and_manage(client, auth):
+    """Kasra and Carlos (Team lead) can do everything an engineer can (start the demo print) and still manage users."""
+    lead = await auth("lead")
+    assert (await client.get("/api/v1/users", headers=lead)).status_code == 200
+    s = await _demo_session(client, lead)
+    assert (await client.get(f"/api/v1/sessions/{s['id']}/readings?raw=true", headers=lead)).status_code == 200

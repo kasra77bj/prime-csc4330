@@ -147,3 +147,35 @@ async def test_history_has_accepted_suggestion(client, auth):
     recs = (await client.get(f"/api/v1/sessions/{hist['id']}/recommendations", headers=op)).json()
     assert len(recs) == 1 and recs[0]["status"] == "accepted" and recs[0]["title"] == "Increase pump speed 18 → 24 RPM"
     _ = uuid
+
+
+async def test_critical_alert_auto_pauses_until_ai_decision(client, auth):
+    """Edit 6: a critical alert pauses the live print; accepting the AI suggestion resumes it and the
+    print returns to the main (corrected) track at the next layer. Motor power is shown as a positive value."""
+    from app.models import ControlEvent
+    eng = await auth("engineer")
+    sid = await _clone_demo_session()
+    r = await _live_runner(sid)
+    await r.run_fast(max_layer=5)
+    rec = (await _recs(sid))[0]
+    await client.post(f"/api/v1/recommendations/{rec.id}/reject", headers=eng,
+                      json={"reason": "disagree_model", "note": "show the critical path"})
+    await r.run_fast(max_layer=6)
+    assert r.branch_active and r.status == SessionStatus.paused and r.auto_paused
+    detail = (await client.get(f"/api/v1/sessions/{sid}", headers=eng)).json()
+    assert detail["status"] == "paused" and detail["auto_paused"] is True
+    assert detail["pause_reason"].startswith("Paused automatically")
+    async with SessionLocal() as db:
+        ev = (await db.scalars(select(ControlEvent).where(ControlEvent.session_id == sid))).all()
+    assert ev and ev[-1].user_id is None
+    pending = [x for x in await _recs(sid) if x.status == RecStatus.pending]
+    assert pending, "an AI suggestion is waiting for the engineer"
+    res = await client.post(f"/api/v1/recommendations/{pending[-1].id}/accept", headers=eng)
+    assert res.status_code == 200, res.text
+    assert r.status == SessionStatus.running and not r.auto_paused
+    await r.run_fast(max_layer=7)
+    assert r.recovered and not r.branch_active
+    readings = (await client.get(f"/api/v1/sessions/{sid}/readings?signals=motor_power&last_s=600",
+                                 headers=eng)).json()["points"]
+    assert readings and all((p["motor_power"] or 0) >= 0 for p in readings)
+    manager.runners.pop(sid, None)

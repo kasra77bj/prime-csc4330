@@ -4,40 +4,32 @@ import { useNavigate } from "react-router-dom";
 import { ApiError, get, post } from "../api/client";
 import type { EnrollOut, LoginOut, MeOut, TokenOut } from "../api/types";
 import { Button } from "../components/Button";
-import { Logo } from "../components/Logo";
+import { LogoMark } from "../components/Logo";
 import { useAuth } from "../store/auth";
 import { socket } from "../ws/socket";
 
-function Hero() {
+/** Sign-in frame: one card in the middle of the page with the PRIME logo above it. */
+function Frame({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative hidden flex-1 flex-col justify-between overflow-hidden bg-charcoal p-10 text-white lg:flex">
-      <Logo light tagline />
-      <svg viewBox="0 0 400 260" className="absolute -right-10 bottom-0 w-[560px] opacity-25" aria-hidden fill="none">
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-canvas px-4 py-10">
+      <svg viewBox="0 0 400 260" className="pointer-events-none absolute -bottom-10 left-1/2 w-[900px] -translate-x-1/2 opacity-[0.07]" aria-hidden fill="none">
         {[0, 1, 2, 3, 4, 5, 6].map((i) => (
           <path key={i} d={`M20 ${230 - i * 28} C 120 ${222 - i * 28}, 260 ${238 - i * 28}, 380 ${228 - i * 28}`}
             stroke={i % 2 ? "#1F5F8B" : "#2E7D32"} strokeWidth={14} strokeLinecap="round" />
         ))}
       </svg>
-      <div className="relative max-w-md">
-        <h2 className="text-3xl font-semibold leading-tight">See every print condition live. Correct a layer while it is still correctable.</h2>
-        <p className="mt-3 text-white/70">Real-time monitoring and AI process control for concrete 3D printing.</p>
-      </div>
-      <p className="relative flex items-center gap-2 text-sm text-white/70">
-        <Lock aria-hidden className="h-4 w-4" /> Secured with 2-factor authentication · encrypted in transit and at rest
-      </p>
-    </div>
-  );
-}
-
-function Frame({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex min-h-screen bg-surface">
-      <Hero />
-      <div className="flex flex-1 items-center justify-center p-6">
-        <div className="w-full max-w-[400px]">
-          <div className="mb-8 lg:hidden"><Logo tagline /></div>
-          {children}
+      <div className="relative flex w-full max-w-[440px] flex-col items-center">
+        <div className="mb-6 flex flex-col items-center gap-3 text-center" data-testid="login-logo">
+          <LogoMark className="h-16 w-16" />
+          <div>
+            <div className="text-2xl font-bold tracking-wide text-text">PRIME</div>
+            <div className="text-xs font-semibold uppercase tracking-[0.12em] text-text-muted">AI-powered concrete 3D printing</div>
+          </div>
         </div>
+        <div className="w-full rounded-card bg-surface p-8 shadow-md">{children}</div>
+        <p className="mt-6 flex items-center gap-2 text-xs text-text-muted">
+          <Lock aria-hidden className="h-4 w-4" /> Secured with 2-factor authentication · encrypted in transit and at rest
+        </p>
       </div>
     </div>
   );

@@ -121,20 +121,24 @@ export function LiveMonitorPage() {
               <Button variant="secondary" className="ml-auto" onClick={escalate}><Megaphone aria-hidden className="h-4 w-4" /> Escalate to engineer</Button>
             )}
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-3">
+          {/* Row 1: layer width · layer height · material temperature; row 2: motor power · pump speed · print speed; row 3: interlayer delay */}
+          <div className="grid gap-4 sm:grid-cols-3" data-testid="live-tiles">
             {tile("sll_width", {
               range: job ? `Target ${job.target_layer_width_mm} ± ${job.width_tolerance_mm} mm` : "",
               size: "lg", digits: 2,
               levelLabel: levelOf("sll_width") === "ok" ? undefined : (r.sll_width ?? 0) < (job?.target_layer_width_mm ?? 0) ? "Below target" : "Above target",
             })}
+            {tile("sll_height", {
+              range: job ? `Target ${job.target_layer_height_mm} ± ${job.height_tolerance_mm} mm` : "",
+              size: "lg", digits: 2,
+              levelLabel: levelOf("sll_height") === "ok" ? undefined : (r.sll_height ?? 0) < (job?.target_layer_height_mm ?? 0) ? "Below target" : "Above target",
+            })}
+            {tile("temperature", { size: "lg" })}
+            {tile("motor_power", { range: "Duty × voltage × current, as a positive value" })}
             {tile("pump_rpm", {
-              size: "lg",
               ai: lastExt && Math.abs(lastExt.value - (r.pump_rpm ?? lastExt.value)) >= 1 ? `Model ${fmt(lastExt.value, 0)} RPM` : lastExt ? "Model agrees" : undefined,
             })}
-            {tile("temperature")}
-            {tile("motor_power", { range: "Duty × voltage × current" })}
             {tile("print_speed", { secondary: <>Nozzle {s.detail?.printer?.nozzle ?? "–"} · flow {fmt(r.flow, 0)} mm³/s</> })}
-            {tile("sll_height", { range: job ? `Target ${job.target_layer_height_mm} ± ${job.height_tolerance_mm} mm` : "", digits: 2 })}
             <MetricTile label="Interlayer delay" unit="min" digits={0} value={any?.delay_setting_min ?? s.detail?.current_delay_min}
               level="ok" levelLabel="Setting" range="Wait before the next layer"
               ai={lastDly ? `Model ${lastDly.value} min · ${Math.round((lastDly.confidence ?? 0) * 100)}%` : undefined} />

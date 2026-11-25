@@ -33,8 +33,8 @@ DEMO_USERS = [
     ("Dev Patel", "dev@prime.demo", UserRole.engineer, "DEVPRIMEDEMOPRIMEDEMOSECRETKEYAB", DEMO_PASSWORD),
     ("Sam Lee", "sam@prime.demo", UserRole.admin, "SAMPRIMEDEMOPRIMEDEMOSECRETKEYAB", DEMO_PASSWORD),
     ("Jordan Brooks", "jordan@prime.demo", UserRole.manager, "JORDANPRIMEDEMOPRIMEDEMOSECRETKE", DEMO_PASSWORD),
-    ("Kasra Banijamali", "kasra@prime.demo", UserRole.admin, "KASRAPRIMEDEMOPRIMEDEMOSECRETKEY", DEMO_PASSWORD),
-    ("Carlos Manosalvas", "carlos@prime.demo", UserRole.admin, "CARLOSPRIMEDEMOPRIMEDEMOSECRETKE", DEMO_PASSWORD),
+    ("Kasra Banijamali", "kasra@prime.demo", UserRole.lead, "KASRAPRIMEDEMOPRIMEDEMOSECRETKEY", DEMO_PASSWORD),
+    ("Carlos Manosalvas", "carlos@prime.demo", UserRole.lead, "CARLOSPRIMEDEMOPRIMEDEMOSECRETKE", DEMO_PASSWORD),
 ]
 
 SENSORS = [
@@ -52,7 +52,7 @@ SENSORS = [
 PRINTER_LIMITS = {
     Signal.temperature: (18.0, 24.0, 15.0, 27.0, 1.5),
     Signal.pump_rpm: (5.0, 75.0, 0.0, 80.0, None),
-    Signal.motor_power: (-7.0, 0.0, -8.5, 0.5, None),
+    Signal.motor_power: (0.0, 7.0, None, 8.5, None),   # shown as a positive magnitude |duty x V x I|
     Signal.voltage: (11.5, 12.5, 11.0, 13.0, None),
     Signal.print_speed: (5.0, 20.0, 0.0, 25.0, None),
 }

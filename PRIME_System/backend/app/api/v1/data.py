@@ -81,12 +81,12 @@ async def layers(session_id: uuid.UUID, _: User = Depends(VIEW), db: AsyncSessio
     for c in cps:
         by_layer.setdefault(c.layer_id, []).append({
             "id": str(c.id), "checkpoint": c.checkpoint_no, "ts": c.ts, "sll_width_mm": c.sll_width_mm,
-            "sll_height_mm": c.sll_height_mm, "temperature": c.temperature, "motor_power": c.motor_power,
+            "sll_height_mm": c.sll_height_mm, "temperature": c.temperature, "motor_power": abs(c.motor_power),
             "print_speed": c.print_speed, "flow": c.flow, "pump_rpm": c.pump_rpm})
     return [{"layer": x.layer_no, "started_at": x.started_at, "ended_at": x.ended_at,
              "measured_width_mm": x.measured_width_mm, "measured_height_mm": x.measured_height_mm,
              "total_height_mm": x.total_height_mm, "interlayer_delay_min": x.interlayer_delay_min,
-             "avg_rpm": x.avg_rpm, "avg_temperature": x.avg_temperature, "avg_motor_power": x.avg_motor_power,
+             "avg_rpm": x.avg_rpm, "avg_temperature": x.avg_temperature, "avg_motor_power": abs(x.avg_motor_power) if x.avg_motor_power is not None else None,
              "within_tolerance": x.within_tolerance, "checkpoints": by_layer.get(x.id, [])} for x in lays]
 
 

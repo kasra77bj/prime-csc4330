@@ -23,7 +23,7 @@ from app.models import (AdjustParam, Adjustment, AdjustSource, Escalation, Predi
 from app.ws.hub import hub
 
 FEATURE_TEXT = {
-    "Motor Power": lambda v: f"pump motor power ({v:.2f} W)",
+    "Motor Power": lambda v: f"pump motor power ({abs(v):.2f} W)",
     "Flow": lambda v: f"flow demand ({v:,.0f} mm³/s)",
     "Temperature (C)": lambda v: f"material temperature ({v:.1f} °C)",
 }

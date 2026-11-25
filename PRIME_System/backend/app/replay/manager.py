@@ -92,6 +92,8 @@ class RunnerManager:
             runner = await self._spawn(session_id)
         elif runner is not None:
             runner.status = new_status          # the loop sees this within one tick (<= 0.1 s at 10x)
+            if action in (ControlAction.resume, ControlAction.stop):
+                runner.auto_paused = False
             if action == ControlAction.stop:     # acknowledge now; close the open layer in the background
                 t = asyncio.create_task(self._finalize(runner))
                 self._bg.add(t)

@@ -46,6 +46,8 @@ ROLE_PERMISSIONS: dict[UserRole, frozenset[Permission]] = {
                                P.manage_users, P.demo_controls, P.view_audit}),
     UserRole.manager: frozenset({P.view_live, P.view_reports, P.export_data}),
 }
+# Team lead (the project team's own accounts): engineer + admin rights, e.g. start prints and run the demo panel.
+ROLE_PERMISSIONS[UserRole.lead] = ROLE_PERMISSIONS[UserRole.engineer] | ROLE_PERMISSIONS[UserRole.admin]
 
 
 def has_permission(role: UserRole, perm: Permission) -> bool:

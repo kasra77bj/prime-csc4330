@@ -48,7 +48,10 @@ async function login(page, email, pw, landing = /\/(dashboard|onboarding)/) {
   await page.waitForURL(landing, { timeout: 15000 });
 }
 async function holdStop(page) {
-  const box = await page.getByRole("button", { name: /Hold to stop/ }).boundingBox();
+  const btn = page.getByRole("button", { name: /Hold to stop/ });
+  await btn.waitFor();
+  await page.waitForTimeout(300);   // let banners settle so the button does not move under the pointer
+  const box = await btn.boundingBox();
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.mouse.down();
   await page.waitForTimeout(1900);
@@ -262,8 +265,10 @@ try {
     await solo.getByRole("button", { name: /Manual adjust/ }).and(solo.locator("[disabled]")).waitFor();
     await shot(solo, "11_operator_locked_ai");
   });
-  await step("operator-only", "no action -> critical width alert on every print tab", async () => {
+  await step("operator-only", "no action -> critical width alert pauses the print automatically", async () => {
     await solo.getByRole("alert").filter({ hasText: /Critical/ }).filter({ hasText: /Layer width/ }).waitFor({ timeout: 60000 });
+    await solo.getByTestId("auto-pause-banner").waitFor({ timeout: 15000 });
+    await text(solo, "Print paused automatically");
     await shot(solo, "12_critical");
   });
   await step("US-07", "hold-to-stop stops the print", async () => {

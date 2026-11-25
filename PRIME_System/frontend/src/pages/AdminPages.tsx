@@ -15,6 +15,7 @@ const ROLES: { v: UserRole; label: string; can: string }[] = [
   { v: "engineer", label: "Engineer", can: "Everything an operator sees, plus AI decisions, manual changes, raw data and reports." },
   { v: "manager", label: "Manager", can: "Read-only: session history, reports and data export. No live control." },
   { v: "admin", label: "Administrator", can: "Creates users, assigns roles, sets up printers. No print control." },
+  { v: "lead", label: "Team lead", can: "Everything an engineer and an administrator can do: starts demo prints, decides on AI suggestions, manages users." },
 ];
 const ROLE_LABEL = Object.fromEntries(ROLES.map((r) => [r.v, r.label])) as Record<UserRole, string>;
 const when = (iso: string | null | undefined) => iso ? new Date(iso).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: "America/Chicago" }) : "Never";

@@ -101,7 +101,7 @@ Common columns on every table except `readings`: `id uuid pk`, `created_at times
 
 ## 5. Seed data (`make seed`)
 - Site: *RECAST Lab*.
-- Users (password `Prime!2026`, TOTP secrets fixed in `seed.py` when `DEMO_MODE=true`): Maya Ortiz (operator), Dev Patel (engineer), Sam Lee (admin), Jordan Brooks (manager), + Kasra and Carlos as admins.
+- Users (password `Prime!2026`, TOTP secrets fixed in `seed.py` when `DEMO_MODE=true`): Maya Ortiz (operator), Dev Patel (engineer), Sam Lee (admin), Jordan Brooks (manager), + Kasra and Carlos as **Team lead** (`lead` role: union of engineer and admin permissions, so they can start and control the demo print and manage users).
 - Printers: Gantry-02 (Bay 2), Arm-01 (Bay 1), Gantry-03 (Bay 3, idle) with sensors and limits from `00_project_context.md`.
 - Jobs: Wall Panel WP-03 (120 layers), Column C-12, Footing F-2.
 - Datasets: imported from `data/raw/*.csv` via mappings.

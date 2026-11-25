@@ -98,6 +98,9 @@ class SessionRunner:
         self.ml_state: dict = {"rejected": {}}                 # filled by app.ml.service.setup
         self.rec_engine = None
         self.auto_decide_user = None                           # backfill: engineer who accepts suggestions
+        self.auto_paused = False                               # paused by a critical alert (not a person)
+        self.recovered = False                                 # came back from the no-action branch
+        self.main_rows: list[dict] = []
         self.finished = asyncio.Event()
 
     # ------------------------------------------------------------------ setup
@@ -111,6 +114,7 @@ class SessionRunner:
             self.scenario: Scenario = load_scenario(s.scenario_name)
             ds = await db.get(Dataset, s.dataset_id)
             self.rows = load_rows(ds.processed_file)
+            self.main_rows = self.rows
             if self.scenario.branch:
                 bds = await db.scalar(select(Dataset).where(Dataset.name == self.scenario.branch.dataset))
                 if bds is not None:
@@ -131,7 +135,12 @@ class SessionRunner:
             for lay in (await db.scalars(select(Layer).where(Layer.session_id == self.session_id))).all():
                 self.layer_ids[lay.layer_no] = lay.id
             b = self.scenario.branch
-            if b and self.branch_rows and self.layer >= b.from_layer and not self._acted(b):
+            late = [a.applied_at_layer for a in (await db.scalars(select(Adjustment).where(
+                Adjustment.session_id == self.session_id, Adjustment.parameter == AdjustParam.pump_rpm,
+                Adjustment.applied_at_layer.is_not(None)))).all()]
+            if b and late and self.layer >= min(late) and not self._acted(b):
+                self.recovered = True                     # restart after a late fix: stay on the main track
+            elif b and self.branch_rows and self.layer >= b.from_layer and not self._acted(b):
                 self.rows, self.branch_active = self.branch_rows, True
             targets = {Signal.sll_width: (self.job.target_layer_width_mm, self.job.width_tolerance_mm),
                        Signal.sll_height: (self.job.target_layer_height_mm, self.job.height_tolerance_mm)}
@@ -169,12 +178,28 @@ class SessionRunner:
 
     def _maybe_branch(self, nxt: dict) -> dict | None:
         b = self.scenario.branch
-        if b and self.branch_rows and not self.branch_active and nxt["layer"] >= b.from_layer \
-                and not self._acted(b):
+        if b and self.branch_rows and not self.branch_active and not self.recovered \
+                and nxt["layer"] >= b.from_layer and not self._acted(b):
             self.rows, self.branch_active = self.branch_rows, True
             self.cursor = next(i for i, r in enumerate(self.rows) if r["layer"] >= nxt["layer"])
             self.events.append(("scenario", {"event": "branch", "dataset": b.dataset, "from_layer": nxt["layer"]}))
             return self._peek()
+        return nxt
+
+    def _maybe_recover(self, nxt: dict) -> dict:
+        """On the no-action branch, an RPM change the engineer approved late brings the print back to the main
+        (recovered) track from the layer where the change applies."""
+        if not self.branch_active or nxt["phase"] != "printing" or nxt["layer"] == self.layer_open:
+            return nxt
+        if any(p[0] == "pump_rpm" and p[3] < nxt["layer"] for p in self.pending):
+            layer = nxt["layer"]
+            idx = next((i for i, r in enumerate(self.main_rows) if r["layer"] >= layer and r["phase"] == "printing"),
+                       None)
+            if idx is not None:
+                self.rows, self.cursor, self.branch_active = self.main_rows, idx, False
+                self.recovered = True
+                self.events.append(("scenario", {"event": "recovered", "from_layer": layer}))
+                return self._peek()
         return nxt
 
     def _take(self) -> dict | None:
@@ -187,6 +212,7 @@ class SessionRunner:
             return r
         if nxt is None:
             return None
+        nxt = self._maybe_recover(nxt)
         nxt = self._maybe_branch(nxt)
         if nxt is None:
             return None
@@ -244,8 +270,13 @@ class SessionRunner:
         r["sim_t_s"] = self.sim_t
         r["ts"] = self._now()
         self.last_row = r
-        self.events.append(("reading", r))
-        decisions = self.alerts.rules.evaluate(r, printing)
+        # Users see motor power as a positive magnitude |duty x V x I|. The raw signed value stays in the
+        # segment rows because the vision checkpoints (model inputs) need the lab sign convention.
+        shown = dict(r)
+        if shown.get("motor_power") is not None:
+            shown["motor_power"] = abs(shown["motor_power"])
+        self.events.append(("reading", shown))
+        decisions = self.alerts.rules.evaluate(shown, printing)
         if decisions:
             self.events.append(("alerts", decisions, layer, r["ts"]))
         return True
@@ -299,7 +330,7 @@ class SessionRunner:
             "measured_width_mm": _mean(rows, "sll_width"), "measured_height_mm": _mean(rows, "sll_height"),
             "total_height_mm": rows[-1].get("total_height") if rows else None,
             "avg_rpm": _mean(rows, "pump_rpm"), "avg_speed": _mean(rows, "print_speed"),
-            "avg_temperature": _mean(rows, "temperature"), "avg_motor_power": _mean(rows, "motor_power"),
+            "avg_temperature": _mean(rows, "temperature"), "avg_motor_power": abs(_mean(rows, "motor_power") or 0.0) if rows else None,
             "within_tolerance": within, "interlayer_delay_min": delay}))
         self.layer_open, self.layer_rows = None, []
 
@@ -322,6 +353,7 @@ class SessionRunner:
             return
         readings, to_publish, other_pub = [], [], []
         quality_due = False
+        critical_alert = None
         async with SessionLocal() as db:
             for ev in events:
                 kind = ev[0]
@@ -365,7 +397,10 @@ class SessionRunner:
                         await hook(self, db, cp)
                 elif kind == "alerts":
                     _, decisions, layer, ts = ev
-                    await self.alerts.apply(db, decisions, layer, ts)
+                    changed = await self.alerts.apply(db, decisions, layer, ts)
+                    for a in changed:
+                        if a.severity.value == "critical" and a.status.value == "open":
+                            critical_alert = a
                 elif kind == "applied":
                     _, adj_id, param, value, layer = ev
                     await db.execute(update(Adjustment).where(Adjustment.id == adj_id)
@@ -417,6 +452,33 @@ class SessionRunner:
                 "delay_setting_min": last.get("delay_setting_min")}, session_id=sid)
         for typ, data in other_pub:
             await hub.publish(self.channel, typ, data, session_id=sid)
+        if critical_alert is not None and self.status == SessionStatus.running:
+            await self._auto_pause(critical_alert)
+
+    async def _auto_pause(self, alert) -> None:
+        """Critical alert -> pause the print so the team can review; the engineer's decision resumes it."""
+        from app.core.audit import audit
+        from app.core.notify import notify
+        from app.models import ControlAction, ControlEvent
+        self.status = SessionStatus.paused
+        self.auto_paused = True
+        reason = f"Paused automatically: {alert.message}"
+        async with SessionLocal() as db:
+            await db.execute(update(PrintSession).where(PrintSession.id == self.session_id)
+                             .values(status=SessionStatus.paused))
+            db.add(ControlEvent(session_id=self.session_id, action=ControlAction.pause, user_id=None,
+                                at=datetime.now(timezone.utc), layer_no=self.layer, reason=reason))
+            audit(db, None, "session.auto_pause", "print_session", self.session_id, None,
+                  {"alert_id": str(alert.id), "reason": reason})
+            for uid in {self.operator_id, self.engineer_id} - {None}:
+                await notify(db, uid, "alert", "Print paused: critical alert",
+                             "Review the AI suggestion. Accepting or modifying it resumes the print; "
+                             "the operator can also press Resume.", f"/prints/{self.session_id}/live")
+            await db.commit()
+        payload = {"status": "paused", "by": None, "action": "pause", "auto": True, "reason": reason}
+        await hub.publish(self.channel, "control", payload, session_id=str(self.session_id))
+        await hub.publish(f"site:{self.printer.site_id}", "control",
+                          {"session_id": str(self.session_id), **payload}, session_id=str(self.session_id))
 
     # ------------------------------------------------------------------ loops
     async def run_live(self) -> None:

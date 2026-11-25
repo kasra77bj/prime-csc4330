@@ -10,7 +10,7 @@ import { useNotes } from "../hooks/useNotifications";
 import { useAuth, useCan } from "../store/auth";
 import { socket } from "../ws/socket";
 
-const ROLE_LABEL: Record<string, string> = { operator: "Operator", engineer: "Engineer", admin: "Admin", manager: "Manager" };
+const ROLE_LABEL: Record<string, string> = { operator: "Operator", engineer: "Engineer", admin: "Admin", manager: "Manager", lead: "Team lead" };
 
 function NavItem({ to, icon: Icon, label, locked }: { to: string; icon: typeof Gauge; label: string; locked?: boolean }) {
   return (

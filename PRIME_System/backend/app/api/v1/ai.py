@@ -104,7 +104,16 @@ async def _decide(rec_id: uuid.UUID, action: str, user: User, db: AsyncSession, 
         out["adjustment"] = adj_dict(adj, user.full_name)
         await hub.publish(f"session:{rec.session_id}", "adjustment", {**out["adjustment"], "status": "queued"},
                           session_id=str(rec.session_id))
+        await _resume_if_auto_paused(rec.session_id, user, "Resumed after the engineer approved the AI suggestion")
     return out
+
+
+async def _resume_if_auto_paused(session_id: uuid.UUID, user: User, reason: str) -> None:
+    """A print paused by a critical alert continues once the engineer has decided on a change."""
+    runner = manager.get(session_id)
+    if runner is not None and runner.auto_paused and runner.status.value == "paused":
+        from app.models import ControlAction
+        await manager.control(session_id, ControlAction.resume, user.id, reason)
 
 
 @router.post("/recommendations/{rec_id}/accept")
@@ -164,6 +173,7 @@ async def manual_adjustment(session_id: uuid.UUID, body: ManualIn, request: Requ
     await hub.publish(f"session:{s.id}", "adjustment", {**data, "status": "queued"}, session_id=str(s.id))
     if pending is not None:
         await publish_rec(pending, printer.site_id)
+    await _resume_if_auto_paused(s.id, user, "Resumed after the engineer's manual adjustment")
     return data
 
 

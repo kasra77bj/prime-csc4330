@@ -45,7 +45,7 @@ Setup: window A = **Operator (Maya)** at 1024×768 (tablet view); window B = **E
 - [ ] Time the run; target ≤ 10 min, leave 2–3 min for questions
 
 ## 4. Fallback plan
-1. **Pause missed at layer 5** (red banner at layer 6: the replay took the no-action branch): tell that story instead: critical alert on every tab, the AI still suggests a pump change, Maya uses **hold-to-stop**; then `/demo` → reset and start again if time allows.
+1. **Pause missed at layer 5** (red banner at layer 6: the replay took the no-action branch): PRIME **pauses the print automatically** ("Print paused automatically" banner). Explain the critical alert, then the engineer clicks **Review AI suggestion** and accepts it: the print resumes and returns to the corrected track at the next layer. (Or Maya uses **hold-to-stop**, then `/demo` → reset.)
 2. **Something else breaks mid-demo:** `/demo` panel → jump to the next scripted layer, or reset and start again.
 3. **Backend crash:** `docker compose restart backend`; runner resumes from the persisted cursor.
 4. **Total failure:** play the **backup screen recording** (record the final rehearsal, 1080p, ~10 min, saved locally and on a USB stick).

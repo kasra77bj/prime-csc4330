@@ -36,7 +36,7 @@ async def _summary(db: AsyncSession, s: PrintSession) -> SessionSummary:
 @router.get("/printers", response_model=list[PrinterLive])
 async def printers(user: User = Depends(VIEW), db: AsyncSession = Depends(get_db)):
     site_ids = None
-    if user.role != UserRole.admin:
+    if user.role not in (UserRole.admin, UserRole.lead):
         me = await db.scalar(select(User).options(selectinload(User.sites)).where(User.id == user.id))
         site_ids = [s.id for s in me.sites]
     q = select(Printer).where(Printer.is_active.is_(True)).order_by(Printer.bay)
@@ -127,7 +127,7 @@ async def create_session(body: SessionCreateIn, request: Request,
         if await db.get(model, key) is None:
             raise not_found(model.__name__)
     s = PrintSession(**body.model_dump(), status=SessionStatus.scheduled,
-                     engineer_id=body.engineer_id or (user.id if user.role == UserRole.engineer else None))
+                     engineer_id=body.engineer_id or (user.id if user.role in (UserRole.engineer, UserRole.lead) else None))
     db.add(s)
     await db.flush()
     audit(db, user.id, "session.create", "print_session", s.id, None, body.model_dump(), request)
@@ -151,7 +151,14 @@ async def get_session(session_id: uuid.UUID, _: User = Depends(VIEW), db: AsyncS
     open_alerts = await db.scalar(select(Alert.id).where(Alert.session_id == s.id,
                                                          Alert.status != AlertStatus.resolved).limit(1))
     base = (await _summary(db, s)).model_dump()
-    return SessionDetail(**base, dataset_id=s.dataset_id, operator_id=s.operator_id, engineer_id=s.engineer_id,
+    pause_reason, auto_paused = None, False
+    if s.status == SessionStatus.paused:
+        from app.models import ControlEvent
+        ev = await db.scalar(select(ControlEvent).where(ControlEvent.session_id == s.id)
+                             .order_by(ControlEvent.at.desc()).limit(1))
+        if ev is not None:
+            pause_reason, auto_paused = ev.reason, ev.user_id is None
+    return SessionDetail(**base, pause_reason=pause_reason, auto_paused=auto_paused, dataset_id=s.dataset_id, operator_id=s.operator_id, engineer_id=s.engineer_id,
                          replay_speed=s.replay_speed, sim_time_s=s.sim_time_s, last_seq=s.last_seq,
                          limits=[LimitOut(signal=x.signal, normal_min=x.normal_min, normal_max=x.normal_max,
                                           critical_min=x.critical_min, critical_max=x.critical_max)

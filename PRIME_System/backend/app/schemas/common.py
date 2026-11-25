@@ -202,6 +202,8 @@ class SessionDetail(SessionSummary):
     latest: dict | None = None
     job: JobOut | None = None
     printer: PrinterOut | None = None
+    pause_reason: str | None = None      # set when the print is paused; "Paused automatically: ..." for alerts
+    auto_paused: bool = False
 
 
 class ControlIn(BaseModel):

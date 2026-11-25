@@ -94,7 +94,7 @@ export function RolePage() {
   const nav = useNavigate();
   const me = useAuth((s) => s.me);
   const perms = new Set(me?.permissions ?? []);
-  const role = { operator: "Operator", engineer: "Engineer", admin: "Administrator", manager: "Manager" }[me?.role ?? "operator"];
+  const role = { operator: "Operator", engineer: "Engineer", admin: "Administrator", manager: "Manager", lead: "Team lead" }[me?.role ?? "operator"];
   const next = () => {
     saveOnboarding({ role_seen: true }).catch(() => undefined);
     nav(perms.has("control_session") ? "/onboarding/tour" : perms.has("manage_sessions") ? "/onboarding/printer" : "/dashboard");

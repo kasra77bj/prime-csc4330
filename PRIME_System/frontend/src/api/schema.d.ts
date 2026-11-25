@@ -1543,6 +1543,13 @@ export interface components {
             } | null;
             job?: components["schemas"]["JobOut"] | null;
             printer?: components["schemas"]["PrinterOut"] | null;
+            /** Pause Reason */
+            pause_reason?: string | null;
+            /**
+             * Auto Paused
+             * @default false
+             */
+            auto_paused: boolean;
         };
         /**
          * SessionStatus
@@ -1701,7 +1708,7 @@ export interface components {
          * UserRole
          * @enum {string}
          */
-        UserRole: "operator" | "engineer" | "admin" | "manager";
+        UserRole: "operator" | "engineer" | "admin" | "manager" | "lead";
         /** ValidationError */
         ValidationError: {
             /** Location */
@@ -2797,6 +2804,7 @@ export interface operations {
                 status?: components["schemas"]["AlertStatus"] | null;
                 session_id?: string | null;
                 severity?: components["schemas"]["Severity"] | null;
+                active?: boolean;
                 limit?: number;
             };
             header?: never;

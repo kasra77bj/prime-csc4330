@@ -30,7 +30,7 @@ Written after Phase 0 (Nov 20, 2026), once the team's pickles and lab data were 
 | `voltage` | V | 11.8–12.1 | 11.9–12.3 |
 | `current` | A | 0.66–0.89 | 0.61–0.88 |
 | `duty` | % (signed) | −0.56 to −0.10 | −0.44 to −0.08 |
-| `motor_power` = duty×V×I | W | −5.6 to −0.8 | −3.5 to −0.8 |
+| `motor_power` = duty×V×I | W | −5.6 to −0.8 | −3.5 to −0.8 (stored signed; **shown as the positive magnitude** 0.8–3.5 in readings, tiles, alerts, layers and reports; the models still get the signed value) |
 | `print_speed` | mm/s | 10 | 10 |
 | `sll_width` (vision) | mm | 18.2–20.2 | 16.7–19.7 |
 | `sll_height` (vision) | mm | 14.3–16.0 | 15.0–16.0 |
@@ -51,7 +51,9 @@ Removed from earlier specs: `ambient_temp`, `pump_power` in kW, `layer_width/lay
 | `hist_wp02_completed` | Yesterday's completed print (Sessions/Report pages have content before the demo) | 8 | 3,168 |
 | `lab_raw_reference` | The team's real lab rows (`raw_data/raw.xlsx`), kept as the range reference | 5 | 20 |
 
-Each generated dataset has a `*_checkpoints.csv` (4 rows/layer with the model outputs at generation time, used as test fixtures) and a `*_stream.csv` (1 Hz rows: `printing` phase with checkpoint segments, then `interlayer_delay` phase). Regenerate with `make generate-data` (deterministic seeds).
+Each generated dataset has a `*_checkpoints.csv` (4 rows/layer with the model outputs at generation time, used as test fixtures) and a `*_stream.csv` (1 Hz rows: `printing` phase with checkpoint segments, then `interlayer_delay` phase). Regenerate with `make generate-data` (deterministic seeds). Between vision checkpoints the stream adds visible, seeded jitter: layer width ±0.45 mm, layer height ±0.55 mm, material temperature ±0.12 °C (the `checkpoint_mark` rows that feed the models are unchanged).
+
+**Auto-pause (Nov 25):** any *critical* alert pauses a running print automatically (control event with no user, audit `session.auto_pause`, operator and engineer notified, red "Print paused automatically" banner on every print tab). Accepting or modifying an AI suggestion, or a manual adjustment, resumes it; rejecting leaves it paused (the operator can still press Resume or hold STOP). If the no-action branch was taken and the RPM change is accepted, the replay returns to the main (corrected) track at the next layer.
 
 ## 4. The demo story (replaces 14 §5 and the numbers in 18 §2)
 | Layer | Temp °C | Pump RPM (applied) | Model RPM | Width at end (mm) | RF delay | What happens |

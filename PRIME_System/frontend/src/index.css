@@ -13,8 +13,18 @@ body { @apply bg-canvas text-text font-sans antialiased; }
 .tabular { font-variant-numeric: tabular-nums; }
 
 /* Report "Export > PDF": the browser prints the report page (docs/16 §5) */
+/* Report print frame (ReportPages): a plain block on screen, a table with a repeating header when printed */
+.print-only { display: none; }
+.print-frame, .print-frame > tbody, .print-frame > tbody > tr, .print-frame > tbody > tr > td { display: block; }
+
 @media print {
-  @page { size: letter; margin: 12mm; }
+  @page { size: letter; margin: 10mm 12mm 12mm; }
+  .print-only { display: table-header-group; }
+  .print-frame { display: table; width: 100%; border-collapse: collapse; }
+  .print-frame > tbody { display: table-row-group; }
+  .print-frame > tbody > tr, .print-frame > thead > tr { display: table-row; }
+  .print-frame > tbody > tr > td, .print-frame > thead > tr > td { display: table-cell; padding: 0; }
+  .print-header { padding: 0 0 6px; margin-bottom: 4px; }
   .no-print { display: none !important; }
   body { background: var(--surface); }
   .print-break { break-inside: avoid; }

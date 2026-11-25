@@ -25,7 +25,7 @@ FastAPI (Python 3.11) · SQLAlchemy 2 + Alembic · PostgreSQL 16 · WebSockets �
 `backend/` FastAPI app (`app/models` = all 29 tables, `app/replay/source_csv.py` ingest, `app/seed/seed.py`) · `frontend/` React app · `ml_models/` **the team's pickles (do not modify; git-ignored)** · `ml/` `model_config.yaml`, `MODEL_REPORT.md`, `inspect_models.py` · `raw_data/raw.xlsx` lab reference · `data/generated/` synthetic datasets + `data/generator/` script · `data/mappings/` · `data/processed/` (parquet, git-ignored) · `data/reports/` · `docs/` specs.
 
 ## Demo logins
-`admin@prime.demo`/`admin123`, `engineer@prime.demo`/`engineer123`, personas `maya@`/`dev@`/`sam@`/`jordan@prime.demo` with `Prime!2026`. 2FA demo code `246810` (DEMO_MODE only).
+`admin@prime.demo`/`admin123`, `engineer@prime.demo`/`engineer123`, personas `maya@`/`dev@`/`sam@`/`jordan@prime.demo` and Team leads `kasra@`/`carlos@prime.demo` (role `lead` = engineer + admin permissions) with `Prime!2026`. 2FA demo code `246810` (DEMO_MODE only).
 
 ## Extension points (Phase 3+)
 - Front end: live data comes from `useSessionStream(sessionId)` → `useLive` store; add new WS event types there. API types: regenerate with `npm run gen:api` (backend running); hand-written types for free-form JSON live in `src/api/types.ts`.

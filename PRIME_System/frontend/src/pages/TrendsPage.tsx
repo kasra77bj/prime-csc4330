@@ -72,7 +72,9 @@ export function TrendsPage() {
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
-  const meta = SIGNAL_META[primary];
+  // primary is undefined when no signal is selected: fall back so the page still renders an empty chart
+  const meta = primary ? SIGNAL_META[primary] : { label: "", unit: "", digits: 1 };
+  const empty = sel.length === 0;
   return (
     <PrintLayout>
       <div className="grid gap-6 p-4 sm:p-6 lg:grid-cols-[240px_1fr]">
@@ -124,14 +126,14 @@ export function TrendsPage() {
           <div className="rounded-card bg-surface p-4 shadow-sm">
             <p className="mb-2 text-sm font-semibold">{sel.map((k) => SIGNAL_META[k].label).join(" and ") || "Pick a signal"}
               {q.data && <span className="ml-2 font-normal text-text-muted">· averaged every {q.data.bucket_s} s of print time</span>}</p>
-            {sel.length === 0 ? <p className="py-16 text-center text-sm text-text-muted">Choose at least one signal on the left.</p> :
-              points.length === 0 ? <p className="py-16 text-center text-sm text-text-muted">{q.isLoading ? "Loading…" : "No readings in this window yet."}</p> : (
-                <div className="h-[380px]">
+            {!empty && points.length === 0 ? <p className="py-16 text-center text-sm text-text-muted">{q.isLoading ? "Loading…" : "No readings in this window yet."}</p> : (
+                <div className="relative h-[380px]" data-testid="trend-chart">
+                  {empty && <p className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center text-sm text-text-muted">Choose at least one signal on the left.</p>}
                   <ResponsiveContainer>
-                    <ComposedChart data={data} margin={{ top: 8, right: sel[1] ? 8 : 24, bottom: 8, left: 0 }}>
+                    <ComposedChart data={empty ? [{ t_s: 0, layer: 0, model: null }, { t_s: 600, layer: 0, model: null }] : data} margin={{ top: 8, right: sel[1] ? 8 : 24, bottom: 8, left: 0 }}>
                       <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
                       <XAxis dataKey="t_s" type="number" domain={["dataMin", "dataMax"]} tickFormatter={(v: number) => duration(v)} stroke="var(--text-muted)" fontSize={12} />
-                      <YAxis yAxisId="a" domain={["auto", "auto"]} stroke="var(--text-muted)" fontSize={12} width={56} tickFormatter={(v: number) => fmt(v, meta.digits > 1 ? 1 : meta.digits)} />
+                      <YAxis yAxisId="a" domain={empty ? [0, 1] : ["auto", "auto"]} stroke="var(--text-muted)" fontSize={12} width={56} tickFormatter={(v: number) => fmt(v, meta.digits > 1 ? 1 : meta.digits)} />
                       {sel[1] && <YAxis yAxisId="b" orientation="right" domain={["auto", "auto"]} stroke="var(--viz-teal)" fontSize={12} width={56} />}
                       {lim?.normal_min != null && lim.normal_max != null && <ReferenceArea yAxisId="a" y1={lim.normal_min} y2={lim.normal_max} fill="var(--brand-50)" fillOpacity={0.9} ifOverflow={primary === "sll_width" || primary === "sll_height" ? "extendDomain" : "hidden"} />}
                       {lim?.critical_min != null && lim.normal_min != null && <ReferenceArea yAxisId="a" y1={lim.critical_min} y2={lim.normal_min} fill="var(--viz-ochre)" fillOpacity={0.15} ifOverflow="hidden" />}
@@ -143,7 +145,7 @@ export function TrendsPage() {
                       ))}
                       <Tooltip labelFormatter={(v) => `Print time ${duration(Number(v))}`}
                         formatter={(v, name) => [fmt(Number(v), 2), name === "model" ? "AI model" : SIGNAL_META[name as Sig]?.label ?? String(name)]} />
-                      <Line yAxisId="a" dataKey={primary} stroke={COLORS[0]} strokeWidth={2} dot={false} isAnimationActive={false} connectNulls />
+                      {primary && <Line yAxisId="a" dataKey={primary} stroke={COLORS[0]} strokeWidth={2} dot={false} isAnimationActive={false} connectNulls />}
                       {predOf && <Line yAxisId="a" dataKey="model" stroke="var(--viz-violet)" strokeWidth={2} strokeDasharray="6 4" dot={false} isAnimationActive={false} type="stepAfter" connectNulls />}
                       {sel[1] && <Line yAxisId="b" dataKey={sel[1]} stroke={COLORS[1]} strokeWidth={2} dot={false} isAnimationActive={false} connectNulls />}
                     </ComposedChart>

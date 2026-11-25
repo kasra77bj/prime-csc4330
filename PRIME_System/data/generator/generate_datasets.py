@@ -179,14 +179,19 @@ def build(ds: DatasetSpec, xgb, rf):
             # checkpoint values (model inputs); the rows in between get small sensor noise for realism.
             at_mark = s + 1 == print_s or min(int((s + 1) / print_s * CHECKPOINTS), CHECKPOINTS - 1) != idx
             n = 0.0 if at_mark else 1.0
+            # visible bead variation between marks: width/height wider, temperature small (docs/20 section 3)
+            dw = float(np.clip(rng.normal(0, 0.22), -0.45, 0.45))
+            dh = float(np.clip(rng.normal(0, 0.25), -0.55, 0.55))
+            dt = float(np.clip(rng.normal(0, 0.05), -0.12, 0.12))
             stream.append(dict(t_s=t, layer=ls.layer, phase="printing", checkpoint=int(r.checkpoint),
                                speed_mm_s=SPEED_MM_S, nozzle=NOZZLE, mixture=MIX, rpm=int(r.rpm),
-                               sll_width_mm=r.sll_width_mm, sll_height_mm=r.sll_height_mm,
+                               sll_width_mm=round(r.sll_width_mm + n * dw, 3),
+                               sll_height_mm=round(r.sll_height_mm + n * dh, 3),
                                total_height_mm=r.total_height_mm,
                                voltage_v=round(r.voltage_v + n * rng.normal(0, 0.01), 3),
                                current_a=round(r.current_a + n * rng.normal(0, 0.006), 3),
                                duty_pct=round(r.duty_pct * (1 + n * rng.normal(0, 0.008)), 4),
-                               temperature_c=round(r.temperature_c + n * rng.normal(0, 0.015), 3),
+                               temperature_c=round(r.temperature_c + n * dt, 3),
                                checkpoint_mark=bool(at_mark), delay_setting_min=ls.delay_setting))
             t += 1
         if ls.layer != last_layer:

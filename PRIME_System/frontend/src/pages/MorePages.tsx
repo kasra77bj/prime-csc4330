@@ -158,7 +158,7 @@ export function SettingsPage() {
     await saveOnboarding({ welcome_done: false, role_seen: false, tour_done: false, dismissed: false }).catch(() => undefined);
     nav("/onboarding/welcome");
   };
-  const role = { operator: "Operator", engineer: "Engineer", admin: "Administrator", manager: "Manager" }[me?.role ?? "operator"];
+  const role = { operator: "Operator", engineer: "Engineer", admin: "Administrator", manager: "Manager", lead: "Team lead" }[me?.role ?? "operator"];
   return (
     <AppShell title="Settings" subtitle="Your profile and notification preferences">
       <div className="grid max-w-4xl gap-6 p-4 sm:p-6 lg:grid-cols-2">

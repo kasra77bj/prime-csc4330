@@ -85,8 +85,12 @@ export function useSessionStream(sessionId: string | undefined) {
           break;
         }
         case "control": {
-          const c = m.data as { status: SessionStatus };
-          patch(sessionId, (s) => ({ status: c.status, detail: s.detail ? { ...s.detail, status: c.status } : s.detail }));
+          const c = m.data as { status: SessionStatus; auto?: boolean; reason?: string | null };
+          const auto = c.status === "paused" && !!c.auto;
+          patch(sessionId, (s) => ({
+            status: c.status,
+            detail: s.detail ? { ...s.detail, status: c.status, auto_paused: auto, pause_reason: c.status === "paused" ? c.reason ?? null : null } : s.detail,
+          }));
           break;
         }
         case "quality":

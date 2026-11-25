@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Bar, CartesianGrid, ComposedChart, Line, ReferenceArea, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis } from "recharts";
 import { ApiError, download, get, patch, post } from "../api/client";
 import type { Report, SessionDetail, SessionSummary } from "../api/types";
+import { Logo } from "../components/Logo";
 import { Button } from "../components/Button";
 import { LockedButton } from "../components/LockedButton";
 import { StatusPill, type Level } from "../components/StatusPill";
@@ -97,6 +98,21 @@ export function ReportPage() {
   const widthBand = k ? [k.width.target - k.width.tolerance, k.width.target + k.width.tolerance] : null;
   return (
     <AppShell title={title} subtitle={d ? `Job ${d.job_code} · ${span}` : undefined}>
+      {/* The table frame is invisible on screen; when printed (PDF export) its <thead> repeats on every page,
+          so the PRIME logo sits top-left as a header on all pages. */}
+      <table className="print-frame w-full">
+        <thead className="print-only">
+          <tr><td>
+            <div className="print-header flex items-center gap-3 border-b border-border pb-2" data-testid="report-print-header">
+              <Logo tagline />
+              <div className="ml-auto text-right text-xs leading-tight text-text-muted">
+                <div className="font-semibold text-text">{title}</div>
+                {d && <div>Job {d.job_code} · {span}</div>}
+              </div>
+            </div>
+          </td></tr>
+        </thead>
+        <tbody><tr><td>
       <div className="space-y-6 p-4 sm:p-6">
         <div className="flex flex-wrap items-center gap-3">
           {k && <StatusPill {...STATUS[k.status]} />}
@@ -230,6 +246,8 @@ export function ReportPage() {
           </>
         )}
       </div>
+        </td></tr></tbody>
+      </table>
     </AppShell>
   );
 }

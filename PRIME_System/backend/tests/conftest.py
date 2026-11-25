@@ -73,6 +73,7 @@ CREDS = {
     "engineer": ("engineer@prime.demo", "engineer123"),
     "operator": ("maya@prime.demo", "Prime!2026"),
     "manager": ("jordan@prime.demo", "Prime!2026"),
+    "lead": ("kasra@prime.demo", "Prime!2026"),
 }
 
 

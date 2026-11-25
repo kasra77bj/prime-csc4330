@@ -36,6 +36,7 @@ class UserRole(str, enum.Enum):
     engineer = "engineer"
     admin = "admin"
     manager = "manager"
+    lead = "lead"            # team lead: everything an engineer and an admin can do (Kasra, Carlos)
 
 
 class SessionStatus(str, enum.Enum):
