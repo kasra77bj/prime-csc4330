@@ -1,9 +1,43 @@
 import { ArrowLeft } from "lucide-react";
-import type { ReactNode } from "react";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { useEffect, useRef, type ReactNode } from "react";
+import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
+import { post } from "../api/client";
+import { AlertBanner, topAlert } from "../components/AlertBanner";
 import { ControlBar } from "../components/ControlBar";
+import { toast } from "../components/Toaster";
 import { useSessionStream } from "../hooks/useSessionStream";
-import { useSession } from "../store/live";
+import { mutedNudges } from "../lib/prefs";
+import { useCan } from "../store/auth";
+import { useSession, type LiveSession } from "../store/live";
+
+const UNACK_AFTER_MS = 30_000;
+
+/** Nudge (docs/17 §9): a warning left unacknowledged for 30 s gets one gentle reminder, never while a critical
+ *  alert is open (the red banner already has the operator's attention). */
+function useUnackNudge(sessionId: string | undefined, s: LiveSession) {
+  const shown = useRef(new Set<string>());
+  const canAck = useCan("acknowledge_alert");
+  const canEscalate = useCan("escalate");
+  useEffect(() => {
+    if (!sessionId || !canAck) return;
+    const t = setInterval(() => {
+      const open = Object.values(s.alerts).filter((a) => a.status === "open");
+      if (open.some((a) => a.severity === "critical") || mutedNudges().has("unack")) return;
+      const late = open.find((a) => a.severity === "warning" && !shown.current.has(a.id) && Date.now() - new Date(a.raised_at).getTime() > UNACK_AFTER_MS);
+      if (!late) return;
+      shown.current.add(late.id);
+      const label = late.message.split(" ").slice(0, 2).join(" ");
+      toast({
+        kind: "warning", title: `${label} warning has been open for 30 s`, body: "Acknowledge it, or escalate to the engineer.",
+        actions: [
+          { label: "Acknowledge", onClick: () => { post(`/alerts/${late.id}/acknowledge`).catch(() => undefined); } },
+          ...(canEscalate ? [{ label: "Escalate", onClick: () => { post(`/sessions/${sessionId}/escalate`, { alert_id: late.id, message: late.message }).then(() => toast({ kind: "neutral", title: "Engineer notified", body: "They usually respond in about 2 minutes." })).catch(() => undefined); } }] : []),
+        ],
+      });
+    }, 2000);
+    return () => clearInterval(t);
+  }, [sessionId, s.alerts, canAck, canEscalate]);
+}
 import { AppShell } from "./AppShell";
 
 const TABS = [["live", "Live"], ["vision", "Vision"], ["trends", "Trends"], ["ai", "AI"]] as const;
@@ -12,15 +46,17 @@ const TABS = [["live", "Live"], ["vision", "Vision"], ["trends", "Trends"], ["ai
 export function PrintLayout({ children }: { children: ReactNode }) {
   const { sessionId } = useParams();
   const nav = useNavigate();
+  const { pathname } = useLocation();
   useSessionStream(sessionId);
   const s = useSession(sessionId);
+  useUnackNudge(sessionId, s);
   const d = s.detail;
   const layer = s.lastAny?.layer ?? d?.current_layer ?? 0;
   const title = d ? `${d.job_name} · ${d.printer_name}` : "Loading print…";
   return (
-    <AppShell title={title} subtitle={d ? `Job ${d.job_code} · ${d.job?.mixture ?? ""} · nozzle ${d.printer?.nozzle ?? ""}` : undefined}
+    <AppShell quietSession={sessionId} title={title} subtitle={d ? `Job ${d.job_code} · ${d.job?.mixture ?? ""} · nozzle ${d.printer?.nozzle ?? ""}` : undefined}
       actions={<button type="button" onClick={() => nav("/dashboard")} className="hidden items-center gap-1 rounded-ctl px-2 py-1 text-sm text-text-muted hover:bg-canvas md:inline-flex"><ArrowLeft className="h-4 w-4" /> Dashboard</button>}>
-      <nav className="flex gap-1 border-b border-border bg-surface px-4 sm:px-6" aria-label="Print views">
+      <nav className="no-print flex gap-1 border-b border-border bg-surface px-4 sm:px-6" aria-label="Print views">
         {TABS.map(([path, label]) => (
           <NavLink key={path} to={`/prints/${sessionId}/${path}`}
             className={({ isActive }) => `border-b-2 px-4 py-3 text-sm font-medium ${isActive ? "border-brand-600 text-brand-700" : "border-transparent text-text-muted hover:text-text"}`}>
@@ -28,6 +64,11 @@ export function PrintLayout({ children }: { children: ReactNode }) {
           </NavLink>
         ))}
       </nav>
+      {(() => {   // the print's highest open alert, on every print tab (US-06)
+        const a = topAlert(s.alerts);
+        const geo = a?.signal === "sll_width" || a?.signal === "sll_height";
+        return <AlertBanner alert={a} onView={geo && !pathname.endsWith("/vision") ? () => nav(`/prints/${sessionId}/vision`) : undefined} />;
+      })()}
       <div className="flex-1">{children}</div>
       {sessionId && (
         <ControlBar sessionId={sessionId} status={s.status} title={d ? `${d.job_name}` : ""} layer={layer} totalLayers={d?.total_layers ?? null} />

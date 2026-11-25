@@ -231,6 +231,9 @@ class AlertOut(ORM):
     acknowledged_by: uuid.UUID | None
     acknowledged_at: datetime | None
     resolved_at: datetime | None
+    job_name: str | None = None
+    printer_name: str | None = None
+    acknowledged_by_name: str | None = None
 
 
 class EscalateIn(BaseModel):

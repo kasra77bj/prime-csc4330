@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { get } from "../api/client";
 import type { NotificationOut, WsEnvelope } from "../api/types";
 import { toast, type ToastKind } from "../components/Toaster";
+import { mutedNudges, type NudgeType } from "../lib/prefs";
 import { socket } from "../ws/socket";
 
 interface NoteStore { items: NotificationOut[]; unread: number; set: (items: NotificationOut[]) => void; add: (n: NotificationOut) => void }
@@ -24,6 +25,7 @@ export function useNotificationFeed(enabled: boolean) {
       const d = m.data as { id: string; kind: string; title: string; body: string | null; link: string | null };
       useNotes.getState().add({ id: d.id, kind: d.kind, title: d.title, body: d.body, link: d.link, read_at: null, created_at: m.ts ?? new Date().toISOString() });
       const kind = d.title.startsWith("Critical") ? "critical" : d.title.startsWith("Change applied") ? "success" : KIND[d.kind] ?? "neutral";
+      if (kind !== "critical" && mutedNudges().has(d.kind as NudgeType)) return;   // muted in Settings (still in the bell)
       toast({ kind, title: d.title, body: d.body });
     });
   }, [enabled]);

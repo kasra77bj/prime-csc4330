@@ -1,15 +1,51 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowRight, BellRing, CircleDot, Gauge, Play, Sparkles, X } from "lucide-react";
+import { ArrowRight, BellRing, Check, Circle, CircleDot, Gauge, Layers, Play, Sparkles, Target, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { get, patch } from "../api/client";
-import type { AlertOut, DashboardSummary, PrinterLive, Reading, Recommendation, WsEnvelope } from "../api/types";
+import { useNavigate } from "react-router-dom";
+import { get } from "../api/client";
+import type { Achievements, AlertOut, DashboardSummary, PrinterLive, Reading, Recommendation, WsEnvelope } from "../api/types";
 import { Button } from "../components/Button";
 import { StatusPill } from "../components/StatusPill";
 import { AppShell } from "../layouts/AppShell";
 import { clock, fmt, greeting } from "../lib/format";
 import { useAuth } from "../store/auth";
 import { socket } from "../ws/socket";
+import { saveOnboarding } from "./OnboardingPages";
+
+/** "Getting started" checklist (docs/06 part A): reads the same onboarding flags as the flow. */
+function Checklist() {
+  const me = useAuth((s) => s.me);
+  const nav = useNavigate();
+  const ob = (me?.onboarding ?? {}) as Record<string, boolean>;
+  if (!me || ob.dismissed) return null;
+  const items = [
+    ["Secure your account (2-factor)", me.mfa_enrolled, null],
+    ["Meet your dashboard", ob.welcome_done, "/onboarding/welcome"],
+    ["Practice hold-to-stop", ob.practice_stop_done, "/onboarding/tour"],
+    ["Watch your first live print", ob.first_live_watched, null],
+    ["Acknowledge your first alert", ob.first_alert_ack, null],
+  ] as const;
+  const done = items.filter((i) => i[1]).length;
+  return (
+    <section className="rounded-card border-l-4 border-ok bg-surface p-4 shadow-sm" aria-label="Getting started">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1">
+          <p className="font-semibold">Getting started {done}/{items.length}</p>
+          <div className="mt-2 h-1.5 max-w-sm overflow-hidden rounded-full bg-canvas"><div className="h-full bg-ok" style={{ width: `${(done / items.length) * 100}%` }} /></div>
+        </div>
+        <Button variant="ghost" aria-label="Dismiss the checklist" onClick={() => saveOnboarding({ dismissed: true }).catch(() => undefined)}><X className="h-4 w-4" /></Button>
+      </div>
+      <ul className="mt-3 grid gap-2 text-sm sm:grid-cols-2 xl:grid-cols-5">
+        {items.map(([label, ok, link]) => (
+          <li key={label} className="flex items-center gap-2">
+            {ok ? <Check aria-hidden className="h-4 w-4 text-ok" /> : <Circle aria-hidden className="h-4 w-4 text-text-muted" />}
+            {!ok && link ? <button type="button" className="text-left text-brand-700 underline" onClick={() => nav(link)}>{label}</button> : <span className={ok ? "text-text-muted line-through" : ""}>{label}</span>}
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
 
 type Live = Pick<Reading, "layer" | "phase" | "temperature" | "pump_rpm" | "print_speed" | "sll_width" | "motor_power" | "delay_setting_min">;
 
@@ -79,7 +115,7 @@ export function DashboardPage() {
   const me = useAuth((s) => s.me);
   const nav = useNavigate();
   const qc = useQueryClient();
-  const [params, setParams] = useSearchParams();
+  const ach = useQuery({ queryKey: ["achievements"], queryFn: () => get<Achievements>("/me/achievements"), refetchInterval: 30000 });
   const summary = useQuery({ queryKey: ["summary"], queryFn: () => get<DashboardSummary>("/dashboard/summary"), refetchInterval: 10000 });
   const printers = useQuery({ queryKey: ["printers"], queryFn: () => get<PrinterLive[]>("/printers"), refetchInterval: 15000 });
   const alerts = useQuery({ queryKey: ["alerts", "recent"], queryFn: () => get<AlertOut[]>("/alerts?limit=5") });
@@ -110,21 +146,11 @@ export function DashboardPage() {
   }, [siteId, qc]);
 
   const s = summary.data;
-  const welcome = params.get("welcome") === "1";
-  const dismissWelcome = () => { patch("/me/onboarding", { welcome_done: true }).catch(() => undefined); params.delete("welcome"); setParams(params); };
   const today = new Date().toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "America/Chicago" });
   return (
     <AppShell title={greeting(me?.full_name ?? "")} subtitle={`${today} · ${me?.sites[0]?.name ?? ""}`}>
       <div className="space-y-6 p-4 sm:p-6">
-        {welcome && (
-          <div className="flex items-start justify-between gap-4 rounded-card border-l-4 border-ok bg-surface p-4 shadow-sm">
-            <div>
-              <p className="font-semibold">Welcome to PRIME, {me?.full_name.split(" ")[0]}</p>
-              <p className="text-sm text-text-muted">See every print condition live, get warned before defects form, and review AI suggestions. You decide; the AI only advises.</p>
-            </div>
-            <Button variant="ghost" aria-label="Dismiss" onClick={dismissWelcome}><X className="h-4 w-4" /></Button>
-          </div>
-        )}
+        <Checklist />
         <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Today at a glance">
           <Kpi label="Active prints" value={s ? String(s.active_prints) : "–"} icon={Gauge} />
           <Kpi label="Open alerts" value={s ? String(s.open_alerts) : "–"} icon={BellRing} tone={s?.open_alerts ? "warn" : "neutral"}
@@ -143,7 +169,7 @@ export function DashboardPage() {
           <aside className="space-y-4" aria-label="Needs your attention">
             <h2 className="text-sm font-semibold uppercase tracking-wide text-text-muted">Needs your attention</h2>
             {(recs.data ?? []).map((r) => (
-              <button key={r.id} type="button" onClick={() => nav(`/prints/${r.session_id}/live`)}
+              <button key={r.id} type="button" onClick={() => nav(`/prints/${r.session_id}/ai`)}
                 className="w-full rounded-card border-l-4 border-brand-600 bg-brand-50 p-3 text-left shadow-sm hover:bg-[#dde8f0]">
                 <span className="inline-flex items-center gap-1 text-xs font-semibold text-brand-700"><Sparkles aria-hidden className="h-3.5 w-3.5" /> AI suggestion</span>
                 <p className="mt-1 font-semibold">{r.title}</p>
@@ -151,6 +177,16 @@ export function DashboardPage() {
               </button>
             ))}
             {(recs.data ?? []).length === 0 && <p className="rounded-card bg-surface p-3 text-sm text-text-muted shadow-sm">No AI suggestions waiting.</p>}
+            {ach.data?.goal && (
+              <div className="rounded-card bg-surface p-3 shadow-sm">
+                <p className="flex items-center gap-2 text-sm font-semibold"><Target aria-hidden className="h-4 w-4 text-ok" /> {ach.data.goal.shift_label} goal: {ach.data.goal.goal_text}</p>
+                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-canvas"><div className="h-full bg-ok" style={{ width: `${(ach.data.goal.progress / ach.data.goal.target) * 100}%` }} /></div>
+                <p className="mt-1 flex items-center justify-between text-xs text-text-muted">
+                  <span className="tabular">{ach.data.goal.progress} of {ach.data.goal.target}</span>
+                  <span className="inline-flex items-center gap-1"><Layers aria-hidden className="h-3.5 w-3.5" /> {ach.data.streak}-layer clean streak</span>
+                </p>
+              </div>
+            )}
             <div className="rounded-card bg-surface p-3 shadow-sm">
               <p className="mb-2 text-sm font-semibold">Recent alerts</p>
               <ul className="space-y-2">

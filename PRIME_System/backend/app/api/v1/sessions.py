@@ -80,6 +80,9 @@ async def sensor_test(printer_id: uuid.UUID, request: Request, user: User = Depe
                         "status": sensor.status, "samples": len(vals),
                         "last_value": round(vals[-1], 3) if vals else None, "unit": sensor.unit})
     audit(db, user.id, "printer.sensor_test", "printer", printer_id, request=request)
+    if results and all(r["status"] == "live" for r in results):
+        from app.gamification.service import award
+        await award(db, user.id, "calibrated")
     await db.commit()
     return {"printer_id": str(printer_id), "passed": all(r["status"] == "live" for r in results), "sensors": results}
 

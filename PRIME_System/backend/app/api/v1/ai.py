@@ -94,6 +94,8 @@ async def _decide(rec_id: uuid.UUID, action: str, user: User, db: AsyncSession, 
     printer = await db.get(Printer, s.printer_id)
     runner = manager.get(rec.session_id)
     adj = await decide(db, rec, user, action, runner, request=request, limits=_limits(rec.parameter, printer), **kw)
+    from app.gamification.service import award
+    await award(db, user.id, "model_partner")
     await db.commit()
     await db.refresh(rec)
     await publish_rec(rec, printer.site_id)

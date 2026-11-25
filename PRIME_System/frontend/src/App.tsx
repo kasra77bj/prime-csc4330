@@ -1,14 +1,23 @@
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { get, restoreSession } from "./api/client";
-import type { MeOut } from "./api/types";
+import type { MeOut, SessionSummary } from "./api/types";
 import { Toaster } from "./components/Toaster";
 import { useNotificationFeed } from "./hooks/useNotifications";
 import { AppShell } from "./layouts/AppShell";
-import { ComingNext, PrintLayout } from "./layouts/PrintLayout";
+import { ComingNext } from "./layouts/PrintLayout";
+import { AdminAuditPage, AdminUsersPage } from "./pages/AdminPages";
+import { AiPage } from "./pages/AiPage";
+import { AlertsPage } from "./pages/AlertsPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { LiveMonitorPage } from "./pages/LiveMonitorPage";
 import { EnrollPage, LoginPage, MfaPage } from "./pages/LoginPages";
+import { AchievementsPage, DemoPage, SettingsPage } from "./pages/MorePages";
+import { PrinterSetupPage, RolePage, TourPage, WelcomePage } from "./pages/OnboardingPages";
+import { ReportPage, SessionsPage } from "./pages/ReportPages";
+import { TrendsPage } from "./pages/TrendsPage";
+import { VisionPage } from "./pages/VisionPage";
 import { useAuth } from "./store/auth";
 import { socket } from "./ws/socket";
 
@@ -20,12 +29,17 @@ function RequireAuth({ children }: { children: JSX.Element }) {
   return children;
 }
 
-function Later({ title }: { title: string }) {
-  return <AppShell title={title}><ComingNext title={`${title} arrives in Phase 3`} text="This page is planned in docs/19_agent_tasks.md (Phase 3). The live monitor, dashboard and AI suggestions already work." /></AppShell>;
-}
+const ACTIVE = ["running", "paused", "prechecking"];
 
-function PrintLater({ title, text }: { title: string; text: string }) {
-  return <PrintLayout><ComingNext title={title} text={text} /></PrintLayout>;
+/** Sidebar "Trends" / "AI suggestions": open that tab of the most relevant print (the live demo print first). */
+function ToPrintTab({ tab, title }: { tab: "trends" | "ai"; title: string }) {
+  const q = useQuery({ queryKey: ["sessions"], queryFn: () => get<SessionSummary[]>("/sessions") });
+  if (q.isLoading) return <AppShell title={title}><p className="p-6 text-sm text-text-muted">Finding the current print…</p></AppShell>;
+  const all = q.data ?? [];
+  const pick = all.find((s) => ACTIVE.includes(s.status) && s.scenario_name === "demo") ?? all.find((s) => ACTIVE.includes(s.status))
+    ?? all.find((s) => s.scenario_name === "demo") ?? all[0];
+  if (!pick) return <AppShell title={title}><ComingNext title="No prints yet" text="Once a print is scheduled or running, its trends and AI suggestions show here." /></AppShell>;
+  return <Navigate to={`/prints/${pick.id}/${tab}`} replace />;
 }
 
 export default function App() {
@@ -47,20 +61,33 @@ export default function App() {
   }, []);
   useEffect(() => { if (token) socket.connect(token); }, [token]);
   if (booting) return <div className="flex min-h-screen items-center justify-center text-sm text-text-muted">Loading PRIME…</div>;
+  const auth = (el: JSX.Element) => <RequireAuth>{el}</RequireAuth>;
   return (
     <>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/login/verify" element={<MfaPage />} />
         <Route path="/login/enroll" element={<EnrollPage />} />
-        <Route path="/dashboard" element={<RequireAuth><DashboardPage /></RequireAuth>} />
-        <Route path="/prints/:sessionId/live" element={<RequireAuth><LiveMonitorPage /></RequireAuth>} />
-        <Route path="/prints/:sessionId/vision" element={<RequireAuth><PrintLater title="Vision arrives in Phase 3" text="Camera view with measured layer width and height drawn over the bead." /></RequireAuth>} />
-        <Route path="/prints/:sessionId/trends" element={<RequireAuth><PrintLater title="Trends arrive in Phase 3" text="Any signal over a time window you choose, with the AI's predicted line." /></RequireAuth>} />
-        <Route path="/prints/:sessionId/ai" element={<RequireAuth><PrintLater title="Full AI review page arrives in Phase 3" text="For now, accept, modify or reject suggestions on the Live tab." /></RequireAuth>} />
-        {["alerts", "ai", "sessions", "trends", "me/achievements", "admin/users", "settings"].map((p) => (
-          <Route key={p} path={`/${p}`} element={<RequireAuth><Later title={p === "me/achievements" ? "Achievements" : p === "admin/users" ? "Admin" : p === "ai" ? "AI suggestions" : p[0].toUpperCase() + p.slice(1)} /></RequireAuth>} />
-        ))}
+        <Route path="/onboarding/welcome" element={auth(<WelcomePage />)} />
+        <Route path="/onboarding/role" element={auth(<RolePage />)} />
+        <Route path="/onboarding/tour" element={auth(<TourPage />)} />
+        <Route path="/onboarding/printer" element={auth(<PrinterSetupPage />)} />
+        <Route path="/dashboard" element={auth(<DashboardPage />)} />
+        <Route path="/prints/:sessionId/live" element={auth(<LiveMonitorPage />)} />
+        <Route path="/prints/:sessionId/vision" element={auth(<VisionPage />)} />
+        <Route path="/prints/:sessionId/trends" element={auth(<TrendsPage />)} />
+        <Route path="/prints/:sessionId/ai" element={auth(<AiPage />)} />
+        <Route path="/trends" element={auth(<ToPrintTab tab="trends" title="Trends" />)} />
+        <Route path="/ai" element={auth(<ToPrintTab tab="ai" title="AI suggestions" />)} />
+        <Route path="/alerts" element={auth(<AlertsPage />)} />
+        <Route path="/sessions" element={auth(<SessionsPage />)} />
+        <Route path="/sessions/:sessionId/report" element={auth(<ReportPage />)} />
+        <Route path="/admin" element={<Navigate to="/admin/users" replace />} />
+        <Route path="/admin/users" element={auth(<AdminUsersPage />)} />
+        <Route path="/admin/audit" element={auth(<AdminAuditPage />)} />
+        <Route path="/me/achievements" element={auth(<AchievementsPage />)} />
+        <Route path="/settings" element={auth(<SettingsPage />)} />
+        <Route path="/demo" element={auth(<DemoPage />)} />
         <Route path="*" element={<Navigate to={token ? "/dashboard" : "/login"} replace />} />
       </Routes>
       <Toaster />

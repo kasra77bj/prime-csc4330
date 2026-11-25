@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { WsEnvelope } from "../api/types";
+import { toast } from "../components/Toaster";
 
 export type ConnState = "connecting" | "live" | "reconnecting" | "offline";
 
@@ -81,6 +82,8 @@ class LiveSocket {
       }
       if (msg.type === "connection" && msg.channel?.startsWith("session:")) {
         const recovered = msg.data.recovered ?? 0;
+        if (msg.data.state === "live" && useConnection.getState().missedSince)   // reliability NFR, docs/16 §3
+          toast({ kind: "success", title: "Reconnected, no data lost", body: `${recovered} live updates recovered from the server buffer.` });
         useConnection.getState().set({
           state: msg.data.state === "live" ? "live" : "reconnecting",
           recovered: useConnection.getState().missedSince ? recovered : null,

@@ -96,6 +96,11 @@ class RunnerManager:
                 t = asyncio.create_task(self._finalize(runner))
                 self._bg.add(t)
                 t.add_done_callback(self._bg.discard)
+        elif action == ControlAction.stop:       # no runner in memory: still produce the report
+            from app.reports.service import on_session_end
+            t = asyncio.create_task(on_session_end(session_id))
+            self._bg.add(t)
+            t.add_done_callback(self._bg.discard)
         if expired:
             from app.ml.recommend import publish_rec
             for rec in expired:
@@ -113,6 +118,8 @@ class RunnerManager:
         runner._close_segment()
         runner._close_layer()
         await runner.flush()
+        from app.reports.service import on_session_end
+        await on_session_end(runner.session_id, notify_users=runner.publish)
 
     async def resume_active(self) -> int:
         async with SessionLocal() as db:
@@ -161,3 +168,5 @@ async def backfill(session_id: uuid.UUID, base_time: datetime) -> None:
         s = await db.get(PrintSession, session_id)
         s.status, s.ended_at = SessionStatus.completed, r._now()
         await db.commit()
+    from app.reports.service import on_session_end
+    await on_session_end(session_id, notify_users=False)

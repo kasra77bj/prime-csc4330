@@ -55,3 +55,21 @@ test("alert banner picks the most severe open alert", () => {
     ({ id, severity, status, raised_at: "2026-11-20T10:00:00Z" }) as unknown as AlertOut;
   expect(topAlert({ a: a("a", "warning"), b: a("b", "critical"), c: a("c", "critical", "resolved") })?.id).toBe("b");
 });
+
+import { deviation } from "../pages/VisionPage";
+import { stats } from "../pages/TrendsPage";
+
+describe("Phase 3 helpers", () => {
+  it("grades bead geometry against target ± tolerance (critical beyond 2×)", () => {
+    expect(deviation(19.6, 19.5, 1).level).toBe("ok");
+    expect(deviation(18.05, 19.5, 1).level).toBe("warning");
+    expect(deviation(16.7, 19.5, 1).level).toBe("critical");
+    expect(deviation(18.05, 19.5, 1).pct).toBeCloseTo(-7.44, 1);
+  });
+  it("computes trend window statistics", () => {
+    expect(stats([])).toBeNull();
+    const s = stats([18, 19, 20])!;
+    expect([s.min, s.max, s.avg]).toEqual([18, 20, 19]);
+    expect(s.sd).toBeCloseTo(0.816, 3);
+  });
+});

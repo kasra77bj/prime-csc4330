@@ -1,6 +1,6 @@
 # PRIME developer commands. Docker targets work on Windows via Git Bash / WSL;
 # the `local-*` targets run without Docker (needs Python 3.12, Node 22, Postgres 16).
-.PHONY: up down build logs seed reset-demo ingest test test-backend test-frontend models-report generate-data \
+.PHONY: up down build logs seed reset-demo ingest test e2e test-backend test-frontend models-report generate-data \
         local-setup local-backend local-frontend
 
 up:            ; docker compose up --build -d && docker compose logs -f backend
@@ -12,6 +12,7 @@ reset-demo:    ; docker compose exec backend python -m app.seed.seed --reset
 ingest:        ; docker compose exec backend python -m app.replay.source_csv ingest-all
 
 test: test-backend test-frontend
+e2e:           ; cd frontend && npm run e2e   # needs backend :8000 + frontend :5173 running
 test-backend:  ; cd backend && .venv/bin/pytest -q
 test-frontend: ; cd frontend && npm test
 

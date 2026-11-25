@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { get } from "../api/client";
 import type {
-  Adjustment, AlertOut, Prediction, Reading, Recommendation, SessionDetail, SessionStatus, WsEnvelope,
+  Adjustment, AlertOut, Prediction, Quality, Reading, Recommendation, SessionDetail, SessionStatus, WsEnvelope,
 } from "../api/types";
 import { appendReading, SERIES_LEN, useLive, type Point } from "../store/live";
 import { socket } from "../ws/socket";
@@ -15,13 +15,14 @@ export function useSessionStream(sessionId: string | undefined) {
     if (!sessionId) return;
     let alive = true;
     const load = async () => {
-      const [detail, alerts, recs, preds, adjs, hist] = await Promise.all([
+      const [detail, alerts, recs, preds, adjs, hist, quality] = await Promise.all([
         get<SessionDetail>(`/sessions/${sessionId}`),
         get<AlertOut[]>(`/alerts?session_id=${sessionId}&limit=50`),
         get<Recommendation[]>(`/sessions/${sessionId}/recommendations`),
         get<Prediction[]>(`/sessions/${sessionId}/predictions?limit=200`),
         get<Adjustment[]>(`/sessions/${sessionId}/adjustments`),
         get<Bucketed>(`/sessions/${sessionId}/readings?signals=temperature,pump_rpm,motor_power,print_speed,sll_width,sll_height,flow&last_s=900&bucket=4s`),
+        get<Quality>(`/sessions/${sessionId}/quality`).catch(() => null),
       ]);
       if (!alive) return;
       const series: Record<string, Point[]> = {};
@@ -38,7 +39,7 @@ export function useSessionStream(sessionId: string | undefined) {
           extrusion_rate: preds.filter((p) => p.target === "extrusion_rate").slice(-40),
           interlayer_delay: preds.filter((p) => p.target === "interlayer_delay").slice(-40),
         },
-        adjustments: adjs, loaded: true,
+        adjustments: adjs, quality, loaded: true,
       }));
     };
     load().catch(() => undefined);
@@ -88,6 +89,13 @@ export function useSessionStream(sessionId: string | undefined) {
           patch(sessionId, (s) => ({ status: c.status, detail: s.detail ? { ...s.detail, status: c.status } : s.detail }));
           break;
         }
+        case "quality":
+          patch(sessionId, () => ({ quality: m.data as Quality }));
+          break;
+        case "checkpoint":
+        case "layer_completed":
+          patch(sessionId, (s) => ({ tick: s.tick + 1 }));
+          break;
         case "resync_required":
           load().catch(() => undefined);
           break;

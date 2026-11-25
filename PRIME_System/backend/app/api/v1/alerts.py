@@ -14,8 +14,8 @@ from app.core.errors import APIError, not_found
 from app.core.notify import notify
 from app.core.rbac import Permission, require
 from app.db import get_db
-from app.models import (Alert, AlertStatus, Escalation, OnboardingProgress, Printer, PrintSession, Severity, User,
-                        UserRole)
+from app.models import (Alert, AlertStatus, Escalation, OnboardingProgress, Printer, PrintJob, PrintSession, Severity,
+                        User, UserRole)
 from app.schemas.common import AlertOut, EscalateIn, EscalateOut, UserOut
 from app.ws.hub import hub
 
@@ -32,7 +32,7 @@ async def _broadcast(db: AsyncSession, a: Alert) -> None:
 
 @router.get("/alerts", response_model=list[AlertOut])
 async def list_alerts(status: AlertStatus | None = None, session_id: uuid.UUID | None = None,
-                      severity: Severity | None = None, limit: int = 100,
+                      severity: Severity | None = None, active: bool = False, limit: int = 100,
                       _: User = Depends(require(Permission.view_live)), db: AsyncSession = Depends(get_db)):
     q = select(Alert)
     if status:
@@ -41,7 +41,20 @@ async def list_alerts(status: AlertStatus | None = None, session_id: uuid.UUID |
         q = q.where(Alert.session_id == session_id)
     if severity:
         q = q.where(Alert.severity == severity)
-    return (await db.scalars(q.order_by(Alert.raised_at.desc()).limit(min(limit, 500)))).all()
+    if active:      # only prints that are still running/paused (the global critical banner)
+        from app.replay.manager import ACTIVE
+        q = q.where(Alert.session_id.in_(select(PrintSession.id).where(PrintSession.status.in_(ACTIVE))))
+    rows = (await db.scalars(q.order_by(Alert.raised_at.desc()).limit(min(limit, 500)))).all()
+    # context for the alerts center: which print, and who acknowledged
+    sids = {a.session_id for a in rows}
+    ctx = {sid: (job, printer) for sid, job, printer in (await db.execute(
+        select(PrintSession.id, PrintJob.name, Printer.name).join(PrintJob, PrintJob.id == PrintSession.job_id)
+        .join(Printer, Printer.id == PrintSession.printer_id).where(PrintSession.id.in_(sids)))).all()} if sids else {}
+    uids = {a.acknowledged_by for a in rows if a.acknowledged_by}
+    names = dict((await db.execute(select(User.id, User.full_name).where(User.id.in_(uids)))).all()) if uids else {}
+    return [AlertOut.model_validate(a).model_copy(update={
+        "job_name": ctx.get(a.session_id, (None, None))[0], "printer_name": ctx.get(a.session_id, (None, None))[1],
+        "acknowledged_by_name": names.get(a.acknowledged_by)}) for a in rows]
 
 
 @router.post("/alerts/{alert_id}/acknowledge", response_model=AlertOut)
@@ -57,6 +70,8 @@ async def acknowledge(alert_id: uuid.UUID, request: Request, user: User = Depend
         ob = await db.scalar(select(OnboardingProgress).where(OnboardingProgress.user_id == user.id))
         if ob is not None:
             ob.first_alert_ack = True
+        from app.gamification.service import on_acknowledge
+        await on_acknowledge(db, user.id, a)
         audit(db, user.id, "alert.acknowledge", "alert", a.id, request=request)
         await db.commit()
         await _broadcast(db, a)
@@ -103,9 +118,33 @@ async def escalate(session_id: uuid.UUID, body: EscalateIn, request: Request,
     title = f"{user.full_name} needs you: {what}"
     await notify(db, engineer.id, "escalation", title, body.message or (alert.message if alert else None),
                  f"/prints/{s.id}/ai", {"escalation_id": str(esc.id), "session_id": str(s.id)})
+    from app.gamification.service import on_escalate
+    await on_escalate(db, user.id, s.id)
     audit(db, user.id, "session.escalate", "escalation", esc.id, None,
           {"to": engineer.id, "alert_id": alert.id if alert else None}, request)
     await db.commit()
     mins = max(1, round(typical / 60))
     return EscalateOut(escalation_id=esc.id, engineer=UserOut.model_validate(engineer), typical_response_s=typical,
                        message=f"{engineer.full_name} (Engineer) was notified · usually responds in ~{mins} min.")
+
+
+@router.post("/sessions/{session_id}/escalations/seen")
+async def escalations_seen(session_id: uuid.UUID, request: Request,
+                           user: User = Depends(require(Permission.decide_recommendation)),
+                           db: AsyncSession = Depends(get_db)):
+    """The engineer opened the AI page: open escalations count as answered and the operator hears
+    "<engineer> is reviewing" (docs/17 section 3)."""
+    now = datetime.now(timezone.utc)
+    open_ = (await db.scalars(select(Escalation).where(Escalation.session_id == session_id,
+                                                       Escalation.responded_at.is_(None)))).all()
+    for esc in open_:
+        esc.seen_at = esc.seen_at or now
+        esc.responded_at = now
+    for uid in {e.from_user_id for e in open_}:
+        await notify(db, uid, "escalation", f"{user.full_name.split()[0]} is reviewing",
+                     f"{user.full_name} (Engineer) opened the AI suggestions for your print.",
+                     f"/prints/{session_id}/live")
+    if open_:
+        audit(db, user.id, "escalation.seen", "print_session", session_id, None, {"count": len(open_)}, request)
+    await db.commit()
+    return {"answered": len(open_)}
